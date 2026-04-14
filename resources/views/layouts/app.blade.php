@@ -119,7 +119,7 @@
                 </div>
             </div>
             <div class="border-t border-gray-200 mt-8 pt-6 text-center text-xs text-gray-400">
-                © 2025 Sanctuari. All rights reserved.
+                © 2025 Sanctuari. All rights reserveded.
             </div>
         </div>
     </footer>
