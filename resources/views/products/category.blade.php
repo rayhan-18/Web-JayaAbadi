@@ -43,11 +43,18 @@
             ]
         ]
     ];
-    
+
     $category = $categories[$slug] ?? $categories['ruang-tamu'];
     $categoryName = $category['name'];
     $categoryDescription = $category['description'];
-    $products = $category['products'];
+    $allProducts = $category['products'];
+
+    $page = request()->get('page', 1);
+    $perPage = 4;
+    $totalProducts = count($allProducts);
+    $lastPage = ceil($totalProducts / $perPage);
+    $offset = ($page - 1) * $perPage;
+    $productsOnPage = array_slice($allProducts, $offset, $perPage, true);
 @endphp
 
 @extends('layouts.app')
@@ -56,56 +63,138 @@
 
 @section('content')
 <div class="bg-white">
-    <!-- Hero Kategori -->
-    <div class="relative bg-gradient-to-r from-amber-50/60 via-white to-amber-50/60 border-b border-amber-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 text-center">
-            <div class="inline-flex items-center gap-2 bg-white/70 backdrop-blur-sm text-amber-700 text-xs font-semibold tracking-wide uppercase px-3 py-1 rounded-full border border-amber-200/50 mb-4">
-                <i class="fas fa-tag text-amber-500 text-xs"></i>
-                <span>Koleksi</span>
+    <!-- Hero Section Minimalis Elegan (SAMA PERSIS DENGAN INDEX) -->
+    <section class="relative py-20 md:py-28 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-amber-50 via-white to-amber-50/30"></div>
+        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#d4a373 1px, transparent 1px); background-size: 24px 24px;"></div>
+        <div class="absolute top-0 -left-20 w-80 h-80 bg-amber-300/20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 -right-20 w-96 h-96 bg-stone-300/20 rounded-full blur-3xl"></div>
+        
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-section">
+            <div class="inline-flex items-center gap-2 bg-white/60 backdrop-blur-sm text-amber-800 text-xs font-semibold px-4 py-1.5 rounded-full shadow-sm mb-5 animate-item">
+                <i class="fas fa-sparkle text-amber-500 text-xs"></i>
+                <span>Koleksi Eksklusif 2025</span>
             </div>
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-semibold text-gray-900">{{ $categoryName }}</h1>
-            <div class="w-16 h-0.5 bg-amber-400 mx-auto my-5 rounded-full"></div>
-            <p class="text-gray-600 max-w-2xl mx-auto text-base md:text-lg">{{ $categoryDescription }}</p>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-semibold text-gray-900 animate-item delay-1">
+                {{ $categoryName }}
+            </h1>
+            <div class="w-16 h-0.5 bg-amber-400 mx-auto my-5 rounded-full animate-item delay-2"></div>
+            <p class="text-gray-600 max-w-2xl mx-auto text-base md:text-lg animate-item delay-3">
+                {{ $categoryDescription }}
+            </p>
+            <div class="flex gap-4 justify-center mt-8 animate-item delay-4">
+                <a href="#produk" class="bg-gray-900 hover:bg-amber-600 text-white px-6 py-2.5 rounded-full text-sm font-medium transition transform hover:scale-105 shadow-lg flex items-center gap-2">
+                    <i class="fas fa-arrow-down"></i> Lihat Koleksi
+                </a>
+                <a href="#" class="border border-gray-300 hover:border-amber-500 text-gray-700 hover:text-amber-600 px-6 py-2.5 rounded-full text-sm font-medium transition flex items-center gap-2">
+                    <i class="fas fa-tag"></i> Promo Spesial
+                </a>
+            </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Grid Produk (Tanpa Wishlist) -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            @foreach($products as $product)
-            <div class="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                <a href="{{ route('products.show', $product['slug']) }}" class="block">
-                    <div class="relative overflow-hidden bg-gray-100">
-                        <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="w-full aspect-square object-cover transition duration-500 group-hover:scale-105">
-                        <!-- Rating badge (tanpa wishlist) -->
-                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full text-xs font-semibold text-amber-700 shadow-sm">
+    <!-- Grid Produk Full Width (TANPA SIDEBAR FILTER) -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" id="produk">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            @foreach($productsOnPage as $product)
+            <div class="group bg-white rounded-xl shadow-sm hover:shadow-md transition overflow-hidden">
+                <a href="{{ route('products.show', $product['slug']) }}">
+                    <div class="relative aspect-square overflow-hidden bg-gray-100">
+                        <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                        <div class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full text-xs">
                             <i class="fas fa-star text-yellow-500 text-[10px] mr-1"></i> {{ $product['rating'] }}
                         </div>
+                        <button class="absolute top-2 right-2 bg-white/90 w-7 h-7 rounded-full flex items-center justify-center text-gray-500 hover:text-rose-500 transition">
+                            <i class="far fa-heart text-sm"></i>
+                        </button>
                     </div>
-                    <div class="p-5 text-center">
-                        <h3 class="font-semibold text-gray-800 text-lg">{{ $product['name'] }}</h3>
-                        <p class="text-amber-700 font-bold text-xl mt-2">Rp {{ number_format($product['price'], 0, ',', '.') }}</p>
-                        <div class="mt-4 flex justify-center">
-                            <button onclick="event.preventDefault(); alert('Produk ditambahkan ke keranjang (demo)');" class="bg-gray-900 hover:bg-amber-600 text-white px-5 py-2 rounded-full text-sm font-medium transition flex items-center gap-2">
-                                <i class="fas fa-bag-shopping text-sm"></i> Tambah
-                            </button>
-                        </div>
+                    <div class="p-4">
+                        <h3 class="font-medium text-gray-800">{{ $product['name'] }}</h3>
+                        <p class="text-gray-400 text-xs mt-1">{{ $categoryName }}</p>
+                        <p class="text-amber-700 font-bold text-lg mt-2">Rp {{ number_format($product['price'], 0, ',', '.') }}</p>
                     </div>
                 </a>
+                <div class="px-4 pb-4">
+                    <form action="#" method="POST" onsubmit="alert('Demo: Produk ditambahkan ke keranjang'); return false;">
+                        @csrf
+                        <button type="submit" class="w-full bg-gray-900 hover:bg-amber-600 text-white py-2 rounded-full text-sm font-medium transition flex items-center justify-center gap-1">
+                            <i class="fas fa-bag-shopping text-xs"></i> Keranjang
+                        </button>
+                    </form>
+                </div>
             </div>
             @endforeach
         </div>
-        
-        <!-- Pagination -->
-        <div class="mt-12 flex justify-center">
-            <nav class="flex gap-2">
-                <button class="px-3 py-1.5 border border-gray-300 rounded-md text-sm text-gray-600 hover:bg-gray-50 transition">Prev</button>
-                <button class="px-3 py-1.5 bg-amber-600 text-white rounded-md text-sm shadow-sm">1</button>
-                <button class="px-3 py-1.5 border border-gray-300 rounded-md text-sm text-gray-600 hover:bg-gray-50 transition">2</button>
-                <button class="px-3 py-1.5 border border-gray-300 rounded-md text-sm text-gray-600 hover:bg-gray-50 transition">3</button>
-                <button class="px-3 py-1.5 border border-gray-300 rounded-md text-sm text-gray-600 hover:bg-gray-50 transition">Next</button>
+
+        @if($lastPage > 1)
+        <div class="mt-10 flex justify-center">
+            <nav class="flex items-center gap-2">
+                @if($page > 1)
+                <a href="{{ route('products.category', ['slug' => $slug, 'page' => $page-1]) }}" class="px-3 py-1.5 border rounded-md text-sm hover:bg-gray-50 flex items-center gap-1"><i class="fas fa-chevron-left text-xs"></i> Prev</a>
+                @endif
+                @for($i = 1; $i <= $lastPage; $i++)
+                    @if($i == $page)
+                    <span class="px-3 py-1.5 bg-amber-600 text-white rounded-md text-sm">{{ $i }}</span>
+                    @else
+                    <a href="{{ route('products.category', ['slug' => $slug, 'page' => $i]) }}" class="px-3 py-1.5 border rounded-md text-sm hover:bg-gray-50">{{ $i }}</a>
+                    @endif
+                @endfor
+                @if($page < $lastPage)
+                <a href="{{ route('products.category', ['slug' => $slug, 'page' => $page+1]) }}" class="px-3 py-1.5 border rounded-md text-sm hover:bg-gray-50 flex items-center gap-1">Next <i class="fas fa-chevron-right text-xs"></i></a>
+                @endif
             </nav>
         </div>
+        @endif
     </div>
 </div>
+
+<style>
+    .animate-section {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        will-change: transform, opacity;
+    }
+    .animate-section.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .animate-item {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+        will-change: transform, opacity;
+    }
+    .animate-item.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .delay-1 { transition-delay: 0.08s; }
+    .delay-2 { transition-delay: 0.16s; }
+    .delay-3 { transition-delay: 0.24s; }
+    .delay-4 { transition-delay: 0.32s; }
+</style>
+
+<script>
+    (function() {
+        const sections = document.querySelectorAll('.animate-section');
+        const items = document.querySelectorAll('.animate-item');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+        sections.forEach(s => observer.observe(s));
+        items.forEach(i => observer.observe(i));
+        const alreadyVisible = () => {
+            sections.forEach(el => { if(el.getBoundingClientRect().top < window.innerHeight - 50) el.classList.add('is-visible'); });
+            items.forEach(el => { if(el.getBoundingClientRect().top < window.innerHeight - 50) el.classList.add('is-visible'); });
+        };
+        window.addEventListener('load', alreadyVisible);
+        window.addEventListener('resize', alreadyVisible);
+    })();
+</script>
 @endsection
