@@ -1,5 +1,5 @@
 @php
-    // Data produk statis (16 produk) - sama persis dengan sebelumnya
+    // Data produk statis (16 produk)
     $allProducts = [
         'kursi-lengan-nordik' => ['name' => 'Kursi Lengan Nordik', 'category' => 'Ruang Tamu', 'category_slug' => 'ruang-tamu', 'price' => 4250000, 'image' => 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=600&h=600&fit=crop', 'rating' => 4.8],
         'meja-samping-walnut' => ['name' => 'Meja Samping Walnut', 'category' => 'Ruang Tamu', 'category_slug' => 'ruang-tamu', 'price' => 1850000, 'image' => 'https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=600&h=600&fit=crop', 'rating' => 4.7],
@@ -33,7 +33,7 @@
 
 @section('content')
 <div class="bg-white">
-    <!-- Hero Section Minimalis Elegan: Gradien + Pattern + Glassmorphism -->
+    <!-- Hero Section Minimalis Elegan -->
     <section class="relative py-20 md:py-28 overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-br from-amber-50 via-white to-amber-50/30"></div>
         <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#d4a373 1px, transparent 1px); background-size: 24px 24px;"></div>
@@ -63,10 +63,10 @@
         </div>
     </section>
 
-    <!-- Filter & Grid Produk (ukuran produk disamakan dengan category) -->
+    <!-- Filter & Grid Produk -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" id="produk">
         <div class="flex flex-col lg:flex-row gap-8">
-            <!-- Sidebar Filter (tetap ada) -->
+            <!-- Sidebar Filter -->
             <aside class="lg:w-1/4 space-y-6 animate-section">
                 <div>
                     <h3 class="font-semibold text-gray-800 text-sm uppercase tracking-wider mb-4 flex items-center gap-2 border-l-3 border-amber-400 pl-2">
@@ -94,12 +94,12 @@
                 </div>
             </aside>
 
-            <!-- Grid Produk (4 kolom desktop, ukuran kecil seperti category) -->
+            <!-- Grid Produk dengan border panjang ke bawah -->
             <div class="lg:w-3/4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="productGrid">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" id="productGrid">
                     @foreach($productsOnPage as $slug => $product)
-                    <div class="group bg-white rounded-xl shadow-sm hover:shadow-md transition overflow-hidden animate-item" data-category="{{ $product['category_slug'] }}" data-price="{{ $product['price'] }}">
-                        <a href="{{ route('products.show', $slug) }}">
+                    <div class="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition overflow-hidden animate-item flex flex-col h-full" data-category="{{ $product['category_slug'] }}" data-price="{{ $product['price'] }}">
+                        <a href="{{ route('products.show', $slug) }}" class="flex-1">
                             <div class="relative aspect-square overflow-hidden bg-gray-100">
                                 <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                                 <div class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full text-xs">
@@ -109,16 +109,17 @@
                                     <i class="far fa-heart text-sm"></i>
                                 </button>
                             </div>
-                            <div class="p-4">
+                            <div class="p-4 pb-2">
                                 <h3 class="font-medium text-gray-800">{{ $product['name'] }}</h3>
                                 <p class="text-gray-400 text-xs mt-1">{{ $product['category'] }}</p>
                                 <p class="text-amber-700 font-bold text-lg mt-2">Rp {{ number_format($product['price'], 0, ',', '.') }}</p>
                             </div>
                         </a>
-                        <div class="px-4 pb-4">
+
+                        <div class="px-4 mb-4 mt-2"> 
                             <form action="#" method="POST" onsubmit="alert('Demo: Produk ditambahkan ke keranjang'); return false;">
                                 @csrf
-                                <button type="submit" class="w-full bg-gray-900 hover:bg-amber-600 text-white py-2 rounded-full text-sm font-medium transition flex items-center justify-center gap-1">
+                                <button type="submit" class="w-full bg-gray-900 hover:bg-amber-600 text-white py-2.5 rounded-full text-sm font-medium transition flex items-center justify-center gap-2 shadow-sm hover:-translate-y-0.5">
                                     <i class="fas fa-bag-shopping text-xs"></i> Keranjang
                                 </button>
                             </form>
@@ -153,7 +154,7 @@
 </div>
 
 <style>
-    /* Scroll reveal */
+    /* Scroll reveal animations */
     .animate-section {
         opacity: 0;
         transform: translateY(30px);
@@ -178,6 +179,11 @@
     .delay-2 { transition-delay: 0.16s; }
     .delay-3 { transition-delay: 0.24s; }
     .delay-4 { transition-delay: 0.32s; }
+
+    /* Border card tampak jelas */
+    .rounded-xl {
+        border: 1px solid #e5e7eb; /* border-gray-200 */
+    }
 </style>
 
 <script>
