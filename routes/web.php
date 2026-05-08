@@ -13,6 +13,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard.index');
     })->name('dashboard');
+
+    Route::get('/produk', function () {
+        return view('admin.product.index');
+    })->name('product.index');
 });
 
 // ========================
