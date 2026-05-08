@@ -101,14 +101,7 @@
                         <li><a href="{{ route('products.category', 'koleksi-baru') }}" class="hover:text-amber-700">Koleksi Baru</a></li>
                     </ul>
                 </div>
-                <div>
-                    <h4 class="font-semibold text-gray-900 mb-3">Bantuan</h4>
-                    <ul class="space-y-2 text-sm text-gray-600">
-                        <li><a href="#" class="hover:text-amber-700">Kebijakan Pengiriman</a></li>
-                        <li><a href="#" class="hover:text-amber-700">Lacak Pesanan</a></li>
-                        <li><a href="#" class="hover:text-amber-700">Material & Perawatan</a></li>
-                    </ul>
-                </div>
+                
                 <div>
                     <h4 class="font-semibold text-gray-900 mb-3">Perusahaan</h4>
                     <ul class="space-y-2 text-sm text-gray-600">
