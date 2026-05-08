@@ -17,6 +17,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/produk', function () {
         return view('admin.product.index');
     })->name('product.index');
+
+    Route::get('/kategori', function () {
+        return view('admin.category.index');
+    })->name('category.index');
 });
 
 // ========================

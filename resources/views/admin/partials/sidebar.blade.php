@@ -122,7 +122,7 @@
             <span class="nav-icon">📦</span> Produk
         </a>
 
-        <a href="#" class="nav-item">
+        <a href="{{ route('admin.category.index') }}" class="nav-item {{ request()->routeIs('admin.category.*') ? 'active' : '' }}">
             <span class="nav-icon">⊞</span> Kategori
         </a>
 
