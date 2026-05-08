@@ -118,9 +118,10 @@
         </a>
 
         <div class="sidebar-section">Katalog</div>
-        <a href="#" class="nav-item">
+        <a href="{{ route('admin.product.index') }}" class="nav-item {{ request()->routeIs('admin.product.*') ? 'active' : '' }}">
             <span class="nav-icon">📦</span> Produk
         </a>
+
         <a href="#" class="nav-item">
             <span class="nav-icon">⊞</span> Kategori
         </a>
