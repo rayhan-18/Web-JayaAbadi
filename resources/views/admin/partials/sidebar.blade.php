@@ -127,7 +127,7 @@
         </a>
 
         <div class="sidebar-section">Transaksi</div>
-        <a href="#" class="nav-item">
+        <a href="{{ route('admin.order.index') }}" class="nav-item {{ request()->routeIs('admin.order.*') ? 'active' : '' }}">
             <span class="nav-icon">🛍️</span> Pesanan
             <span class="nav-badge">8</span>
         </a>

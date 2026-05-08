@@ -21,6 +21,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/kategori', function () {
         return view('admin.category.index');
     })->name('category.index');
+
+    Route::get('/pesanan', function () {
+        return view('admin.order.index');
+    })->name('order.index');
+
+    Route::get('/pesanan/{id}', function ($id) {
+        return view('admin.order.show', ['orderId' => $id]);
+    })->name('order.show');
 });
 
 // ========================
