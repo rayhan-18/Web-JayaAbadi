@@ -7,6 +7,15 @@ use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
 // ========================
+// ADMIN ROUTES (STATIS)
+// ========================
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard.index');
+    })->name('dashboard');
+});
+
+// ========================
 // PUBLIC ROUTES (STATIS)
 // ========================
 Route::get('/', [HomeController::class, 'index'])->name('home');
