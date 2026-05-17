@@ -243,7 +243,7 @@
         <h1>Produk</h1>
         <div class="breadcrumb">FurniHome / Produk</div>
     </div>
-    
+
     <a href="{{ route('admin.product.create') }}" class="btn-primary">
         <i class="ti ti-plus"></i> Tambah Produk
     </a>
@@ -323,7 +323,7 @@
                 <td>{{ $item['stok'] }}</td>
                 <td><span class="status-badge">{{ $item['status'] }}</span></td>
                 <td class="action-icons" style="justify-content: center;">
-                    <a href="#" class="action-btn" title="Edit"><i class="ti ti-edit"></i></a>
+                    <a href="{{ route('admin.product.edit', $item['no']) }}" class="action-btn" title="Edit"><i class="ti ti-edit"></i></a>
                     <a href="#" class="action-btn delete" title="Hapus"><i class="ti ti-trash"></i></a>
                 </td>
             </tr>
