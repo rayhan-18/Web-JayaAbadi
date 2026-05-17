@@ -157,14 +157,14 @@
         </div>
 
         <div class="sb-sec">Data</div>
-        <div class="parent" id="p-pelanggan">
+        <div class="parent {{ request()->routeIs('admin.customer.*') ? 'open' : '' }}" id="p-pelanggan">
             <div class="nav-row" onclick="tog('p-pelanggan')">
                 <div class="nr-icon-wrap"><i class="ti ti-users"></i></div> Pelanggan
                 <i class="ti ti-chevron-right chev"></i>
             </div>
             <div class="sub">
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Semua Pelanggan</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Member</a>
+                {{-- Update link "Semua Pelanggan" ke route customer.index --}}
+                <a href="{{ route('admin.customer.index') }}" class="sub-row {{ request()->routeIs('admin.customer.index') ? 'active' : '' }}"><span class="sub-dot"></span>Semua Pelanggan</a>
             </div>
         </div>
 

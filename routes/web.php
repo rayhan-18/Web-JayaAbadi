@@ -45,6 +45,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/pembayaran', function () {
         return view('admin.payment.index');
     })->name('payment.index');
+
+    Route::get('/pelanggan', function () {
+        return view('admin.customer.index');
+    })->name('customer.index');
 });
 
 // ========================
