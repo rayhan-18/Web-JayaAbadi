@@ -42,9 +42,25 @@ Route::prefix('admin')->name('admin.')->group(function () {
         return view('admin.order.index');
     })->name('order.index');
 
-    Route::get('/pesanan/{id}', function ($id) {
-        return view('admin.order.show', ['orderId' => $id]);
-    })->name('order.show');
+    Route::get('/pembayaran', function () {
+        return view('admin.payment.index');
+    })->name('payment.index');
+
+    Route::get('/pelanggan', function () {
+        return view('admin.customer.index');
+    })->name('customer.index');
+
+    Route::get('/laporan/penjualan', function () {
+        return view('admin.report.sales');
+    })->name('report.sales');
+
+    Route::get('/laporan/stok', function () {
+        return view('admin.report.stock');
+    })->name('report.stock');
+
+    Route::get('/kasir/transaksi', function () {
+        return view('admin.cashier.pos');
+    })->name('kasir.pos');
 });
 
 // ========================

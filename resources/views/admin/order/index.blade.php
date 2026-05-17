@@ -4,313 +4,224 @@
 
 @section('styles')
 <style>
+    :root {
+        --accent: #5c9e74;
+        --accent-dark: #3a5c48;
+        --accent-light: #e8f0eb;
+        --border: #e6e9e4;
+        --bg-surface: #ffffff;
+        --bg-hover: #f5f7f4;
+        --text-main: #2d3b32;
+        --text-sec: #7a9080;
+        --text-muted: #9aada2;
+        --radius-md: 10px;
+        --radius-lg: 14px;
+    }
+
+    body { color: var(--text-main); }
+
     .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 24px;
+        display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
     }
     .page-title h1 {
-        font-size: 24px;
-        font-weight: 700;
-        color: #1f2937;
-        margin: 0;
+        font-size: 22px; font-weight: 700; color: var(--text-main); margin: 0; letter-spacing: -0.02em;
     }
     .page-title .breadcrumb {
-        font-size: 13px;
-        color: #6b7280;
-        margin-top: 4px;
+        font-size: 13px; color: var(--text-sec); margin-top: 4px;
     }
+
     .stats-row {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 16px;
-        margin-bottom: 28px;
+        display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px;
     }
     .stat-card {
-        background: #fff;
-        border-radius: 16px;
-        border: 1px solid #e5e7eb;
-        padding: 20px 16px;
-        text-align: center;
-        transition: 0.2s;
+        background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border);
+        padding: 20px 16px; text-align: center; transition: all 0.2s ease;
     }
-    .stat-card .stat-icon {
-        font-size: 28px;
-        margin-bottom: 8px;
+    .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(45, 59, 50, 0.04); }
+    
+    .stat-icon {
+        width: 42px; height: 42px; border-radius: var(--radius-md);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 22px; margin: 0 auto 12px;
     }
-    .stat-card .stat-label {
-        font-size: 14px;
-        font-weight: 500;
-        color: #6b7280;
-        margin-bottom: 8px;
-    }
-    .stat-card .stat-value {
-        font-size: 32px;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-    }
-    .stat-card.all .stat-value { color: #1f2937; }
-    .stat-card.pending .stat-value { color: #f59e0b; }
-    .stat-card.proses .stat-value { color: #3b82f6; }
-    .stat-card.kirim .stat-value { color: #8b5cf6; }
-    .stat-card.selesai .stat-value { color: #10b981; }
-    .filter-bar {
-        display: flex;
-        gap: 12px;
-        margin-bottom: 24px;
-        flex-wrap: wrap;
-        align-items: center;
-    }
+    
+    .stat-card.all .stat-icon     { background: transparent; color: var(--text-sec); }
+    .stat-card.pending .stat-icon { background: transparent; color: #b89247; }
+    .stat-card.proses .stat-icon  { background: transparent; color: #5c7b9e; }
+    .stat-card.kirim .stat-icon   { background: transparent; color: #865c9e; }
+    .stat-card.selesai .stat-icon { background: transparent; color: var(--accent); }
+
+    .stat-label { font-size: 12.5px; font-weight: 600; color: var(--text-sec); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.02em; }
+    .stat-value { font-size: 26px; font-weight: 700; color: var(--text-main); letter-spacing: -0.02em; }
+    
+    .filter-bar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
     .search-box {
-        display: flex;
-        align-items: center;
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        padding: 6px 12px;
-        gap: 8px;
-        flex: 1;
-        max-width: 300px;
+        display: flex; align-items: center; background: var(--bg-surface);
+        border: 1px solid var(--border); border-radius: var(--radius-md);
+        padding: 0 14px; gap: 10px; flex: 1; max-width: 320px; height: 40px; transition: all 0.2s;
     }
-    .search-box input {
-        border: none;
-        outline: none;
-        font-size: 13px;
-        width: 100%;
+    .search-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(92, 158, 116, 0.15); }
+    .search-box i { color: var(--text-sec); font-size: 16px; }
+    .search-box input { border: none; outline: none; font-size: 13px; width: 100%; color: var(--text-main); background: transparent; }
+    .search-box input::placeholder { color: var(--text-muted); }
+    
+    .select-wrapper { position: relative; display: inline-block; }
+    .select-wrapper i.prefix-icon {
+        position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-sec); font-size: 15px; pointer-events: none;
     }
     .filter-select {
-        padding: 6px 12px;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        background: #fff;
-        font-size: 13px;
-        cursor: pointer;
+        height: 40px; padding: 0 36px 0 34px; border: 1px solid var(--border); border-radius: var(--radius-md);
+        background: var(--bg-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a9080' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
+        appearance: none; font-size: 13px; font-weight: 500; color: var(--text-main); cursor: pointer; transition: all 0.2s; min-width: 160px;
     }
+    .filter-select:hover { background-color: var(--bg-hover); border-color: #d1d6cf; }
+    .filter-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(92, 158, 116, 0.15); }
+
+    .export-dropdown { position: relative; display: inline-block; }
     .btn-export {
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        padding: 8px 16px;
-        border-radius: 8px;
-        font-size: 13px;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        transition: 0.2s;
+        background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border);
+        padding: 0 16px; height: 40px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
+        display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s;
     }
-    .btn-export:hover { background: #f9fafb; }
-    .export-dropdown {
-        position: relative;
-        display: inline-block;
-    }
+    .btn-export i { font-size: 16px; color: var(--text-sec); }
+    .btn-export:hover { background: var(--bg-hover); border-color: #d1d6cf; }
+    
     .export-dropdown-content {
-        display: none;
-        position: absolute;
-        right: 0;
-        background: #fff;
-        min-width: 160px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        border-radius: 8px;
-        z-index: 1;
-        border: 1px solid #e5e7eb;
+        display: none; position: absolute; right: 0; top: 46px; background: var(--bg-surface);
+        min-width: 180px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-radius: 10px;
+        z-index: 10; border: 1px solid var(--border); overflow: hidden;
     }
     .export-dropdown-content a {
-        padding: 8px 16px;
-        display: block;
-        text-decoration: none;
-        color: #374151;
-        font-size: 13px;
+        padding: 10px 16px; display: flex; align-items: center; gap: 10px; text-decoration: none;
+        color: var(--text-main); font-size: 13px; font-weight: 500; border-bottom: 1px solid #f0f2ef;
     }
-    .export-dropdown-content a:hover { background: #f3f4f6; }
+    .export-dropdown-content a:last-child { border-bottom: none; }
+    .export-dropdown-content a i { color: var(--text-sec); font-size: 15px; }
+    .export-dropdown-content a:hover { background: var(--bg-hover); color: var(--accent); }
+    .export-dropdown-content a:hover i { color: var(--accent); }
     .export-dropdown:hover .export-dropdown-content { display: block; }
 
-    /* LAYOUT TABEL + DETAIL PANEL */
-    .layout-order {
-        display: flex;
-        gap: 20px;
-    }
-    .table-section {
-        flex: 1;
-        min-width: 0;
-    }
-    .detail-panel {
-        width: 340px;
-        flex-shrink: 0;
-        background: #fff;
-        border-radius: 16px;
-        border: 1px solid #e5e7eb;
-        display: none;
-        flex-direction: column;
-        position: sticky;
-        top: 90px;
-        max-height: calc(100vh - 110px);
-        overflow-y: auto;
-    }
-    .detail-panel.open { display: flex; }
-    .dp-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 16px 20px;
-        border-bottom: 1px solid #f3f4f6;
-        background: #fff;
-        position: sticky;
-        top: 0;
-        z-index: 1;
-    }
-    .dp-header h3 { font-size: 16px; font-weight: 700; }
-    .dp-close {
-        width: 28px;
-        height: 28px;
-        border-radius: 8px;
-        background: #f9fafb;
-        border: 1px solid #e5e7eb;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        font-size: 14px;
-        color: #6b7280;
-    }
-    .dp-body { padding: 16px 20px; }
-    .dp-order-id { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-    .dp-row { display: flex; gap: 12px; margin-bottom: 12px; }
-    .dp-label { font-size: 12px; color: #6b7280; font-weight: 500; min-width: 100px; }
-    .dp-value { font-size: 13px; color: #1f2937; font-weight: 500; flex: 1; }
-    .dp-section-title { font-size: 13px; font-weight: 700; margin: 16px 0 10px; }
-    .dp-divider { border: none; border-top: 1px solid #f3f4f6; margin: 12px 0; }
-    .dp-product {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 12px;
-    }
-    .dp-product-img {
-        width: 44px;
-        height: 44px;
-        border-radius: 10px;
-        background: #f3f4f6;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
-        flex-shrink: 0;
-    }
-    .dp-product-name { font-size: 13px; font-weight: 600; color: #1f2937; }
-    .dp-product-qty { font-size: 11px; color: #6b7280; margin-top: 2px; }
-    .dp-product-price { margin-left: auto; font-size: 13px; font-weight: 600; white-space: nowrap; }
-    .dp-total-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 8px;
-        font-size: 13px;
-    }
-    .dp-total-row .lbl { color: #6b7280; }
-    .dp-total-row .val { font-weight: 500; }
-    .dp-total-row.grand .lbl { font-weight: 700; color: #1f2937; }
-    .dp-total-row.grand .val { font-weight: 700; color: #1a2e22; font-size: 16px; }
-    .btn-update {
-        width: 100%;
-        padding: 10px;
-        background: #1a2e22;
-        color: #fff;
-        border: none;
-        border-radius: 10px;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        margin-top: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-    .btn-update:hover { background: #2d4a35; }
-
-    .table-wrapper {
-        background: #fff;
-        border-radius: 16px;
-        border: 1px solid #e5e7eb;
-        overflow-x: auto;
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 13px;
-    }
+    .layout-order { display: flex; gap: 20px; align-items: flex-start; }
+    .table-section { flex: 1; min-width: 0; }
+    
+    .table-wrapper { background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border); overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 960px; } /* Lebar dinaikkan sedikit agar kolom Sumber muat lega */
     th {
-        text-align: left;
-        padding: 14px 16px;
-        background: #f9fafb;
-        font-weight: 600;
-        color: #4b5563;
-        border-bottom: 1px solid #e5e7eb;
-        white-space: nowrap;
+        text-align: left; padding: 14px 20px; background: var(--bg-hover); font-weight: 600;
+        color: var(--text-sec); border-bottom: 1px solid var(--border); font-size: 12px;
+        text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;
     }
-    td {
-        padding: 14px 16px;
-        border-bottom: 1px solid #f3f4f6;
-        vertical-align: middle;
-    }
-    tbody tr:hover { background: #f9fafb; }
+    td { padding: 14px 20px; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--text-main); }
+    tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--bg-hover); }
 
     .customer-info { line-height: 1.4; }
-    .customer-name { font-weight: 500; color: #1f2937; }
-    .customer-email { font-size: 11px; color: #9ca3af; margin-top: 2px; }
-    .status-badge {
-        display: inline-block;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: 600;
-        white-space: nowrap;
-    }
-    .status-pending { background: #fef3c7; color: #b45309; }
-    .status-diproses { background: #dbeafe; color: #1d4ed8; }
-    .status-dikirim { background: #e0e7ff; color: #4338ca; }
-    .status-selesai { background: #dcfce7; color: #15803d; }
-    .action-btn {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        background: #f9fafb;
-        border: 1px solid #e5e7eb;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        color: #6b7280;
-        font-size: 16px;
-        transition: 0.15s;
-    }
-    .action-btn:hover { background: #f3f4f6; color: #374151; }
+    .customer-name { font-weight: 600; color: var(--text-main); font-size: 13.5px; }
+    .customer-email { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
 
-    .pagination {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 24px;
-        font-size: 13px;
-        color: #6b7280;
+    /* Muted Premium Badges */
+    .status-badge {
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap;
     }
-    .pagination-links {
-        display: flex;
-        gap: 8px;
+    .status-pending  { background: #fdf5e6; color: #8a5a2e; }
+    .status-diproses { background: #f0f4f8; color: #4a6b8c; }
+    .status-dikirim  { background: #f3f0f8; color: #6b4a8c; }
+    .status-selesai  { background: var(--accent-light); color: var(--accent-dark); }
+    
+    .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; }
+    .status-pending::before  { background: #d99e52; }
+    .status-diproses::before { background: #6993c4; }
+    .status-dikirim::before  { background: #9269c4; }
+    .status-selesai::before  { background: var(--accent); }
+
+    /* Premium Channel Badges (Online vs POS) */
+    .channel-badge {
+        display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+        padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap;
     }
+    .channel-online  { background: #eef7f2; color: #3b7a54; border: 1px solid #dbeee3; }
+    .channel-offline { background: #f1f3f5; color: #495057; border: 1px solid #e9ecef; }
+    .channel-badge i { font-size: 13px; }
+
+    .action-btn {
+        width: 32px; height: 32px; border-radius: 8px; background: var(--bg-surface);
+        border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center;
+        cursor: pointer; color: var(--text-sec); font-size: 16px; transition: 0.15s; text-decoration: none;
+    }
+    .action-btn:hover { background: var(--bg-hover); color: var(--accent); border-color: #d1d6cf; }
+
+    .pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; font-size: 13px; color: var(--text-sec); }
+    .pagination-links { display: flex; gap: 6px; }
     .pagination-links a, .pagination-links span {
-        padding: 6px 10px;
-        border: 1px solid #e5e7eb;
-        border-radius: 6px;
-        text-decoration: none;
-        color: #4b5563;
+        display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 30px; padding: 0 10px;
+        border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text-main); font-weight: 500;
+        transition: 0.15s; background: var(--bg-surface);
     }
-    .pagination-links a:hover { background: #f3f4f6; }
-    .pagination-links .active {
-        background: #4a7c5e;
-        border-color: #4a7c5e;
-        color: white;
+    .pagination-links a:hover { background: var(--bg-hover); border-color: var(--accent); color: var(--accent); }
+    .pagination-links .active { background: var(--accent); border-color: var(--accent); color: white; }
+
+    .detail-panel {
+        width: 360px; flex-shrink: 0; background: #ffffff !important; border-radius: var(--radius-lg);
+        border: 1px solid var(--border); display: none; flex-direction: column;
+        position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow-y: auto;
+        box-shadow: -4px 0 24px rgba(0, 0, 0, 0.04);
     }
+    .detail-panel.open { display: flex; animation: slideIn 0.3s ease-out; }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+    
+    .detail-panel::-webkit-scrollbar { width: 5px; }
+    .detail-panel::-webkit-scrollbar-track { background: transparent; }
+    .detail-panel::-webkit-scrollbar-thumb { background: #d1d6cf; border-radius: 10px; }
+    .detail-panel::-webkit-scrollbar-thumb:hover { background: #9aada2; }
+
+    .dp-header {
+        display: flex; justify-content: space-between; align-items: center; padding: 18px 20px;
+        border-bottom: 1px solid var(--border); 
+        background: #ffffff !important; 
+        position: sticky; top: 0; z-index: 20; 
+    }
+    .dp-header h3 { font-size: 15px; font-weight: 700; margin: 0; color: var(--text-main); }
+    .dp-close {
+        width: 30px; height: 30px; border-radius: 8px; background: var(--bg-hover); border: 1px solid transparent;
+        display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--text-sec); transition: 0.2s;
+    }
+    .dp-close:hover { background: #fdf5f5; color: #c47a7a; border-color: #e8caca; }
+    
+    .dp-body { padding: 20px; }
+    .dp-order-id { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 16px; letter-spacing: -0.02em; }
+    .dp-row { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+    .dp-label { font-size: 12.5px; color: var(--text-sec); font-weight: 500; min-width: 100px; }
+    .dp-value { font-size: 13px; color: var(--text-main); font-weight: 500; flex: 1; line-height: 1.4; }
+    
+    .dp-section-title { font-size: 13px; font-weight: 700; color: var(--text-main); margin: 20px 0 14px; text-transform: uppercase; letter-spacing: 0.02em; }
+    .dp-divider { border: none; border-top: 1px dashed var(--border); margin: 16px 0; }
+    
+    .dp-product { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .dp-product-img {
+        width: 42px; height: 42px; border-radius: 10px; background: transparent;
+        border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+        font-size: 20px; color: var(--text-sec); flex-shrink: 0;
+    }
+    .dp-product-name { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 2px; }
+    .dp-product-qty { font-size: 11.5px; color: var(--text-muted); }
+    .dp-product-price { margin-left: auto; font-size: 13.5px; font-weight: 600; color: var(--text-main); white-space: nowrap; }
+    
+    .dp-total-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; }
+    .dp-total-row .lbl { color: var(--text-sec); }
+    .dp-total-row .val { font-weight: 500; color: var(--text-main); }
+    .dp-total-row.grand { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+    .dp-total-row.grand .lbl { font-weight: 700; color: var(--text-main); font-size: 14px; }
+    .dp-total-row.grand .val { font-weight: 700; color: var(--accent); font-size: 18px; }
+    
+    .btn-update {
+        width: 100%; padding: 12px; background-color: #5c9e74 !important; color: #ffffff !important;
+        border: none; border-radius: 10px; font-size: 13px; font-weight: 600;
+        cursor: pointer; margin-top: 24px; display: flex; align-items: center; justify-content: center; gap: 8px;
+        box-shadow: 0 2px 6px rgba(92, 158, 116, 0.2); outline: none; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); -webkit-tap-highlight-color: transparent;
+    }
+    .btn-update:hover { background-color: #3a5c48 !important; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(58, 92, 72, 0.3); }
+    .btn-update:active { transform: scale(0.97); background-color: #2d4a3a !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); transition: all 0.1s; }
 </style>
 @endsection
 
@@ -318,34 +229,51 @@
 <div class="page-header">
     <div class="page-title">
         <h1>Pesanan</h1>
-        <div class="breadcrumb">Dashboard / Pesanan</div>
+        <div class="breadcrumb">FurniHome / Pesanan</div>
     </div>
     <div class="export-dropdown">
-        <button class="btn-export">📥 Export Laporan ▾</button>
+        <button class="btn-export"><i class="ti ti-download"></i> Export Laporan <i class="ti ti-chevron-down" style="font-size: 14px;"></i></button>
         <div class="export-dropdown-content">
-            <a href="#">Export PDF</a>
-            <a href="#">Export Excel</a>
-            <a href="#">Export CSV</a>
+            <a href="#"><i class="ti ti-file-type-pdf"></i> Export PDF</a>
+            <a href="#"><i class="ti ti-file-spreadsheet"></i> Export Excel</a>
+            <a href="#"><i class="ti ti-file-type-csv"></i> Export CSV</a>
         </div>
     </div>
 </div>
 
-<!-- Statistik Cards -->
 <div class="stats-row">
-    <div class="stat-card all"><div class="stat-icon">📦</div><div class="stat-label">Semua Pesanan</div><div class="stat-value">120</div></div>
-    <div class="stat-card pending"><div class="stat-icon">⏳</div><div class="stat-label">Pending</div><div class="stat-value">12</div></div>
-    <div class="stat-card proses"><div class="stat-icon">⚙️</div><div class="stat-label">Diproses</div><div class="stat-value">25</div></div>
-    <div class="stat-card kirim"><div class="stat-icon">🚚</div><div class="stat-label">Dikirim</div><div class="stat-value">45</div></div>
-    <div class="stat-card selesai"><div class="stat-icon">✅</div><div class="stat-label">Selesai</div><div class="stat-value">38</div></div>
+    <div class="stat-card all"><div class="stat-icon"><i class="ti ti-package"></i></div><div class="stat-label">Semua Pesanan</div><div class="stat-value">120</div></div>
+    <div class="stat-card pending"><div class="stat-icon"><i class="ti ti-clock-hour-4"></i></div><div class="stat-label">Pending</div><div class="stat-value">12</div></div>
+    <div class="stat-card proses"><div class="stat-icon"><i class="ti ti-settings"></i></div><div class="stat-label">Diproses</div><div class="stat-value">25</div></div>
+    <div class="stat-card kirim"><div class="stat-icon"><i class="ti ti-truck"></i></div><div class="stat-label">Dikirim</div><div class="stat-value">45</div></div>
+    <div class="stat-card selesai"><div class="stat-icon"><i class="ti ti-circle-check"></i></div><div class="stat-label">Selesai</div><div class="stat-value">38</div></div>
 </div>
 
-<!-- Filter -->
 <div class="filter-bar">
-    <div class="search-box"><span>🔍</span><input type="text" placeholder="Cari pesanan..."></div>
-    <select class="filter-select"><option>Semua Status</option><option>Pending</option><option>Diproses</option><option>Dikirim</option><option>Selesai</option></select>
+    <div class="search-box">
+        <i class="ti ti-search"></i>
+        <input type="text" placeholder="Cari Order ID, Pelanggan...">
+    </div>
+    <div class="select-wrapper">
+        <i class="ti ti-filter prefix-icon"></i>
+        <select class="filter-select">
+            <option>Semua Saluran</option>
+            <option>Website Online</option>
+            <option>POS Cashier</option>
+        </select>
+    </div>
+    <div class="select-wrapper">
+        <i class="ti ti-circle-check prefix-icon"></i>
+        <select class="filter-select">
+            <option>Semua Status</option>
+            <option>Pending</option>
+            <option>Diproses</option>
+            <option>Dikirim</option>
+            <option>Selesai</option>
+        </select>
+    </div>
 </div>
 
-<!-- Layout Tabel + Detail Panel -->
 <div class="layout-order">
     <div class="table-section">
         <div class="table-wrapper">
@@ -353,39 +281,51 @@
                 <thead>
                     <tr>
                         <th>Order ID</th>
+                        <th>Sumber</th> {{-- KOLOM BARU --}}
                         <th>Pelanggan</th>
                         <th>Tanggal</th>
                         <th>Total</th>
-                        <th>Metode Pembayaran</th>
+                        <th>Pembayaran</th>
                         <th>Status</th>
-                        <th>Aksi</th>
+                        <th style="text-align: center;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @php
+                        // Array Diperbarui: Ditambahkan properti 'channel' untuk membedakan asal pesanan
                         $orders = [
-                            ['id'=>'#ORD-00123','nama'=>'Rayhan Maulana','email'=>'rayhan@gmail.com','tanggal'=>'26 Mei 2024 10:30 WIB','total'=>2750000,'metode'=>'E-Wallet OVO','status'=>'Diproses','alamat'=>'Jl. Merdeka No. 123, Bandung','items'=>[['nama'=>'Kursi Minimalis Kayu','qty'=>1,'harga'=>2750000,'emoji'=>'🪑']],'subtotal'=>2750000,'ongkir'=>50000,'total2'=>2800000,'hp'=>'081234567890'],
-                            ['id'=>'#ORD-00122','nama'=>'Siti Aisyah','email'=>'aisyah@gmail.com','tanggal'=>'25 Mei 2024 15:45 WIB','total'=>1850000,'metode'=>'OVO','status'=>'Diproses','alamat'=>'Jl. Kenanga No. 5, Bandung','items'=>[['nama'=>'Meja Samping Walnut','qty'=>1,'harga'=>1850000,'emoji'=>'🪵']],'subtotal'=>1850000,'ongkir'=>50000,'total2'=>1900000,'hp'=>'081298765432'],
-                            ['id'=>'#ORD-00121','nama'=>'Budi Santoso','email'=>'budi@gmail.com','tanggal'=>'25 Mei 2024 11:20 WIB','total'=>3200000,'metode'=>'Transfer Bank Mandiri ****5678','status'=>'Diproses','alamat'=>'Jl. Sudirman No. 88, Jakarta Pusat','items'=>[['nama'=>'Sofa 3 Seater Premium','qty'=>1,'harga'=>3200000,'emoji'=>'🛋️']],'subtotal'=>3200000,'ongkir'=>75000,'total2'=>3275000,'hp'=>'085612345678'],
-                            ['id'=>'#ORD-00120','nama'=>'Dewi Anggraini','email'=>'dewii@gmail.com','tanggal'=>'24 Mei 2024 09:15 WIB','total'=>950000,'metode'=>'COD Bayar di tempat','status'=>'Pending','alamat'=>'Jl. Mawar No. 12, Surabaya','items'=>[['nama'=>'Rak Buku Minimalis','qty'=>1,'harga'=>950000,'emoji'=>'📚']],'subtotal'=>950000,'ongkir'=>0,'total2'=>950000,'hp'=>'087700011234'],
-                            ['id'=>'#ORD-00119','nama'=>'Ahmad Fauzi','email'=>'ahmad@gmail.com','tanggal'=>'24 Mei 2024 16:50 WIB','total'=>4500000,'metode'=>'Credit Card VISA ****4567','status'=>'Dikirim','alamat'=>'Jl. Gatot Subroto No. 45, Semarang','items'=>[['nama'=>'Tempat Tidur King Size','qty'=>1,'harga'=>3500000,'emoji'=>'🛏️'],['nama'=>'Nakas Minimalis','qty'=>2,'harga'=>500000,'emoji'=>'🗄️']],'subtotal'=>4500000,'ongkir'=>100000,'total2'=>4600000,'hp'=>'082155556666'],
-                            ['id'=>'#ORD-00118','nama'=>'Nina Karlina','email'=>'nina@gmail.com','tanggal'=>'23 Mei 2024 12:10 WIB','total'=>1250000,'metode'=>'E-Wallet DANA','status'=>'Selesai','alamat'=>'Jl. Pahlawan No. 3, Yogyakarta','items'=>[['nama'=>'Kursi Makan Set 4','qty'=>1,'harga'=>1250000,'emoji'=>'🪑']],'subtotal'=>1250000,'ongkir'=>50000,'total2'=>1300000,'hp'=>'081288889999'],
-                            ['id'=>'#ORD-00117','nama'=>'Rizky Pratama','email'=>'rizky@gmail.com','tanggal'=>'23 Mei 2024 10:05 WIB','total'=>2150000,'metode'=>'Transfer Bank BNI ****7890','status'=>'Selesai','alamat'=>'Jl. Diponegoro No. 77, Malang','items'=>[['nama'=>'Lemari Hias Minimalis','qty'=>1,'harga'=>1650000,'emoji'=>'🚪'],['nama'=>'Cermin Dinding Oval','qty'=>1,'harga'=>500000,'emoji'=>'🪞']],'subtotal'=>2150000,'ongkir'=>50000,'total2'=>2200000,'hp'=>'085677778888'],
-                            ['id'=>'#ORD-00116','nama'=>'Larasati Putri','email'=>'larasati@gmail.com','tanggal'=>'22 Mei 2024 14:35 WIB','total'=>3750000,'metode'=>'Credit Card Mastercard ****3210','status'=>'Dikirim','alamat'=>'Jl. Ahmad Yani No. 20, Medan','items'=>[['nama'=>'Meja Kerja Ergonomis','qty'=>1,'harga'=>3750000,'emoji'=>'🖥️']],'subtotal'=>3750000,'ongkir'=>120000,'total2'=>3870000,'hp'=>'081344443333'],
+                            ['id'=>'#ORD-00123','channel'=>'Online','nama'=>'Rayhan Maulana','email'=>'rayhan@gmail.com','tanggal'=>'26 Mei 2024 10:30','total'=>2750000,'metode'=>'E-Wallet OVO','status'=>'Diproses','alamat'=>'Jl. Merdeka No. 123, Bandung','items'=>[['nama'=>'Kursi Minimalis Kayu','qty'=>1,'harga'=>2750000,'icon'=>'ti-armchair']],'subtotal'=>2750000,'ongkir'=>50000,'total2'=>2800000,'hp'=>'081234567890'],
+                            ['id'=>'#ORD-00122','channel'=>'POS Cashier','nama'=>'Siti Aisyah','email'=>'aisyah@gmail.com','tanggal'=>'25 Mei 2024 15:45','total'=>1850000,'metode'=>'OVO','status'=>'Diproses','alamat'=>'Ambil di Toko (Walk-in)','items'=>[['nama'=>'Meja Samping Walnut','qty'=>1,'harga'=>1850000,'icon'=>'ti-table']],'subtotal'=>1850000,'ongkir'=>0,'total2'=>1850000,'hp'=>'081298765432'],
+                            ['id'=>'#ORD-00121','channel'=>'Online','nama'=>'Budi Santoso','email'=>'budi@gmail.com','tanggal'=>'25 Mei 2024 11:20','total'=>3200000,'metode'=>'Transfer Mandiri ****5678','status'=>'Diproses','alamat'=>'Jl. Sudirman No. 88, Jakarta Pusat','items'=>[['nama'=>'Sofa 3 Seater Premium','qty'=>1,'harga'=>3200000,'icon'=>'ti-sofa']],'subtotal'=>3200000,'ongkir'=>75000,'total2'=>3275000,'hp'=>'085612345678'],
+                            ['id'=>'#ORD-00120','channel'=>'POS Cashier','nama'=>'Dewi Anggraini','email'=>'dewii@gmail.com','tanggal'=>'24 Mei 2024 09:15','total'=>950000,'metode'=>'COD Bayar di tempat','status'=>'Pending','alamat'=>'Jl. Mawar No. 12, Surabaya','items'=>[['nama'=>'Rak Buku Minimalis','qty'=>1,'harga'=>950000,'icon'=>'ti-books']],'subtotal'=>950000,'ongkir'=>0,'total2'=>950000,'hp'=>'087700011234'],
+                            ['id'=>'#ORD-00119','channel'=>'Online','nama'=>'Ahmad Fauzi','email'=>'ahmad@gmail.com','tanggal'=>'24 Mei 2024 16:50','total'=>4500000,'metode'=>'Credit Card VISA ****4567','status'=>'Dikirim','alamat'=>'Jl. Gatot Subroto No. 45, Semarang','items'=>[['nama'=>'Tempat Tidur King Size','qty'=>1,'harga'=>3500000,'icon'=>'ti-bed'],['nama'=>'Nakas Minimalis','qty'=>2,'harga'=>500000,'icon'=>'ti-archive']],'subtotal'=>4500000,'ongkir'=>100000,'total2'=>4600000,'hp'=>'082155556666'],
+                            ['id'=>'#ORD-00118','channel'=>'POS Cashier','nama'=>'Nina Karlina','email'=>'nina@gmail.com','tanggal'=>'23 Mei 2024 12:10','total'=>1250000,'metode'=>'E-Wallet DANA','status'=>'Selesai','alamat'=>'Ambil di Toko (Walk-in)','items'=>[['nama'=>'Kursi Makan Set 4','qty'=>1,'harga'=>1250000,'icon'=>'ti-armchair']],'subtotal'=>1250000,'ongkir'=>0,'total2'=>1250000,'hp'=>'081288889999'],
+                            ['id'=>'#ORD-00117','channel'=>'Online','nama'=>'Rizky Pratama','email'=>'rizky@gmail.com','tanggal'=>'23 Mei 2024 10:05','total'=>2150000,'metode'=>'Transfer BNI ****7890','status'=>'Selesai','alamat'=>'Jl. Diponegoro No. 77, Malang','items'=>[['nama'=>'Lemari Hias Minimalis','qty'=>1,'harga'=>1650000,'icon'=>'ti-door'],['nama'=>'Cermin Dinding Oval','qty'=>1,'harga'=>500000,'icon'=>'ti-frame']],'subtotal'=>2150000,'ongkir'=>50000,'total2'=>2200000,'hp'=>'085677778888'],
+                            ['id'=>'#ORD-00116','channel'=>'POS Cashier','nama'=>'Larasati Putri','email'=>'larasati@gmail.com','tanggal'=>'22 Mei 2024 14:35','total'=>3750000,'metode'=>'Credit Card MC ****3210','status'=>'Dikirim','alamat'=>'Jl. Ahmad Yani No. 20, Medan','items'=>[['nama'=>'Meja Kerja Ergonomis','qty'=>1,'harga'=>3750000,'icon'=>'ti-desk']],'subtotal'=>3750000,'ongkir'=>120000,'total2'=>3870000,'hp'=>'081344443333'],
                         ];
                     @endphp
                     @foreach($orders as $index => $o)
                     <tr>
-                        <td style="font-weight:600;">{{ $o['id'] }}</td>
+                        <td style="font-weight:600; color: var(--text-main);">{{ $o['id'] }}</td>
+                        
+                        {{-- BADGE CHANNEL ELEGAN --}}
+                        <td>
+                            @if($o['channel'] == 'Online')
+                                <span class="channel-badge channel-online"><i class="ti ti-world"></i> Website</span>
+                            @else
+                                <span class="channel-badge channel-offline"><i class="ti ti-building-store"></i> POS Kasir</span>
+                            @endif
+                        </td>
+
                         <td>
                             <div class="customer-info">
                                 <div class="customer-name">{{ $o['nama'] }}</div>
                                 <div class="customer-email">{{ $o['email'] }}</div>
                             </div>
                         </td>
-                        <td>{{ $o['tanggal'] }}</td>
-                        <td>Rp {{ number_format($o['total'], 0, ',', '.') }}</td>
-                        <td>{{ $o['metode'] }}</td>
+                        <td style="color: var(--text-sec); font-size: 12.5px;">{{ $o['tanggal'] }}</td>
+                        <td style="font-weight: 500;">Rp {{ number_format($o['total'], 0, ',', '.') }}</td>
+                        <td style="color: var(--text-sec); font-size: 12.5px;">{{ $o['metode'] }}</td>
                         <td>
                             @php
                                 $statusClass = match($o['status']) {
@@ -398,8 +338,8 @@
                             @endphp
                             <span class="status-badge {{ $statusClass }}">{{ $o['status'] }}</span>
                         </td>
-                        <td>
-                            <div class="action-btn" onclick="showDetail({{ $index }})">👁️</div>
+                        <td style="text-align: center;">
+                            <div class="action-btn" onclick="showDetail({{ $index }})" title="Lihat Detail"><i class="ti ti-eye"></i></div>
                         </td>
                     </tr>
                     @endforeach
@@ -409,29 +349,27 @@
         <div class="pagination">
             <div>Menampilkan 1 - 8 dari 120 pesanan</div>
             <div class="pagination-links">
+                <a href="#" title="Sebelumnya"><i class="ti ti-chevron-left" style="font-size: 16px;"></i></a>
                 <span class="active">1</span>
                 <a href="#">2</a>
                 <a href="#">3</a>
-                <a href="#">4</a>
-                <span>...</span>
+                <span style="border: none; background: transparent; padding: 0 4px; min-width: auto; color: var(--text-muted);">...</span>
                 <a href="#">15</a>
-                <a href="#">→</a>
+                <a href="#" title="Selanjutnya"><i class="ti ti-chevron-right" style="font-size: 16px;"></i></a>
             </div>
         </div>
     </div>
 
-    <!-- Detail Panel (sebelah kanan) -->
     <div class="detail-panel" id="detailPanel">
         <div class="dp-header">
             <h3>Detail Pesanan</h3>
-            <div class="dp-close" onclick="closeDetail()">✕</div>
+            <div class="dp-close" onclick="closeDetail()"><i class="ti ti-x"></i></div>
         </div>
         <div class="dp-body" id="detailBody"></div>
     </div>
 </div>
 
 <script>
-    // Data orders dari Blade (diencode ke JavaScript)
     const orders = @json($orders);
 
     function formatRupiah(n) {
@@ -455,7 +393,7 @@
 
         const itemsHtml = o.items.map(item => `
             <div class="dp-product">
-                <div class="dp-product-img">${item.emoji}</div>
+                <div class="dp-product-img"><i class="ti ${item.icon}"></i></div>
                 <div>
                     <div class="dp-product-name">${item.nama}</div>
                     <div class="dp-product-qty">Qty: ${item.qty}</div>
@@ -464,8 +402,17 @@
             </div>
         `).join('');
 
+        // Tentukan Badge Channel di dalam Detail Panel
+        const channelHtml = o.channel === 'Online' 
+            ? `<span class="channel-badge channel-online"><i class="ti ti-world"></i> Website</span>`
+            : `<span class="channel-badge channel-offline"><i class="ti ti-building-store"></i> POS Kasir</span>`;
+
         body.innerHTML = `
             <div class="dp-order-id">${o.id}</div>
+            <div class="dp-row">
+                <div class="dp-label">Saluran</div>
+                <div class="dp-value">${channelHtml}</div>
+            </div>
             <div class="dp-row">
                 <div class="dp-label">Status</div>
                 <div class="dp-value"><span class="status-badge ${getStatusClass(o.status)}">${o.status}</span></div>
@@ -477,37 +424,31 @@
             <div class="dp-row">
                 <div class="dp-label">Pelanggan</div>
                 <div class="dp-value">
-                    ${o.nama}<br>
-                    <span style="color:#9ca3af;font-size:11px;">${o.email}</span><br>
-                    <span style="color:#9ca3af;font-size:11px;">${o.hp || '-'}</span>
+                    <div style="font-weight: 600; margin-bottom: 2px;">${o.nama}</div>
+                    <div style="color: var(--text-sec); font-size: 11.5px;">${o.email}</div>
+                    <div style="color: var(--text-sec); font-size: 11.5px;">${o.hp || '-'}</div>
                 </div>
             </div>
             <div class="dp-row">
-                <div class="dp-label">Alamat</div>
-                <div class="dp-value" style="font-size:12px;">${o.alamat}</div>
+                <div class="dp-label">Alamat / Logistik</div>
+                <div class="dp-value" style="font-size:12.5px; line-height: 1.5;">${o.alamat}</div>
             </div>
             <div class="dp-row">
-                <div class="dp-label">Metode Bayar</div>
+                <div class="dp-label">Pembayaran</div>
                 <div class="dp-value">${o.metode}</div>
             </div>
             <hr class="dp-divider">
             <div class="dp-section-title">Produk (${o.items.length})</div>
             ${itemsHtml}
-            <hr class="dp-divider">
-            <div class="dp-total-row">
-                <span class="lbl">Subtotal</span>
-                <span class="val">${formatRupiah(o.subtotal)}</span>
-            </div>
-            <div class="dp-total-row">
-                <span class="lbl">Ongkos Kirim</span>
-                <span class="val">${formatRupiah(o.ongkir)}</span>
-            </div>
-            <hr class="dp-divider">
             <div class="dp-total-row grand">
-                <span class="lbl">Total</span>
+                <span class="lbl">Total Pembayaran</span>
                 <span class="val">${formatRupiah(o.total2)}</span>
             </div>
-            <button class="btn-update" onclick="event.stopPropagation(); alert('Update status untuk ${o.id}')">Update Status</button>
+            <div style="display:flex; justify-content: space-between; font-size: 11.5px; color: var(--text-sec); margin-top: 6px;">
+                <span>Subtotal: ${formatRupiah(o.subtotal)}</span>
+                <span>Ongkir: ${formatRupiah(o.ongkir)}</span>
+            </div>
+            <button class="btn-update" onclick="event.stopPropagation(); alert('Update status untuk ${o.id}')"><i class="ti ti-refresh"></i> Update Status Pesanan</button>
         `;
 
         panel.classList.add('open');

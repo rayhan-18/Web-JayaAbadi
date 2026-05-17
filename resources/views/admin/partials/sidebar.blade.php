@@ -129,7 +129,6 @@
             </div>
             <div class="sub">
                 <a href="{{ route('admin.category.index') }}" class="sub-row {{ request()->routeIs('admin.category.index') ? 'active' : '' }}"><span class="sub-dot"></span>Semua Kategori</a>
-                
                 <a href="{{ route('admin.category.create') }}" class="sub-row {{ request()->routeIs('admin.category.create') ? 'active' : '' }}"><span class="sub-dot"></span>Tambah Kategori</a>
             </div>
         </div>
@@ -142,45 +141,39 @@
                 <i class="ti ti-chevron-right chev" style="margin-left:4px"></i>
             </div>
             <div class="sub">
-                <a href="{{ route('admin.order.index') }}" class="sub-row"><span class="sub-dot"></span>Semua Pesanan</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Pending</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Dikirim</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Selesai</a>
+                <a href="{{ route('admin.order.index') }}" class="sub-row {{ request()->routeIs('admin.order.index') ? 'active' : '' }}"><span class="sub-dot"></span>Semua Pesanan</a>
             </div>
         </div>
 
-        <div class="parent" id="p-bayar">
+        <div class="parent {{ request()->routeIs('admin.payment.*') ? 'open' : '' }}" id="p-bayar">
             <div class="nav-row" onclick="tog('p-bayar')">
                 <div class="nr-icon-wrap"><i class="ti ti-receipt"></i></div> Pembayaran
                 <i class="ti ti-chevron-right chev"></i>
             </div>
             <div class="sub">
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Riwayat Pembayaran</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Konfirmasi</a>
+                <a href="{{ route('admin.payment.index') }}" class="sub-row {{ request()->routeIs('admin.payment.index') ? 'active' : '' }}"><span class="sub-dot"></span>Riwayat Pembayaran</a>
             </div>
         </div>
 
         <div class="sb-sec">Data</div>
-        <div class="parent" id="p-pelanggan">
+        <div class="parent {{ request()->routeIs('admin.customer.*') ? 'open' : '' }}" id="p-pelanggan">
             <div class="nav-row" onclick="tog('p-pelanggan')">
                 <div class="nr-icon-wrap"><i class="ti ti-users"></i></div> Pelanggan
                 <i class="ti ti-chevron-right chev"></i>
             </div>
             <div class="sub">
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Semua Pelanggan</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Member</a>
+                <a href="{{ route('admin.customer.index') }}" class="sub-row {{ request()->routeIs('admin.customer.index') ? 'active' : '' }}"><span class="sub-dot"></span>Semua Pelanggan</a>
             </div>
         </div>
 
-        <div class="parent" id="p-laporan">
+        <div class="parent {{ request()->routeIs('admin.report.*') ? 'open' : '' }}" id="p-laporan">
             <div class="nav-row" onclick="tog('p-laporan')">
                 <div class="nr-icon-wrap"><i class="ti ti-report-analytics"></i></div> Laporan
                 <i class="ti ti-chevron-right chev"></i>
             </div>
             <div class="sub">
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Penjualan</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Stok</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Keuangan</a>
+                <a href="{{ route('admin.report.sales') }}" class="sub-row {{ request()->routeIs('admin.report.sales') ? 'active' : '' }}"><span class="sub-dot"></span>Penjualan</a>
+                <a href="{{ route('admin.report.stock') }}" class="sub-row {{ request()->routeIs('admin.report.stock') ? 'active' : '' }}"><span class="sub-dot"></span>Stok</a>
             </div>
         </div>
 
@@ -204,7 +197,7 @@
                 <i class="ti ti-chevron-right chev"></i>
             </div>
             <div class="sub">
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Transaksi POS</a>
+                <a href="{{ route('admin.kasir.pos') }}" class="sub-row {{ request()->routeIs('admin.casier.pos') ? 'active' : '' }}"><span class="sub-dot"></span>Transaksi POS</a>
                 <a href="#" class="sub-row"><span class="sub-dot"></span>Shift Kasir</a>
                 <a href="#" class="sub-row"><span class="sub-dot"></span>Diskon & Voucher</a>
                 <a href="#" class="sub-row"><span class="sub-dot"></span>Riwayat Kasir</a>

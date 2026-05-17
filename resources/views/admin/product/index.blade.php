@@ -43,7 +43,7 @@
     
     /* Premium Button Style - Direct Hex Colors */
     .btn-primary {
-        background-color: #5c9e74 !important; /* Gunakan Hex langsung & !important untuk menimpa konflik */
+        background-color: #5c9e74 !important;
         color: #ffffff !important;
         padding: 10px 20px;
         border-radius: 10px;
@@ -62,14 +62,14 @@
     }
 
     .btn-primary:hover {
-        background-color: #3a5c48 !important; /* Hijau lebih gelap saat di-hover */
+        background-color: #3a5c48 !important;
         transform: translateY(-2px);
         box-shadow: 0 6px 15px rgba(58, 92, 72, 0.3);
     }
 
     .btn-primary:active {
         transform: scale(0.95);
-        background-color: #2d4a3a !important; /* Hijau sangat gelap saat ditekan */
+        background-color: #2d4a3a !important;
         box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         transition: all 0.1s;
     }
@@ -146,7 +146,7 @@
     }
     .filter-select {
         height: 40px;
-        padding: 0 36px 0 34px; /* Space untuk ikon kiri dan panah kanan */
+        padding: 0 36px 0 34px;
         border: 1px solid var(--border);
         border-radius: var(--radius-md);
         background: var(--bg-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a9080' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
@@ -188,14 +188,25 @@
         color: var(--text-main); font-weight: 500; vertical-align: middle;
     }
     tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--bg-hover); }
 
+    /* AKTIF: Style Modifikasi untuk Gambar Produk Realistis */
     .product-img {
-        width: 40px; height: 40px;
-        background: transparent; 
+        width: 44px; height: 44px;
+        background: var(--bg-hover); 
         border: 1px solid var(--border);
-        border-radius: 10px;
+        border-radius: 8px;
+        overflow: hidden;
         display: flex; align-items: center; justify-content: center;
-        font-size: 20px; color: var(--text-sec);
+        flex-shrink: 0;
+    }
+    .product-img img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        transition: transform 0.2s ease;
+    }
+    tbody tr:hover .product-img img {
+        transform: scale(1.08); /* Efek zoom mikro saat baris tabel di-hover */
     }
 
     .status-badge {
@@ -295,23 +306,25 @@
         </thead>
         <tbody>
             @php
+                // Array Diperbarui: Kunci 'icon' diganti menjadi 'img' yang mengarah ke link gambar furnitur asli
                 $produk = [
-                    ['no'=>1, 'icon'=>'ti-armchair', 'nama'=>'Kursi Minimalis Kayu', 'kategori'=>'Kursi', 'harga'=>750000, 'stok'=>45, 'status'=>'Aktif'],
-                    ['no'=>2, 'icon'=>'ti-table', 'nama'=>'Meja Makan Jati', 'kategori'=>'Meja', 'harga'=>2500000, 'stok'=>38, 'status'=>'Aktif'],
-                    ['no'=>3, 'icon'=>'ti-door', 'nama'=>'Lemari Pakaian 3 Pintu', 'kategori'=>'Lemari', 'harga'=>3200000, 'stok'=>30, 'status'=>'Aktif'],
-                    ['no'=>4, 'icon'=>'ti-sofa', 'nama'=>'Sofa Minimalis Abu', 'kategori'=>'Sofa', 'harga'=>4500000, 'stok'=>28, 'status'=>'Aktif'],
-                    ['no'=>5, 'icon'=>'ti-books', 'nama'=>'Rak Buku Minimalis', 'kategori'=>'Rak', 'harga'=>850000, 'stok'=>25, 'status'=>'Aktif'],
-                    ['no'=>6, 'icon'=>'ti-coffee', 'nama'=>'Meja Kopi Bulat', 'kategori'=>'Meja', 'harga'=>650000, 'stok'=>40, 'status'=>'Aktif'],
-                    ['no'=>7, 'icon'=>'ti-bed', 'nama'=>'Tempat Tidur Queen', 'kategori'=>'Tempat Tidur', 'harga'=>3750000, 'stok'=>15, 'status'=>'Aktif'],
-                    ['no'=>8, 'icon'=>'ti-device-tv', 'nama'=>'Meja TV Minimalis', 'kategori'=>'Meja', 'harga'=>1350000, 'stok'=>33, 'status'=>'Aktif'],
+                    ['no'=>1, 'img'=>'https://images.unsplash.com/photo-1505797149-43b0069ec26b?w=100&auto=format&fit=crop&q=60', 'nama'=>'Kursi Minimalis Kayu', 'kategori'=>'Kursi', 'harga'=>750000, 'stok'=>45, 'status'=>'Aktif'],
+                    ['no'=>2, 'img'=>'https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?w=100&auto=format&fit=crop&q=60', 'nama'=>'Meja Makan Jati Set', 'kategori'=>'Meja', 'harga'=>2500000, 'stok'=>38, 'status'=>'Aktif'],
+                    ['no'=>3, 'img'=>'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=100&auto=format&fit=crop&q=60', 'nama'=>'Lemari Pakaian 3 Pintu', 'kategori'=>'Lemari', 'harga'=>3200000, 'stok'=>30, 'status'=>'Aktif'],
+                    ['no'=>4, 'img'=>'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&auto=format&fit=crop&q=60', 'nama'=>'Sofa Minimalis Grey', 'kategori'=>'Sofa', 'harga'=>4500000, 'stok'=>28, 'status'=>'Aktif'],
+                    ['no'=>5, 'img'=>'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=100&auto=format&fit=crop&q=60', 'nama'=>'Rak Buku Kayu Minimalis', 'kategori'=>'Rak', 'harga'=>850000, 'stok'=>25, 'status'=>'Aktif'],
+                    ['no'=>6, 'img'=>'https://images.unsplash.com/photo-1532372320978-9b4d7a92b24d?w=100&auto=format&fit=crop&q=60', 'nama'=>'Meja Samping Walnut', 'kategori'=>'Meja', 'harga'=>650000, 'stok'=>40, 'status'=>'Aktif'],
+                    ['no'=>7, 'img'=>'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=100&auto=format&fit=crop&q=60', 'nama'=>'Sofa Velvet Emerald Luxury', 'kategori'=>'Sofa', 'harga'=>3750000, 'stok'=>15, 'status'=>'Aktif'],
+                    ['no'=>8, 'img'=>'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&auto=format&fit=crop&q=60', 'nama'=>'Kursi Cafe Industrial', 'kategori'=>'Kursi', 'harga'=>1350000, 'stok'=>33, 'status'=>'Aktif'],
                 ];
             @endphp
             @foreach($produk as $item)
             <tr>
-                <td style="color: var(--text-sec);">{{ $item['no'] }}</td>
+                <td style="color: var(--text-sec); layout-grid: center;">{{ $item['no'] }}</td>
                 <td>
                     <div style="display: flex; align-items: center; gap: 12px;">
-                        <div class="product-img"><i class="ti {{ $item['icon'] }}"></i></div>
+                        {{-- SEKARANG MENGGUNAKAN IMAGE TAG DENGAN LINK REALISTIS --}}
+                        <div class="product-img"><img src="{{ $item['img'] }}" alt="{{ $item['nama'] }}"></div>
                         <div>
                             <strong style="color: var(--text-main); font-size: 13.5px;">{{ $item['nama'] }}</strong><br>
                             <span style="font-size:11.5px; color: var(--text-muted);">SKU: {{ strtoupper(substr($item['nama'],0,3)).'-'.str_pad($item['no'],3,'0',STR_PAD_LEFT) }}</span>
