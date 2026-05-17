@@ -3,93 +3,136 @@
 
 @section('styles')
 <style>
-    /* Reset & Variables */
+    /* Reset & Premium Variables based on Sidebar & Topbar */
     :root {
-        --accent: #4a7c5e;
-        --border: #e5e7eb;
-        --text-secondary: #6b7280;
-        --text-muted: #9ca3af;
+        --accent: #5c9e74;
+        --accent-dark: #3a5c48;
+        --accent-light: #e8f0eb;
+        --border: #e6e9e4;
+        --bg-surface: #ffffff;
+        --bg-hover: #f5f7f4;
+        --text-main: #2d3b32;
+        --text-sec: #7a9080;
+        --text-muted: #9aada2;
+        --radius-md: 10px;
+        --radius-lg: 14px;
     }
+
+    body { color: var(--text-main); }
+
+    /* Page Header */
+    .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+    }
+    .page-title h1 {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text-main);
+        letter-spacing: -0.02em;
+    }
+    .page-title p {
+        font-size: 13px;
+        color: var(--text-sec);
+        margin-top: 4px;
+    }
+    .date-filter {
+        display: flex; align-items: center; gap: 8px;
+        border: 1px solid var(--border);
+        background: var(--bg-surface);
+        border-radius: var(--radius-md);
+        padding: 8px 14px; font-size: 12.5px;
+        color: var(--text-sec); cursor: pointer;
+        transition: background 0.15s;
+    }
+    .date-filter:hover { background: var(--bg-hover); }
+    .date-filter i { color: var(--accent); font-size: 16px; }
 
     /* Stats Grid */
     .stats-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 20px;
-        margin-bottom: 28px;
+        margin-bottom: 24px;
     }
     .stat-card {
-        background: #fff;
-        border-radius: 16px;
+        background: var(--bg-surface);
+        border-radius: var(--radius-lg);
         padding: 20px;
         border: 1px solid var(--border);
-        box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-        transition: all 0.2s;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .stat-card:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(45, 59, 50, 0.04);
     }
     .stat-top {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        margin-bottom: 12px;
+        margin-bottom: 14px;
     }
-    .stat-info {
-        flex: 1;
-    }
+    .stat-info { flex: 1; }
     .stat-label {
-        font-size: 13px;
-        font-weight: 500;
-        color: var(--text-secondary);
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--text-sec);
         margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
     }
     .stat-value {
-        font-size: 28px;
+        font-size: 26px;
         font-weight: 700;
-        color: #1f2937;
+        color: var(--text-main);
         line-height: 1.2;
+        letter-spacing: -0.02em;
     }
     .stat-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 14px;
+        width: 42px;
+        height: 42px;
+        border-radius: var(--radius-md);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 24px;
+        font-size: 20px;
+        flex-shrink: 0;
     }
-    .stat-icon.green  { background: #e8f5ee; color: #2e7d64; }
-    .stat-icon.orange { background: #fef3e6; color: #e68a2e; }
-    .stat-icon.teal   { background: #e0f2fe; color: #0f7b6e; }
-    .stat-icon.gray   { background: #f3f4f6; color: #6b7280; }
+    /* Premium Icon Colors - Tanpa Background */
+    .icon-green { background: transparent; color: var(--accent); }
+    .icon-blue  { background: transparent; color: #5c7b9e; }
+    .icon-gold  { background: transparent; color: #b89247; }
+    .icon-gray  { background: transparent; color: var(--text-sec); }
+
     .stat-change {
         font-size: 12px;
         display: flex;
         align-items: center;
         gap: 4px;
-        margin-top: 8px;
+        font-weight: 600;
     }
-    .stat-change.up   { color: #10b981; }
-    .stat-change.down { color: #ef4444; }
-    .stat-change span { color: var(--text-muted); font-weight: normal; }
+    .stat-change.up   { color: var(--accent); }
+    .stat-change.down { color: #c47a7a; }
+    .stat-change span { color: var(--text-muted); font-weight: 400; }
 
     /* Two Column Layout */
     .two-col {
         display: grid;
         grid-template-columns: 1fr 340px;
-        gap: 24px;
+        gap: 20px;
     }
     .left-col, .right-col {
         display: flex;
         flex-direction: column;
-        gap: 24px;
+        gap: 20px;
     }
 
-    /* Chart Card */
+    /* Cards */
     .card {
-        background: #fff;
-        border-radius: 16px;
+        background: var(--bg-surface);
+        border-radius: var(--radius-lg);
         border: 1px solid var(--border);
         overflow: hidden;
     }
@@ -97,210 +140,110 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 16px 20px;
+        padding: 18px 20px;
         border-bottom: 1px solid var(--border);
-        background: #fff;
     }
     .card-title {
-        font-size: 16px;
-        font-weight: 600;
-        color: #1f2937;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text-main);
+        letter-spacing: -0.01em;
     }
     .dropdown-btn {
-        display: flex;
-        align-items: center;
-        gap: 6px;
+        display: flex; align-items: center; gap: 6px;
         border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 5px 12px;
-        font-size: 12px;
-        color: var(--text-secondary);
-        cursor: pointer;
-        background: #fff;
+        border-radius: 6px; padding: 6px 12px;
+        font-size: 12px; font-weight: 500;
+        color: var(--text-sec); cursor: pointer;
+        background: var(--bg-surface); transition: background 0.15s;
     }
+    .dropdown-btn:hover { background: var(--bg-hover); }
+    .link-btn {
+        font-size: 12.5px; font-weight: 600;
+        color: var(--accent); text-decoration: none;
+        transition: color 0.15s;
+    }
+    .link-btn:hover { color: var(--accent-dark); }
+
+    /* Chart Area */
     .chart-legend {
-        display: flex;
-        gap: 20px;
-        padding: 12px 20px 0;
+        display: flex; gap: 20px; padding: 16px 20px 0;
     }
     .legend-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 12px;
-        color: var(--text-secondary);
+        display: flex; align-items: center; gap: 8px;
+        font-size: 12px; color: var(--text-sec); font-weight: 500;
     }
-    .legend-line {
-        width: 24px;
-        height: 2px;
-        border-radius: 2px;
-    }
-    .legend-line.solid  { background: #4a7c5e; }
-    .legend-line.dashed { background: repeating-linear-gradient(90deg, #9ca3af 0 4px, transparent 4px 8px); }
-    .chart-area {
-        padding: 8px 20px 20px;
-    }
-    .chart-svg {
-        width: 100%;
-        height: 200px;
-        overflow: visible;
-    }
+    .legend-line { width: 16px; height: 3px; border-radius: 2px; }
+    .legend-line.solid  { background: var(--accent); }
+    .legend-line.dashed { background: repeating-linear-gradient(90deg, var(--text-muted) 0 4px, transparent 4px 8px); height: 2px; }
+    .chart-area { padding: 12px 20px 24px; }
+    .chart-svg { width: 100%; height: 220px; overflow: visible; }
 
-    /* Table */
-    .overflow-x-auto {
-        overflow-x: auto;
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 13px;
-    }
+    /* Table Design */
+    .overflow-x-auto { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
     th {
-        text-align: left;
-        padding: 12px 16px;
-        background: #f9fafb;
-        font-weight: 600;
-        color: #4b5563;
-        border-bottom: 1px solid var(--border);
+        text-align: left; padding: 14px 20px;
+        background: var(--bg-hover); font-weight: 600;
+        color: var(--text-sec); border-bottom: 1px solid var(--border);
+        font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;
     }
     td {
-        padding: 12px 16px;
-        border-bottom: 1px solid #f3f4f6;
-        color: #374151;
+        padding: 14px 20px; border-bottom: 1px solid var(--border);
+        color: var(--text-main); font-weight: 500;
     }
+    tr:last-child td { border-bottom: none; }
+    
+    /* Muted Premium Badges */
     .badge {
-        display: inline-block;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: 600;
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 4px 10px; border-radius: 6px;
+        font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
     }
-    .badge-green  { background: #dcfce7; color: #15803d; }
-    .badge-orange { background: #ffedd5; color: #c2410c; }
-    .badge-blue   { background: #dbeafe; color: #1d4ed8; }
-    .badge-gray   { background: #f3f4f6; color: #4b5563; }
+    .badge-green  { background: var(--accent-light); color: var(--accent-dark); }
+    .badge-orange { background: #fdf5e6; color: #8a5a2e; }
+    .badge-blue   { background: #f0f4f8; color: #4a6b8c; }
+    .badge-gray   { background: var(--bg-hover); color: var(--text-sec); }
+    
     .action-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 28px;
-        height: 28px;
-        border-radius: 8px;
-        background: #f3f4f6;
-        text-decoration: none;
-        color: #6b7280;
-        transition: all 0.2s;
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 30px; height: 30px; border-radius: 8px;
+        background: var(--bg-surface); border: 1px solid var(--border);
+        color: var(--text-sec); text-decoration: none;
+        transition: all 0.15s; font-size: 15px;
     }
-    .action-btn:hover { background: #e5e7eb; color: #374151; }
+    .action-btn:hover { background: var(--bg-hover); color: var(--accent); border-color: #d1d6cf; }
 
-    /* Product List */
-    .product-list {
-        padding: 0 16px 16px;
+    /* Lists (Products & Revenue) */
+    .list-wrapper { padding: 8px 20px 20px; }
+    .list-item {
+        display: flex; align-items: center; gap: 14px;
+        padding: 12px 0; border-bottom: 1px solid #f0f2ef;
     }
-    .product-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 0;
-        border-bottom: 1px solid #f3f4f6;
+    .list-item:last-child { border-bottom: none; padding-bottom: 0; }
+    
+    .item-thumb {
+        width: 42px; height: 42px; background: var(--bg-hover);
+        border-radius: 10px; display: flex; align-items: center;
+        justify-content: center; font-size: 20px; color: var(--text-sec);
+        border: 1px solid var(--border);
     }
-    .product-item:last-child { border-bottom: none; }
-    .product-thumb {
-        width: 44px;
-        height: 44px;
-        background: #f3f4f6;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 22px;
-    }
-    .product-info {
-        flex: 1;
-    }
-    .product-name {
-        font-weight: 600;
-        color: #1f2937;
-        font-size: 14px;
-    }
-    .product-sold {
-        font-size: 12px;
-        color: var(--text-muted);
-        margin-top: 2px;
-    }
-    .product-price {
-        font-weight: 600;
-        color: #1f2937;
-        font-size: 14px;
-        white-space: nowrap;
-    }
-
-    /* Revenue List */
-    .revenue-list {
-        padding: 0 20px 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
+    .item-info { flex: 1; }
+    .item-name { font-weight: 600; color: var(--text-main); font-size: 13.5px; margin-bottom: 2px; }
+    .item-sub { font-size: 12px; color: var(--text-muted); }
+    .item-value { font-weight: 700; color: var(--text-main); font-size: 13.5px; }
+    
     .revenue-item {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        background: #f9fafb;
-        border-radius: 12px;
-        padding: 14px 16px;
+        background: var(--bg-hover); border-radius: 10px;
+        padding: 14px 16px; border: 1px solid transparent;
+        transition: border 0.2s, background 0.2s;
     }
-    .revenue-icon {
-        width: 40px;
-        height: 40px;
-        background: #e8f5ee;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 20px;
+    .revenue-item:hover {
+        background: var(--bg-surface); border-color: var(--border);
     }
-    .revenue-info {
-        flex: 1;
-    }
-    .revenue-label {
-        font-size: 12px;
-        color: var(--text-secondary);
-    }
-    .revenue-value {
-        font-size: 16px;
-        font-weight: 700;
-        color: var(--accent);
-    }
-    .link-btn {
-        font-size: 12px;
-        color: var(--accent);
-        text-decoration: none;
-        font-weight: 500;
-    }
-    .section-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 16px 20px;
-        border-bottom: 1px solid var(--border);
-    }
-    .page-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 28px;
-    }
-    .page-title h1 {
-        font-size: 24px;
-        font-weight: 700;
-        color: #1f2937;
-    }
-    .page-title p {
-        font-size: 14px;
-        color: var(--text-secondary);
-        margin-top: 4px;
-    }
+    .revenue-item .item-thumb { background: var(--accent-light); color: var(--accent); border: none; }
+    .revenue-item .item-value { color: var(--accent); font-size: 15px; }
+
 </style>
 @endsection
 
@@ -308,14 +251,16 @@
 <div class="page-header">
     <div class="page-title">
         <h1>Dashboard</h1>
-        <p>Selamat datang kembali, Admin!</p>
+        <p>Ikhtisar performa toko Anda hari ini.</p>
     </div>
-    <div style="display:flex;align-items:center;gap:8px;border:1px solid var(--border);background:#fff;border-radius:10px;padding:7px 14px;font-size:13px;cursor:pointer;">
-        📅 20 Mei – 26 Mei 2024 ▾
+    <div class="date-filter">
+        <i class="ti ti-calendar-event"></i>
+        <span>20 Mei – 26 Mei 2024</span>
+        <i class="ti ti-chevron-down" style="font-size: 14px; color: var(--text-muted);"></i>
     </div>
 </div>
 
-{{-- 4 Stat Cards (ikon di kanan, sesuai gambar) --}}
+{{-- 4 Stat Cards --}}
 <div class="stats-grid">
     <div class="stat-card">
         <div class="stat-top">
@@ -323,9 +268,9 @@
                 <div class="stat-label">Total Produk</div>
                 <div class="stat-value">120</div>
             </div>
-            <div class="stat-icon green">📦</div>
+            <div class="stat-icon icon-green"><i class="ti ti-box"></i></div>
         </div>
-        <div class="stat-change up">↑ 12.5% <span>dari bulan lalu</span></div>
+        <div class="stat-change up"><i class="ti ti-arrow-up-right"></i> 12.5% <span>vs bulan lalu</span></div>
     </div>
     <div class="stat-card">
         <div class="stat-top">
@@ -333,19 +278,19 @@
                 <div class="stat-label">Total Pesanan</div>
                 <div class="stat-value">80</div>
             </div>
-            <div class="stat-icon orange">🛒</div>
+            <div class="stat-icon icon-blue"><i class="ti ti-shopping-cart"></i></div>
         </div>
-        <div class="stat-change down">↓ 8.2% <span>dari bulan lalu</span></div>
+        <div class="stat-change down"><i class="ti ti-arrow-down-right"></i> 8.2% <span>vs bulan lalu</span></div>
     </div>
     <div class="stat-card">
         <div class="stat-top">
             <div class="stat-info">
-                <div class="stat-label">Total Pendapatan</div>
+                <div class="stat-label">Pendapatan</div>
                 <div class="stat-value" style="font-size:22px;">Rp 25.430.000</div>
             </div>
-            <div class="stat-icon teal">💵</div>
+            <div class="stat-icon icon-gold"><i class="ti ti-wallet"></i></div>
         </div>
-        <div class="stat-change up">↑ 15.7% <span>dari bulan lalu</span></div>
+        <div class="stat-change up"><i class="ti ti-arrow-up-right"></i> 15.7% <span>vs bulan lalu</span></div>
     </div>
     <div class="stat-card">
         <div class="stat-top">
@@ -353,9 +298,9 @@
                 <div class="stat-label">User Aktif</div>
                 <div class="stat-value">230</div>
             </div>
-            <div class="stat-icon gray">👤</div>
+            <div class="stat-icon icon-gray"><i class="ti ti-users"></i></div>
         </div>
-        <div class="stat-change up">↑ 9.1% <span>dari bulan lalu</span></div>
+        <div class="stat-change up"><i class="ti ti-arrow-up-right"></i> 9.1% <span>vs bulan lalu</span></div>
     </div>
 </div>
 
@@ -366,35 +311,38 @@
         <div class="card">
             <div class="card-header">
                 <span class="card-title">Grafik Penjualan</span>
-                <button class="dropdown-btn">Tahun Ini ▾</button>
+                <button class="dropdown-btn">Tahun Ini <i class="ti ti-chevron-down"></i></button>
             </div>
             <div class="chart-legend">
-                <div class="legend-item"><div class="legend-line solid"></div> Pendapatan (Rp)</div>
+                <div class="legend-item"><div class="legend-line solid"></div> Pendapatan</div>
                 <div class="legend-item"><div class="legend-line dashed"></div> Pesanan</div>
             </div>
             <div class="chart-area">
                 <svg class="chart-svg" viewBox="0 0 860 200" preserveAspectRatio="none">
-                    <text x="0" y="16"  font-size="11" fill="#9ca3af">40jt</text>
-                    <text x="0" y="66"  font-size="11" fill="#9ca3af">30jt</text>
-                    <text x="0" y="116" font-size="11" fill="#9ca3af">20jt</text>
-                    <text x="0" y="166" font-size="11" fill="#9ca3af">10jt</text>
-                    <text x="4" y="196" font-size="11" fill="#9ca3af">0</text>
-                    <line x1="28" y1="10"  x2="860" y2="10"  stroke="#f0f0f0" stroke-width="1"/>
-                    <line x1="28" y1="60"  x2="860" y2="60"  stroke="#f0f0f0" stroke-width="1"/>
-                    <line x1="28" y1="110" x2="860" y2="110" stroke="#f0f0f0" stroke-width="1"/>
-                    <line x1="28" y1="160" x2="860" y2="160" stroke="#f0f0f0" stroke-width="1"/>
+                    <text x="0" y="16"  font-size="11" fill="var(--text-muted)">40jt</text>
+                    <text x="0" y="66"  font-size="11" fill="var(--text-muted)">30jt</text>
+                    <text x="0" y="116" font-size="11" fill="var(--text-muted)">20jt</text>
+                    <text x="0" y="166" font-size="11" fill="var(--text-muted)">10jt</text>
+                    <text x="4" y="196" font-size="11" fill="var(--text-muted)">0</text>
+                    <line x1="28" y1="10"  x2="860" y2="10"  stroke="var(--bg-hover)" stroke-width="1"/>
+                    <line x1="28" y1="60"  x2="860" y2="60"  stroke="var(--bg-hover)" stroke-width="1"/>
+                    <line x1="28" y1="110" x2="860" y2="110" stroke="var(--bg-hover)" stroke-width="1"/>
+                    <line x1="28" y1="160" x2="860" y2="160" stroke="var(--bg-hover)" stroke-width="1"/>
+                    
                     <polyline points="50,155 120,145 190,90 260,42 330,130 400,155 470,120 540,125 610,120 680,110 750,100 820,30"
-                        fill="none" stroke="#4a7c5e" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+                        fill="none" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
                     @foreach([[50,155],[120,145],[190,90],[260,42],[330,130],[400,155],[470,120],[540,125],[610,120],[680,110],[750,100],[820,30]] as [$x,$y])
-                    <circle cx="{{ $x }}" cy="{{ $y }}" r="4" fill="#4a7c5e"/>
+                    <circle cx="{{ $x }}" cy="{{ $y }}" r="4" fill="var(--bg-surface)" stroke="var(--accent)" stroke-width="2"/>
                     @endforeach
+                    
                     <polyline points="50,165 120,162 190,158 260,155 330,160 400,156 470,158 540,156 610,157 680,155 750,156 820,154"
-                        fill="none" stroke="#b0b0b0" stroke-width="2" stroke-dasharray="6,4" stroke-linejoin="round" stroke-linecap="round"/>
+                        fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-dasharray="4,4" stroke-linejoin="round" stroke-linecap="round"/>
                     @foreach([[50,165],[120,162],[190,158],[260,155],[330,160],[400,156],[470,158],[540,156],[610,157],[680,155],[750,156],[820,154]] as [$x,$y])
-                    <circle cx="{{ $x }}" cy="{{ $y }}" r="4" fill="#b0b0b0"/>
+                    <circle cx="{{ $x }}" cy="{{ $y }}" r="3" fill="var(--text-muted)"/>
                     @endforeach
+                    
                     @foreach(['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'] as $i => $bln)
-                    <text x="{{ 44+($i*70) }}" y="210" font-size="11" fill="#9ca3af" text-anchor="middle">{{ $bln }}</text>
+                    <text x="{{ 44+($i*70) }}" y="210" font-size="11" fill="var(--text-sec)" text-anchor="middle">{{ $bln }}</text>
                     @endforeach
                 </svg>
             </div>
@@ -411,7 +359,7 @@
                     <thead>
                         <tr>
                             <th>Order ID</th><th>Pelanggan</th><th>Tanggal</th>
-                            <th>Total</th><th>Status</th><th>Aksi</th>
+                            <th>Total</th><th>Status</th><th style="text-align: center;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -428,7 +376,7 @@
                         <tr>
                             <td>#{{ $o['id'] }}</td>
                             <td>{{ $o['pelanggan'] }}</td>
-                            <td>{{ $o['tanggal'] }}</td>
+                            <td style="color: var(--text-sec);">{{ $o['tanggal'] }}</td>
                             <td>Rp {{ number_format($o['total'],0,',','.') }}</td>
                             <td>
                                 @php
@@ -442,7 +390,9 @@
                                 @endphp
                                 <span class="badge {{ $cls }}">{{ $o['status'] }}</span>
                             </td>
-                            <td><a href="#" class="action-btn">👁️</a></td>
+                            <td style="text-align: center;">
+                                <a href="#" class="action-btn" title="Lihat Detail"><i class="ti ti-eye"></i></a>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -454,28 +404,28 @@
     <div class="right-col">
         {{-- Best Sellers --}}
         <div class="card">
-            <div class="section-header">
+            <div class="card-header">
                 <span class="card-title">Produk Terlaris</span>
-                <a href="#" class="link-btn">Lihat semua</a>
+                <a href="#" class="link-btn">Detail</a>
             </div>
-            <div class="product-list">
+            <div class="list-wrapper">
                 @php
                     $produkTerlaris = [
-                        ['icon'=>'🪑','nama'=>'Kursi Minimalis Kayu', 'terjual'=>45,'harga'=>750000],
-                        ['icon'=>'🍽️','nama'=>'Meja Makan Jati',      'terjual'=>38,'harga'=>2500000],
-                        ['icon'=>'🚪','nama'=>'Lemari Pakaian 3 Pintu','terjual'=>30,'harga'=>3200000],
-                        ['icon'=>'🛋️','nama'=>'Sofa Minimalis Abu',   'terjual'=>28,'harga'=>4500000],
-                        ['icon'=>'📚','nama'=>'Rak Buku Minimalis',   'terjual'=>25,'harga'=>850000],
+                        ['icon'=>'ti-armchair',  'nama'=>'Kursi Minimalis Kayu',   'terjual'=>45,'harga'=>750000],
+                        ['icon'=>'ti-tools-kitchen-2', 'nama'=>'Meja Makan Jati',  'terjual'=>38,'harga'=>2500000],
+                        ['icon'=>'ti-door',      'nama'=>'Lemari Pakaian 3 Pintu', 'terjual'=>30,'harga'=>3200000],
+                        ['icon'=>'ti-sofa',      'nama'=>'Sofa Minimalis Abu',     'terjual'=>28,'harga'=>4500000],
+                        ['icon'=>'ti-books',     'nama'=>'Rak Buku Minimalis',     'terjual'=>25,'harga'=>850000],
                     ];
                 @endphp
                 @foreach($produkTerlaris as $p)
-                <div class="product-item">
-                    <div class="product-thumb">{{ $p['icon'] }}</div>
-                    <div class="product-info">
-                        <div class="product-name">{{ $p['nama'] }}</div>
-                        <div class="product-sold">Terjual {{ $p['terjual'] }}</div>
+                <div class="list-item">
+                    <div class="item-thumb"><i class="ti {{ $p['icon'] }}"></i></div>
+                    <div class="item-info">
+                        <div class="item-name">{{ $p['nama'] }}</div>
+                        <div class="item-sub">Terjual {{ $p['terjual'] }}</div>
                     </div>
-                    <div class="product-price">Rp {{ number_format($p['harga'],0,',','.') }}</div>
+                    <div class="item-value">Rp {{ number_format($p['harga']/1000,0,',','.') }}k</div>
                 </div>
                 @endforeach
             </div>
@@ -483,30 +433,30 @@
 
         {{-- Revenue Summary --}}
         <div class="card">
-            <div class="section-header">
-                <span class="card-title">Ringkasan Pendapatan</span>
-                <a href="#" class="link-btn">Lihat laporan</a>
+            <div class="card-header">
+                <span class="card-title">Pendapatan</span>
+                <a href="#" class="link-btn">Laporan</a>
             </div>
-            <div class="revenue-list">
-                <div class="revenue-item">
-                    <div class="revenue-icon">💰</div>
-                    <div class="revenue-info">
-                        <div class="revenue-label">Pendapatan Hari Ini</div>
-                        <div class="revenue-value">Rp 2.450.000</div>
+            <div class="list-wrapper" style="display: flex; flex-direction: column; gap: 10px; padding-top: 16px;">
+                <div class="list-item revenue-item">
+                    <div class="item-thumb"><i class="ti ti-coin"></i></div>
+                    <div class="item-info">
+                        <div class="item-sub">Hari Ini</div>
+                        <div class="item-value">Rp 2.450.000</div>
                     </div>
                 </div>
-                <div class="revenue-item">
-                    <div class="revenue-icon">📅</div>
-                    <div class="revenue-info">
-                        <div class="revenue-label">Pendapatan Minggu Ini</div>
-                        <div class="revenue-value">Rp 12.750.000</div>
+                <div class="list-item revenue-item">
+                    <div class="item-thumb"><i class="ti ti-calendar-week"></i></div>
+                    <div class="item-info">
+                        <div class="item-sub">Minggu Ini</div>
+                        <div class="item-value">Rp 12.750.000</div>
                     </div>
                 </div>
-                <div class="revenue-item">
-                    <div class="revenue-icon">🗓️</div>
-                    <div class="revenue-info">
-                        <div class="revenue-label">Pendapatan Bulan Ini</div>
-                        <div class="revenue-value">Rp 25.430.000</div>
+                <div class="list-item revenue-item">
+                    <div class="item-thumb"><i class="ti ti-calendar-stats"></i></div>
+                    <div class="item-info">
+                        <div class="item-sub">Bulan Ini</div>
+                        <div class="item-value">Rp 25.430.000</div>
                     </div>
                 </div>
             </div>
