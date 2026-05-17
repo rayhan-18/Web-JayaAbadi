@@ -18,7 +18,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         return view('admin.product.index');
     })->name('product.index');
 
-    // Tambahkan Rute Create Produk Di Sini 👇
     Route::get('/produk/create', function () {
         return view('admin.product.create');
     })->name('product.create');
@@ -26,6 +25,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/kategori', function () {
         return view('admin.category.index');
     })->name('category.index');
+
+    Route::get('/kategori/create', function () {
+        return view('admin.category.create');
+    })->name('category.create');
+
+    Route::get('/kategori/{id}/edit', function ($id) {
+
+        return view('admin.category.edit', ['id' => $id]);
+    })->name('category.edit');
 
     Route::get('/pesanan', function () {
         return view('admin.order.index');

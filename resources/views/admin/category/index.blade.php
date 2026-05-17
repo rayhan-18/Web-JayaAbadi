@@ -41,30 +41,32 @@
         margin-top: 4px;
     }
 
-    /* Premium Button (Direct Hex fix) */
+    /* Premium Button Style - DISAMAKAN PERSIS DENGAN PRODUK */
     .btn-primary {
         background-color: #5c9e74 !important;
         color: #ffffff !important;
         padding: 10px 20px;
-        border-radius: var(--radius-md);
+        border-radius: 10px;
         font-size: 13px;
         font-weight: 600;
         text-decoration: none;
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         border: none;
         box-shadow: 0 2px 6px rgba(92, 158, 116, 0.2);
         outline: none;
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
     .btn-primary:hover {
         background-color: #3a5c48 !important;
         transform: translateY(-2px);
         box-shadow: 0 6px 15px rgba(58, 92, 72, 0.3);
     }
+
     .btn-primary:active {
         transform: scale(0.95);
         background-color: #2d4a3a !important;
@@ -142,7 +144,7 @@
     }
     tr:last-child td { border-bottom: none; }
 
-    /* Category Icon (No solid background) */
+    /* Category Icon */
     .category-icon {
         width: 40px; height: 40px;
         background: transparent; 
@@ -199,7 +201,7 @@
         <h1>Kategori</h1>
         <div class="breadcrumb">FurniHome / Kategori</div>
     </div>
-    <a href="#" class="btn-primary">
+    <a href="{{ route('admin.category.create') }}" class="btn-primary">
         <i class="ti ti-plus"></i> Tambah Kategori
     </a>
 </div>
@@ -255,7 +257,7 @@
                 <td><strong>{{ $item['jumlah'] }}</strong> <span style="color: var(--text-sec); font-size: 12px;">Item</span></td>
                 <td><span class="status-badge">{{ $item['status'] }}</span></td>
                 <td class="action-icons">
-                    <a href="#" class="action-btn" title="Edit"><i class="ti ti-edit"></i></a>
+                    <a href="{{ route('admin.category.edit', $item['id']) }}" class="action-btn" title="Edit"><i class="ti ti-edit"></i></a>
                     <a href="#" class="action-btn delete" title="Hapus"><i class="ti ti-trash"></i></a>
                 </td>
             </tr>

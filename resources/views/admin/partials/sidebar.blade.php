@@ -129,7 +129,8 @@
             </div>
             <div class="sub">
                 <a href="{{ route('admin.category.index') }}" class="sub-row {{ request()->routeIs('admin.category.index') ? 'active' : '' }}"><span class="sub-dot"></span>Semua Kategori</a>
-                <a href="#" class="sub-row {{ request()->routeIs('admin.category.create') ? 'active' : '' }}"><span class="sub-dot"></span>Tambah Kategori</a>
+                
+                <a href="{{ route('admin.category.create') }}" class="sub-row {{ request()->routeIs('admin.category.create') ? 'active' : '' }}"><span class="sub-dot"></span>Tambah Kategori</a>
             </div>
         </div>
 
