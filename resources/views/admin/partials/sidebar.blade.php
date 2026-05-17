@@ -143,9 +143,6 @@
             </div>
             <div class="sub">
                 <a href="{{ route('admin.order.index') }}" class="sub-row"><span class="sub-dot"></span>Semua Pesanan</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Pending</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Dikirim</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Selesai</a>
             </div>
         </div>
 
