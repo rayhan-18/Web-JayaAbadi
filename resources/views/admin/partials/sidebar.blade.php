@@ -168,15 +168,14 @@
             </div>
         </div>
 
-        <div class="parent" id="p-laporan">
+        <div class="parent {{ request()->routeIs('admin.report.*') ? 'open' : '' }}" id="p-laporan">
             <div class="nav-row" onclick="tog('p-laporan')">
                 <div class="nr-icon-wrap"><i class="ti ti-report-analytics"></i></div> Laporan
                 <i class="ti ti-chevron-right chev"></i>
             </div>
             <div class="sub">
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Penjualan</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Stok</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Keuangan</a>
+                <a href="{{ route('admin.report.sales') }}" class="sub-row {{ request()->routeIs('admin.report.sales') ? 'active' : '' }}"><span class="sub-dot"></span>Penjualan</a>
+                <a href="{{ route('admin.report.stock') }}" class="sub-row {{ request()->routeIs('admin.report.stock') ? 'active' : '' }}"><span class="sub-dot"></span>Stok</a>
             </div>
         </div>
 

@@ -49,6 +49,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/pelanggan', function () {
         return view('admin.customer.index');
     })->name('customer.index');
+
+    Route::get('/laporan/penjualan', function () {
+        return view('admin.report.sales');
+    })->name('report.sales');
+
+    Route::get('/laporan/stok', function () {
+        return view('admin.report.stock');
+    })->name('report.stock');
 });
 
 // ========================
