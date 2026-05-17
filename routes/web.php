@@ -57,6 +57,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/laporan/stok', function () {
         return view('admin.report.stock');
     })->name('report.stock');
+
+    Route::get('/kasir/transaksi', function () {
+        return view('admin.cashier.pos');
+    })->name('kasir.pos');
 });
 
 // ========================

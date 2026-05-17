@@ -129,7 +129,6 @@
             </div>
             <div class="sub">
                 <a href="{{ route('admin.category.index') }}" class="sub-row {{ request()->routeIs('admin.category.index') ? 'active' : '' }}"><span class="sub-dot"></span>Semua Kategori</a>
-                
                 <a href="{{ route('admin.category.create') }}" class="sub-row {{ request()->routeIs('admin.category.create') ? 'active' : '' }}"><span class="sub-dot"></span>Tambah Kategori</a>
             </div>
         </div>
@@ -142,7 +141,7 @@
                 <i class="ti ti-chevron-right chev" style="margin-left:4px"></i>
             </div>
             <div class="sub">
-                <a href="{{ route('admin.order.index') }}" class="sub-row"><span class="sub-dot"></span>Semua Pesanan</a>
+                <a href="{{ route('admin.order.index') }}" class="sub-row {{ request()->routeIs('admin.order.index') ? 'active' : '' }}"><span class="sub-dot"></span>Semua Pesanan</a>
             </div>
         </div>
 
@@ -163,7 +162,6 @@
                 <i class="ti ti-chevron-right chev"></i>
             </div>
             <div class="sub">
-                {{-- Update link "Semua Pelanggan" ke route customer.index --}}
                 <a href="{{ route('admin.customer.index') }}" class="sub-row {{ request()->routeIs('admin.customer.index') ? 'active' : '' }}"><span class="sub-dot"></span>Semua Pelanggan</a>
             </div>
         </div>
@@ -199,7 +197,7 @@
                 <i class="ti ti-chevron-right chev"></i>
             </div>
             <div class="sub">
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Transaksi POS</a>
+                <a href="{{ route('admin.kasir.pos') }}" class="sub-row {{ request()->routeIs('admin.casier.pos') ? 'active' : '' }}"><span class="sub-dot"></span>Transaksi POS</a>
                 <a href="#" class="sub-row"><span class="sub-dot"></span>Shift Kasir</a>
                 <a href="#" class="sub-row"><span class="sub-dot"></span>Diskon & Voucher</a>
                 <a href="#" class="sub-row"><span class="sub-dot"></span>Riwayat Kasir</a>

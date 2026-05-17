@@ -105,7 +105,7 @@
     .table-section { flex: 1; min-width: 0; }
     
     .table-wrapper { background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border); overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 900px; } /* Mencegah tabel menyempit berantakan */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 960px; } /* Lebar dinaikkan sedikit agar kolom Sumber muat lega */
     th {
         text-align: left; padding: 14px 20px; background: var(--bg-hover); font-weight: 600;
         color: var(--text-sec); border-bottom: 1px solid var(--border); font-size: 12px;
@@ -119,6 +119,7 @@
     .customer-name { font-weight: 600; color: var(--text-main); font-size: 13.5px; }
     .customer-email { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
 
+    /* Muted Premium Badges */
     .status-badge {
         display: inline-flex; align-items: center; justify-content: center;
         padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap;
@@ -133,6 +134,15 @@
     .status-diproses::before { background: #6993c4; }
     .status-dikirim::before  { background: #9269c4; }
     .status-selesai::before  { background: var(--accent); }
+
+    /* Premium Channel Badges (Online vs POS) */
+    .channel-badge {
+        display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+        padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap;
+    }
+    .channel-online  { background: #eef7f2; color: #3b7a54; border: 1px solid #dbeee3; }
+    .channel-offline { background: #f1f3f5; color: #495057; border: 1px solid #e9ecef; }
+    .channel-badge i { font-size: 13px; }
 
     .action-btn {
         width: 32px; height: 32px; border-radius: 8px; background: var(--bg-surface);
@@ -168,8 +178,8 @@
     .dp-header {
         display: flex; justify-content: space-between; align-items: center; padding: 18px 20px;
         border-bottom: 1px solid var(--border); 
-        background: #ffffff !important; /* FIX OVERLAP: Memastikan warna putih solid dan tidak transparan */
-        position: sticky; top: 0; z-index: 20; /* FIX OVERLAP: Z-index dinaikkan */
+        background: #ffffff !important; 
+        position: sticky; top: 0; z-index: 20; 
     }
     .dp-header h3 { font-size: 15px; font-weight: 700; margin: 0; color: var(--text-main); }
     .dp-close {
@@ -245,6 +255,14 @@
         <input type="text" placeholder="Cari Order ID, Pelanggan...">
     </div>
     <div class="select-wrapper">
+        <i class="ti ti-filter prefix-icon"></i>
+        <select class="filter-select">
+            <option>Semua Saluran</option>
+            <option>Website Online</option>
+            <option>POS Cashier</option>
+        </select>
+    </div>
+    <div class="select-wrapper">
         <i class="ti ti-circle-check prefix-icon"></i>
         <select class="filter-select">
             <option>Semua Status</option>
@@ -263,6 +281,7 @@
                 <thead>
                     <tr>
                         <th>Order ID</th>
+                        <th>Sumber</th> {{-- KOLOM BARU --}}
                         <th>Pelanggan</th>
                         <th>Tanggal</th>
                         <th>Total</th>
@@ -273,21 +292,31 @@
                 </thead>
                 <tbody>
                     @php
-                        // Array Updated: emoji replaced with icon classes
+                        // Array Diperbarui: Ditambahkan properti 'channel' untuk membedakan asal pesanan
                         $orders = [
-                            ['id'=>'#ORD-00123','nama'=>'Rayhan Maulana','email'=>'rayhan@gmail.com','tanggal'=>'26 Mei 2024 10:30','total'=>2750000,'metode'=>'E-Wallet OVO','status'=>'Diproses','alamat'=>'Jl. Merdeka No. 123, Bandung','items'=>[['nama'=>'Kursi Minimalis Kayu','qty'=>1,'harga'=>2750000,'icon'=>'ti-armchair']],'subtotal'=>2750000,'ongkir'=>50000,'total2'=>2800000,'hp'=>'081234567890'],
-                            ['id'=>'#ORD-00122','nama'=>'Siti Aisyah','email'=>'aisyah@gmail.com','tanggal'=>'25 Mei 2024 15:45','total'=>1850000,'metode'=>'OVO','status'=>'Diproses','alamat'=>'Jl. Kenanga No. 5, Bandung','items'=>[['nama'=>'Meja Samping Walnut','qty'=>1,'harga'=>1850000,'icon'=>'ti-table']],'subtotal'=>1850000,'ongkir'=>50000,'total2'=>1900000,'hp'=>'081298765432'],
-                            ['id'=>'#ORD-00121','nama'=>'Budi Santoso','email'=>'budi@gmail.com','tanggal'=>'25 Mei 2024 11:20','total'=>3200000,'metode'=>'Transfer Mandiri ****5678','status'=>'Diproses','alamat'=>'Jl. Sudirman No. 88, Jakarta Pusat','items'=>[['nama'=>'Sofa 3 Seater Premium','qty'=>1,'harga'=>3200000,'icon'=>'ti-sofa']],'subtotal'=>3200000,'ongkir'=>75000,'total2'=>3275000,'hp'=>'085612345678'],
-                            ['id'=>'#ORD-00120','nama'=>'Dewi Anggraini','email'=>'dewii@gmail.com','tanggal'=>'24 Mei 2024 09:15','total'=>950000,'metode'=>'COD Bayar di tempat','status'=>'Pending','alamat'=>'Jl. Mawar No. 12, Surabaya','items'=>[['nama'=>'Rak Buku Minimalis','qty'=>1,'harga'=>950000,'icon'=>'ti-books']],'subtotal'=>950000,'ongkir'=>0,'total2'=>950000,'hp'=>'087700011234'],
-                            ['id'=>'#ORD-00119','nama'=>'Ahmad Fauzi','email'=>'ahmad@gmail.com','tanggal'=>'24 Mei 2024 16:50','total'=>4500000,'metode'=>'Credit Card VISA ****4567','status'=>'Dikirim','alamat'=>'Jl. Gatot Subroto No. 45, Semarang','items'=>[['nama'=>'Tempat Tidur King Size','qty'=>1,'harga'=>3500000,'icon'=>'ti-bed'],['nama'=>'Nakas Minimalis','qty'=>2,'harga'=>500000,'icon'=>'ti-archive']],'subtotal'=>4500000,'ongkir'=>100000,'total2'=>4600000,'hp'=>'082155556666'],
-                            ['id'=>'#ORD-00118','nama'=>'Nina Karlina','email'=>'nina@gmail.com','tanggal'=>'23 Mei 2024 12:10','total'=>1250000,'metode'=>'E-Wallet DANA','status'=>'Selesai','alamat'=>'Jl. Pahlawan No. 3, Yogyakarta','items'=>[['nama'=>'Kursi Makan Set 4','qty'=>1,'harga'=>1250000,'icon'=>'ti-armchair']],'subtotal'=>1250000,'ongkir'=>50000,'total2'=>1300000,'hp'=>'081288889999'],
-                            ['id'=>'#ORD-00117','nama'=>'Rizky Pratama','email'=>'rizky@gmail.com','tanggal'=>'23 Mei 2024 10:05','total'=>2150000,'metode'=>'Transfer BNI ****7890','status'=>'Selesai','alamat'=>'Jl. Diponegoro No. 77, Malang','items'=>[['nama'=>'Lemari Hias Minimalis','qty'=>1,'harga'=>1650000,'icon'=>'ti-door'],['nama'=>'Cermin Dinding Oval','qty'=>1,'harga'=>500000,'icon'=>'ti-frame']],'subtotal'=>2150000,'ongkir'=>50000,'total2'=>2200000,'hp'=>'085677778888'],
-                            ['id'=>'#ORD-00116','nama'=>'Larasati Putri','email'=>'larasati@gmail.com','tanggal'=>'22 Mei 2024 14:35','total'=>3750000,'metode'=>'Credit Card MC ****3210','status'=>'Dikirim','alamat'=>'Jl. Ahmad Yani No. 20, Medan','items'=>[['nama'=>'Meja Kerja Ergonomis','qty'=>1,'harga'=>3750000,'icon'=>'ti-desk']],'subtotal'=>3750000,'ongkir'=>120000,'total2'=>3870000,'hp'=>'081344443333'],
+                            ['id'=>'#ORD-00123','channel'=>'Online','nama'=>'Rayhan Maulana','email'=>'rayhan@gmail.com','tanggal'=>'26 Mei 2024 10:30','total'=>2750000,'metode'=>'E-Wallet OVO','status'=>'Diproses','alamat'=>'Jl. Merdeka No. 123, Bandung','items'=>[['nama'=>'Kursi Minimalis Kayu','qty'=>1,'harga'=>2750000,'icon'=>'ti-armchair']],'subtotal'=>2750000,'ongkir'=>50000,'total2'=>2800000,'hp'=>'081234567890'],
+                            ['id'=>'#ORD-00122','channel'=>'POS Cashier','nama'=>'Siti Aisyah','email'=>'aisyah@gmail.com','tanggal'=>'25 Mei 2024 15:45','total'=>1850000,'metode'=>'OVO','status'=>'Diproses','alamat'=>'Ambil di Toko (Walk-in)','items'=>[['nama'=>'Meja Samping Walnut','qty'=>1,'harga'=>1850000,'icon'=>'ti-table']],'subtotal'=>1850000,'ongkir'=>0,'total2'=>1850000,'hp'=>'081298765432'],
+                            ['id'=>'#ORD-00121','channel'=>'Online','nama'=>'Budi Santoso','email'=>'budi@gmail.com','tanggal'=>'25 Mei 2024 11:20','total'=>3200000,'metode'=>'Transfer Mandiri ****5678','status'=>'Diproses','alamat'=>'Jl. Sudirman No. 88, Jakarta Pusat','items'=>[['nama'=>'Sofa 3 Seater Premium','qty'=>1,'harga'=>3200000,'icon'=>'ti-sofa']],'subtotal'=>3200000,'ongkir'=>75000,'total2'=>3275000,'hp'=>'085612345678'],
+                            ['id'=>'#ORD-00120','channel'=>'POS Cashier','nama'=>'Dewi Anggraini','email'=>'dewii@gmail.com','tanggal'=>'24 Mei 2024 09:15','total'=>950000,'metode'=>'COD Bayar di tempat','status'=>'Pending','alamat'=>'Jl. Mawar No. 12, Surabaya','items'=>[['nama'=>'Rak Buku Minimalis','qty'=>1,'harga'=>950000,'icon'=>'ti-books']],'subtotal'=>950000,'ongkir'=>0,'total2'=>950000,'hp'=>'087700011234'],
+                            ['id'=>'#ORD-00119','channel'=>'Online','nama'=>'Ahmad Fauzi','email'=>'ahmad@gmail.com','tanggal'=>'24 Mei 2024 16:50','total'=>4500000,'metode'=>'Credit Card VISA ****4567','status'=>'Dikirim','alamat'=>'Jl. Gatot Subroto No. 45, Semarang','items'=>[['nama'=>'Tempat Tidur King Size','qty'=>1,'harga'=>3500000,'icon'=>'ti-bed'],['nama'=>'Nakas Minimalis','qty'=>2,'harga'=>500000,'icon'=>'ti-archive']],'subtotal'=>4500000,'ongkir'=>100000,'total2'=>4600000,'hp'=>'082155556666'],
+                            ['id'=>'#ORD-00118','channel'=>'POS Cashier','nama'=>'Nina Karlina','email'=>'nina@gmail.com','tanggal'=>'23 Mei 2024 12:10','total'=>1250000,'metode'=>'E-Wallet DANA','status'=>'Selesai','alamat'=>'Ambil di Toko (Walk-in)','items'=>[['nama'=>'Kursi Makan Set 4','qty'=>1,'harga'=>1250000,'icon'=>'ti-armchair']],'subtotal'=>1250000,'ongkir'=>0,'total2'=>1250000,'hp'=>'081288889999'],
+                            ['id'=>'#ORD-00117','channel'=>'Online','nama'=>'Rizky Pratama','email'=>'rizky@gmail.com','tanggal'=>'23 Mei 2024 10:05','total'=>2150000,'metode'=>'Transfer BNI ****7890','status'=>'Selesai','alamat'=>'Jl. Diponegoro No. 77, Malang','items'=>[['nama'=>'Lemari Hias Minimalis','qty'=>1,'harga'=>1650000,'icon'=>'ti-door'],['nama'=>'Cermin Dinding Oval','qty'=>1,'harga'=>500000,'icon'=>'ti-frame']],'subtotal'=>2150000,'ongkir'=>50000,'total2'=>2200000,'hp'=>'085677778888'],
+                            ['id'=>'#ORD-00116','channel'=>'POS Cashier','nama'=>'Larasati Putri','email'=>'larasati@gmail.com','tanggal'=>'22 Mei 2024 14:35','total'=>3750000,'metode'=>'Credit Card MC ****3210','status'=>'Dikirim','alamat'=>'Jl. Ahmad Yani No. 20, Medan','items'=>[['nama'=>'Meja Kerja Ergonomis','qty'=>1,'harga'=>3750000,'icon'=>'ti-desk']],'subtotal'=>3750000,'ongkir'=>120000,'total2'=>3870000,'hp'=>'081344443333'],
                         ];
                     @endphp
                     @foreach($orders as $index => $o)
                     <tr>
                         <td style="font-weight:600; color: var(--text-main);">{{ $o['id'] }}</td>
+                        
+                        {{-- BADGE CHANNEL ELEGAN --}}
+                        <td>
+                            @if($o['channel'] == 'Online')
+                                <span class="channel-badge channel-online"><i class="ti ti-world"></i> Website</span>
+                            @else
+                                <span class="channel-badge channel-offline"><i class="ti ti-building-store"></i> POS Kasir</span>
+                            @endif
+                        </td>
+
                         <td>
                             <div class="customer-info">
                                 <div class="customer-name">{{ $o['nama'] }}</div>
@@ -373,8 +402,17 @@
             </div>
         `).join('');
 
+        // Tentukan Badge Channel di dalam Detail Panel
+        const channelHtml = o.channel === 'Online' 
+            ? `<span class="channel-badge channel-online"><i class="ti ti-world"></i> Website</span>`
+            : `<span class="channel-badge channel-offline"><i class="ti ti-building-store"></i> POS Kasir</span>`;
+
         body.innerHTML = `
             <div class="dp-order-id">${o.id}</div>
+            <div class="dp-row">
+                <div class="dp-label">Saluran</div>
+                <div class="dp-value">${channelHtml}</div>
+            </div>
             <div class="dp-row">
                 <div class="dp-label">Status</div>
                 <div class="dp-value"><span class="status-badge ${getStatusClass(o.status)}">${o.status}</span></div>
@@ -392,7 +430,7 @@
                 </div>
             </div>
             <div class="dp-row">
-                <div class="dp-label">Alamat</div>
+                <div class="dp-label">Alamat / Logistik</div>
                 <div class="dp-value" style="font-size:12.5px; line-height: 1.5;">${o.alamat}</div>
             </div>
             <div class="dp-row">
