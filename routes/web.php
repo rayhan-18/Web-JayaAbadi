@@ -18,6 +18,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         return view('admin.product.index');
     })->name('product.index');
 
+    // Tambahkan Rute Create Produk Di Sini 👇
+    Route::get('/produk/create', function () {
+        return view('admin.product.create');
+    })->name('product.create');
+
     Route::get('/kategori', function () {
         return view('admin.category.index');
     })->name('category.index');

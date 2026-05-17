@@ -243,7 +243,8 @@
         <h1>Produk</h1>
         <div class="breadcrumb">FurniHome / Produk</div>
     </div>
-    <a href="#" class="btn-primary">
+    
+    <a href="{{ route('admin.product.create') }}" class="btn-primary">
         <i class="ti ti-plus"></i> Tambah Produk
     </a>
 </div>

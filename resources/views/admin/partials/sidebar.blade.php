@@ -118,8 +118,7 @@
             </div>
             <div class="sub">
                 <a href="{{ route('admin.product.index') }}" class="sub-row {{ request()->routeIs('admin.product.index') ? 'active' : '' }}"><span class="sub-dot"></span>Semua Produk</a>
-                <a href="#" class="sub-row {{ request()->routeIs('admin.product.create') ? 'active' : '' }}"><span class="sub-dot"></span>Tambah Produk</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Stok</a>
+                <a href="{{ route('admin.product.create') }}" class="sub-row {{ request()->routeIs('admin.product.create') ? 'active' : '' }}"><span class="sub-dot"></span>Tambah Produk</a>
             </div>
         </div>
 
