@@ -42,9 +42,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         return view('admin.order.index');
     })->name('order.index');
 
-    Route::get('/pesanan/{id}', function ($id) {
-        return view('admin.order.show', ['orderId' => $id]);
-    })->name('order.show');
+    Route::get('/pembayaran', function () {
+        return view('admin.payment.index');
+    })->name('payment.index');
 });
 
 // ========================

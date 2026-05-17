@@ -146,14 +146,13 @@
             </div>
         </div>
 
-        <div class="parent" id="p-bayar">
+        <div class="parent {{ request()->routeIs('admin.payment.*') ? 'open' : '' }}" id="p-bayar">
             <div class="nav-row" onclick="tog('p-bayar')">
                 <div class="nr-icon-wrap"><i class="ti ti-receipt"></i></div> Pembayaran
                 <i class="ti ti-chevron-right chev"></i>
             </div>
             <div class="sub">
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Riwayat Pembayaran</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Konfirmasi</a>
+                <a href="{{ route('admin.payment.index') }}" class="sub-row {{ request()->routeIs('admin.payment.index') ? 'active' : '' }}"><span class="sub-dot"></span>Riwayat Pembayaran</a>
             </div>
         </div>
 
