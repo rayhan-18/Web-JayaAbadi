@@ -4,7 +4,24 @@
 
 @section('styles')
 <style>
-    /* Gunakan style yang sama dengan halaman produk/kategori sebelumnya */
+    /* Premium Variables */
+    :root {
+        --accent: #5c9e74;
+        --accent-dark: #3a5c48;
+        --accent-light: #e8f0eb;
+        --border: #e6e9e4;
+        --bg-surface: #ffffff;
+        --bg-hover: #f5f7f4;
+        --text-main: #2d3b32;
+        --text-sec: #7a9080;
+        --text-muted: #9aada2;
+        --radius-md: 10px;
+        --radius-lg: 14px;
+    }
+
+    body { color: var(--text-main); }
+
+    /* Page Header */
     .page-header {
         display: flex;
         justify-content: space-between;
@@ -12,144 +29,167 @@
         margin-bottom: 24px;
     }
     .page-title h1 {
-        font-size: 24px;
+        font-size: 22px;
         font-weight: 700;
-        color: #1f2937;
+        color: var(--text-main);
         margin: 0;
+        letter-spacing: -0.02em;
     }
     .page-title .breadcrumb {
         font-size: 13px;
-        color: #6b7280;
+        color: var(--text-sec);
         margin-top: 4px;
     }
+
+    /* Premium Button (Direct Hex fix) */
     .btn-primary {
-        background: #4a7c5e;
-        color: white;
-        padding: 8px 16px;
-        border-radius: 8px;
+        background-color: #5c9e74 !important;
+        color: #ffffff !important;
+        padding: 10px 20px;
+        border-radius: var(--radius-md);
         font-size: 13px;
-        font-weight: 500;
+        font-weight: 600;
         text-decoration: none;
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        transition: 0.2s;
+        gap: 8px;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        box-shadow: 0 2px 6px rgba(92, 158, 116, 0.2);
+        outline: none;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
     }
     .btn-primary:hover {
-        background: #3d6a50;
+        background-color: #3a5c48 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(58, 92, 72, 0.3);
     }
+    .btn-primary:active {
+        transform: scale(0.95);
+        background-color: #2d4a3a !important;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        transition: all 0.1s;
+    }
+
+    /* Filter Bar Layout */
     .filter-bar {
-        display: flex;
-        gap: 12px;
-        margin-bottom: 24px;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-    .search-box {
-        display: flex;
-        align-items: center;
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        padding: 6px 12px;
-        gap: 8px;
-        flex: 1;
-        max-width: 300px;
-    }
-    .search-box input {
-        border: none;
-        outline: none;
-        font-size: 13px;
-        width: 100%;
-    }
-    .filter-select {
-        padding: 6px 12px;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        background: #fff;
-        font-size: 13px;
-    }
-    .table-wrapper {
-        background: #fff;
-        border-radius: 16px;
-        border: 1px solid #e5e7eb;
-        overflow-x: auto;
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 13px;
-    }
-    th {
-        text-align: left;
-        padding: 14px 16px;
-        background: #f9fafb;
-        font-weight: 600;
-        color: #4b5563;
-        border-bottom: 1px solid #e5e7eb;
-    }
-    td {
-        padding: 12px 16px;
-        border-bottom: 1px solid #f3f4f6;
-        color: #374151;
-        vertical-align: middle;
-    }
-    .category-icon {
-        width: 36px;
-        height: 36px;
-        background: #f3f4f6;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-    }
-    .status-badge {
-        display: inline-block;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: 600;
-        background: #dcfce7;
-        color: #15803d;
-    }
-    .action-icons {
-        display: flex;
-        gap: 8px;
-    }
-    .action-icons a {
-        color: #6b7280;
-        text-decoration: none;
-        font-size: 16px;
-        transition: 0.2s;
-    }
-    .action-icons a:hover {
-        color: #4a7c5e;
-    }
-    .pagination {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 24px;
-        font-size: 13px;
-        color: #6b7280;
+        gap: 16px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
     }
-    .pagination-links {
+    
+    /* Search Box */
+    .search-box {
         display: flex;
-        gap: 8px;
+        align-items: center;
+        background: var(--bg-surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 0 14px;
+        gap: 10px;
+        width: 100%;
+        max-width: 320px;
+        height: 40px;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.01);
     }
-    .pagination-links a, .pagination-links span {
-        padding: 6px 10px;
-        border: 1px solid #e5e7eb;
-        border-radius: 6px;
-        text-decoration: none;
-        color: #4b5563;
+    .search-box:focus-within {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(92, 158, 116, 0.15);
     }
-    .pagination-links .active {
-        background: #4a7c5e;
-        border-color: #4a7c5e;
-        color: white;
+    .search-box i { color: var(--text-sec); font-size: 16px; }
+    .search-box input {
+        border: none; outline: none; font-size: 13px;
+        width: 100%; color: var(--text-main); background: transparent;
     }
+    .search-box input::placeholder { color: var(--text-muted); }
+
+    /* Select Dropdown */
+    .select-wrapper { position: relative; display: inline-block; }
+    .select-wrapper i.prefix-icon {
+        position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+        color: var(--text-sec); font-size: 15px; pointer-events: none;
+    }
+    .filter-select {
+        height: 40px; padding: 0 36px 0 34px;
+        border: 1px solid var(--border); border-radius: var(--radius-md);
+        background: var(--bg-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a9080' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
+        appearance: none; font-size: 13px; font-weight: 500;
+        color: var(--text-main); cursor: pointer; transition: all 0.2s ease;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.01); min-width: 160px;
+    }
+    .filter-select:hover { background-color: var(--bg-hover); border-color: #d1d6cf; }
+    .filter-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(92, 158, 116, 0.15); }
+
+    /* Table Design */
+    .table-wrapper {
+        background: var(--bg-surface); border-radius: var(--radius-lg);
+        border: 1px solid var(--border); overflow-x: auto;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th {
+        text-align: left; padding: 14px 20px; background: var(--bg-hover);
+        font-weight: 600; color: var(--text-sec); border-bottom: 1px solid var(--border);
+        font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    td {
+        padding: 14px 20px; border-bottom: 1px solid var(--border);
+        color: var(--text-main); font-weight: 500; vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+
+    /* Category Icon (No solid background) */
+    .category-icon {
+        width: 40px; height: 40px;
+        background: transparent; 
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 20px; color: var(--text-sec);
+    }
+
+    /* Badges */
+    .status-badge {
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 4px 10px; border-radius: 6px;
+        font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
+        background: var(--accent-light); color: var(--accent-dark);
+    }
+    .status-badge::before {
+        content: ''; width: 6px; height: 6px; border-radius: 50%;
+        background: var(--accent); margin-right: 6px;
+    }
+
+    /* Action Buttons */
+    .action-icons { display: flex; gap: 8px; justify-content: center; }
+    .action-btn {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 30px; height: 30px; border-radius: 8px;
+        background: var(--bg-surface); border: 1px solid var(--border);
+        color: var(--text-sec); text-decoration: none;
+        transition: all 0.15s; font-size: 15px;
+    }
+    .action-btn:hover { background: var(--bg-hover); color: var(--accent); border-color: #d1d6cf; }
+    .action-btn.delete:hover { color: #c47a7a; border-color: #e8caca; background: #fdf5f5; }
+
+    /* Pagination */
+    .pagination {
+        display: flex; justify-content: space-between; align-items: center;
+        margin-top: 24px; font-size: 13px; color: var(--text-sec);
+    }
+    .pagination-links { display: flex; gap: 6px; }
+    .pagination-links span, .pagination-links a {
+        display: inline-flex; align-items: center; justify-content: center;
+        min-width: 30px; height: 30px; padding: 0 10px;
+        border: 1px solid var(--border); border-radius: 6px;
+        text-decoration: none; color: var(--text-main); font-weight: 500;
+        transition: 0.15s; background: var(--bg-surface);
+    }
+    .pagination-links .active { background: var(--accent); border-color: var(--accent); color: white; }
 </style>
 @endsection
 
@@ -157,21 +197,26 @@
 <div class="page-header">
     <div class="page-title">
         <h1>Kategori</h1>
-        <div class="breadcrumb">Dashboard / Kategori</div>
+        <div class="breadcrumb">FurniHome / Kategori</div>
     </div>
-    <a href="#" class="btn-primary">+ Tambah Kategori</a>
+    <a href="#" class="btn-primary">
+        <i class="ti ti-plus"></i> Tambah Kategori
+    </a>
 </div>
 
 <div class="filter-bar">
     <div class="search-box">
-        <span>🔍</span>
+        <i class="ti ti-search"></i>
         <input type="text" placeholder="Cari kategori...">
     </div>
-    <select class="filter-select">
-        <option>Semua Status</option>
-        <option>Aktif</option>
-        <option>Nonaktif</option>
-    </select>
+    <div class="select-wrapper">
+        <i class="ti ti-circle-check prefix-icon"></i>
+        <select class="filter-select">
+            <option>Semua Status</option>
+            <option>Aktif</option>
+            <option>Nonaktif</option>
+        </select>
+    </div>
 </div>
 
 <div class="table-wrapper">
@@ -179,37 +224,39 @@
         <thead>
             <tr>
                 <th style="width: 50px;">#</th>
-                <th>Ikon</th>
-                <th>Nama Kategori</th>
-                <th>Deskripsi</th>
-                <th>Jumlah Produk</th>
+                <th style="width: 60px; text-align: center;">Ikon</th>
+                <th>Kategori</th>
+                <th style="width: 35%;">Deskripsi</th>
+                <th>Total Produk</th>
                 <th>Status</th>
-                <th style="width: 80px;">Aksi</th>
+                <th style="width: 100px; text-align: center;">Aksi</th>
             </tr>
         </thead>
         <tbody>
             @php
                 $categories = [
-                    ['id'=>1, 'icon'=>'🛋️', 'nama'=>'Sofa', 'deskripsi'=>'Berbagai pilihan sofa untuk ruang tamu dengan desain minimalis hingga mewah.', 'jumlah'=>24, 'status'=>'Aktif'],
-                    ['id'=>2, 'icon'=>'🪑', 'nama'=>'Kursi', 'deskripsi'=>'Kursi minimalis, kursi makan, kursi kerja, dan berbagai model lainnya.', 'jumlah'=>18, 'status'=>'Aktif'],
-                    ['id'=>3, 'icon'=>'🍽️', 'nama'=>'Meja', 'deskripsi'=>'Meja makan, meja tamu, meja kerja, dan berbagai jenis meja lainnya.', 'jumlah'=>27, 'status'=>'Aktif'],
-                    ['id'=>4, 'icon'=>'🚪', 'nama'=>'Lemari', 'deskripsi'=>'Lemari pakai, lemari penyimpanan, dengan berbagai ukuran.', 'jumlah'=>15, 'status'=>'Aktif'],
-                    ['id'=>5, 'icon'=>'🛏️', 'nama'=>'Tempat Tidur', 'deskripsi'=>'Tempat tidur single, queen, king size dengan material berkualitas.', 'jumlah'=>12, 'status'=>'Aktif'],
-                    ['id'=>6, 'icon'=>'📚', 'nama'=>'Rak & Penyimpanan', 'deskripsi'=>'Rak buku, rak dinding, rak sepatu, dan solusi penyimpanan lainnya.', 'jumlah'=>20, 'status'=>'Aktif'],
-                    ['id'=>7, 'icon'=>'💼', 'nama'=>'Meja Kerja', 'deskripsi'=>'Meja kerja minimalis dan ergonomis untuk produktivitas.', 'jumlah'=>10, 'status'=>'Aktif'],
+                    ['id'=>1, 'icon'=>'ti-sofa', 'nama'=>'Sofa', 'deskripsi'=>'Berbagai pilihan sofa untuk ruang tamu dengan desain minimalis hingga mewah.', 'jumlah'=>24, 'status'=>'Aktif'],
+                    ['id'=>2, 'icon'=>'ti-armchair', 'nama'=>'Kursi', 'deskripsi'=>'Kursi minimalis, kursi makan, kursi kerja, dan berbagai model lainnya.', 'jumlah'=>18, 'status'=>'Aktif'],
+                    ['id'=>3, 'icon'=>'ti-table', 'nama'=>'Meja', 'deskripsi'=>'Meja makan, meja tamu, meja kerja, dan berbagai jenis meja lainnya.', 'jumlah'=>27, 'status'=>'Aktif'],
+                    ['id'=>4, 'icon'=>'ti-door', 'nama'=>'Lemari', 'deskripsi'=>'Lemari pakai, lemari penyimpanan, dengan berbagai ukuran.', 'jumlah'=>15, 'status'=>'Aktif'],
+                    ['id'=>5, 'icon'=>'ti-bed', 'nama'=>'Tempat Tidur', 'deskripsi'=>'Tempat tidur single, queen, king size dengan material berkualitas.', 'jumlah'=>12, 'status'=>'Aktif'],
+                    ['id'=>6, 'icon'=>'ti-books', 'nama'=>'Rak & Penyimpanan', 'deskripsi'=>'Rak buku, rak dinding, rak sepatu, dan solusi penyimpanan lainnya.', 'jumlah'=>20, 'status'=>'Aktif'],
+                    ['id'=>7, 'icon'=>'ti-desk', 'nama'=>'Meja Kerja', 'deskripsi'=>'Meja kerja minimalis dan ergonomis untuk produktivitas.', 'jumlah'=>10, 'status'=>'Aktif'],
                 ];
             @endphp
             @foreach($categories as $item)
             <tr>
-                <td>{{ $item['id'] }}</td>
-                <td><div class="category-icon">{{ $item['icon'] }}</div></td>
-                <td><strong>{{ $item['nama'] }}</strong></td>
-                <td>{{ $item['deskripsi'] }}</td>
-                <td>{{ $item['jumlah'] }} Produk</td>
-                <td><span class="status-badge">● {{ $item['status'] }}</span></td>
+                <td style="color: var(--text-sec);">{{ $item['id'] }}</td>
+                <td>
+                    <div class="category-icon" style="margin: 0 auto;"><i class="ti {{ $item['icon'] }}"></i></div>
+                </td>
+                <td><strong style="color: var(--text-main); font-size: 13.5px;">{{ $item['nama'] }}</strong></td>
+                <td style="color: var(--text-sec); font-size: 12.5px; line-height: 1.4;">{{ $item['deskripsi'] }}</td>
+                <td><strong>{{ $item['jumlah'] }}</strong> <span style="color: var(--text-sec); font-size: 12px;">Item</span></td>
+                <td><span class="status-badge">{{ $item['status'] }}</span></td>
                 <td class="action-icons">
-                    <a href="#" title="Edit">✏️</a>
-                    <a href="#" title="Hapus">🗑️</a>
+                    <a href="#" class="action-btn" title="Edit"><i class="ti ti-edit"></i></a>
+                    <a href="#" class="action-btn delete" title="Hapus"><i class="ti ti-trash"></i></a>
                 </td>
             </tr>
             @endforeach
@@ -220,7 +267,9 @@
 <div class="pagination">
     <div>Menampilkan 1 - 7 dari 7 kategori</div>
     <div class="pagination-links">
+        <a href="#" title="Sebelumnya"><i class="ti ti-chevron-left" style="font-size: 16px;"></i></a>
         <span class="active">1</span>
+        <a href="#" title="Selanjutnya"><i class="ti ti-chevron-right" style="font-size: 16px;"></i></a>
     </div>
 </div>
 @endsection
