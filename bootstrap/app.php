@@ -32,4 +32,14 @@ return Application::configure(basePath: dirname(__DIR__))
     $middleware->alias([
         'supabase.auth' => \App\Http\Middleware\SupabaseAuth::class,
     ]);
+    })
+    ->withMiddleware(function (Middleware $middleware): void {
+    $middleware->validateCsrfTokens(except: [
+        'register',
+        'login',
+    ]);
+    $middleware->alias([
+        'supabase.auth' => \App\Http\Middleware\SupabaseAuth::class,
+        'admin'         => \App\Http\Middleware\AdminMiddleware::class, // ← tambah ini
+    ]);
     })->create();

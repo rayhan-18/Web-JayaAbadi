@@ -43,6 +43,12 @@
         Don't have an account?
         <a href="{{ route('register') }}">Sign up</a>
     </p>
+
+    @if (session('status'))
+    <div style="margin-bottom: 1rem; padding: 0.75rem 1rem; background: #D1FAE5; color: #065F46; border-radius: 8px; font-size: 0.875rem;">
+        {{ session('status') }}
+    </div>
+@endif
 </div>
 
 <script>

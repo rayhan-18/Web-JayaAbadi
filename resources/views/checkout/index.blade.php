@@ -22,13 +22,39 @@
                             @error('shipping_address') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                         </div>
                         <div class="mb-4">
-                            <label class="block text-sm font-medium mb-1">Metode Pembayaran</label>
-                            <select name="payment_method" class="w-full border rounded-lg px-3 py-2">
-                                <option value="transfer">Transfer Bank (Virtual Account)</option>
-                                <option value="card">Kartu Kredit / Debit</option>
-                                <option value="cod">Bayar di Tempat (COD)</option>
-                            </select>
-                        </div>
+    <label class="block text-sm font-medium mb-1">Nomor HP</label>
+    <input type="text" name="phone" value="{{ old('phone') }}"
+           class="w-full border rounded-lg px-3 py-2 focus:ring-amber-500 focus:border-amber-500" required>
+    @error('phone') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+</div>
+
+<div class="mb-4">
+    <label class="block text-sm font-medium mb-1">Metode Pembayaran</label>
+    <div class="grid grid-cols-3 gap-3 mt-2">
+        <label class="border rounded-lg p-3 cursor-pointer text-center hover:border-amber-500 has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50">
+            <input type="radio" name="payment_method" value="cash" class="hidden" required>
+            <i class="fa-solid fa-money-bill-wave text-xl text-amber-600 mb-1"></i>
+            <p class="text-sm font-medium">Cash (COD)</p>
+        </label>
+        <label class="border rounded-lg p-3 cursor-pointer text-center hover:border-amber-500 has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50">
+            <input type="radio" name="payment_method" value="transfer" class="hidden">
+            <i class="fa-solid fa-building-columns text-xl text-amber-600 mb-1"></i>
+            <p class="text-sm font-medium">Transfer Bank</p>
+        </label>
+        <label class="border rounded-lg p-3 cursor-pointer text-center hover:border-amber-500 has-[:checked]:border-amber-600 has-[:checked]:bg-amber-50">
+            <input type="radio" name="payment_method" value="ewallet" class="hidden">
+            <i class="fa-solid fa-wallet text-xl text-amber-600 mb-1"></i>
+            <p class="text-sm font-medium">E-Wallet</p>
+        </label>
+    </div>
+    @error('payment_method') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+</div>
+
+<div class="mb-4">
+    <label class="block text-sm font-medium mb-1">Catatan (opsional)</label>
+    <textarea name="notes" rows="2"
+              class="w-full border rounded-lg px-3 py-2 focus:ring-amber-500 focus:border-amber-500">{{ old('notes') }}</textarea>
+</div>
                     </div>
                 </div>
 

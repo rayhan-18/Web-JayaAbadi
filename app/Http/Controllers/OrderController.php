@@ -3,28 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::where('user_id', Auth::id())
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-        
+        $orders = Order::where('user_id', auth()->id())
+            ->latest()
+            ->get();
+
         return view('orders.index', compact('orders'));
     }
-    
+
     public function show(Order $order)
     {
-        // Pastikan order milik user yang login
-        if ($order->user_id != Auth::id()) {
+        // Pastiin user hanya bisa lihat order miliknya
+        if ($order->user_id !== auth()->id()) {
             abort(403);
         }
-        
+
         $order->load('items.product');
-        
+
         return view('orders.show', compact('order'));
     }
 }
