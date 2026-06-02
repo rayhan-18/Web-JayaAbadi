@@ -47,9 +47,6 @@ public function store(Request $request): RedirectResponse
 
     event(new Registered($user));
 
-        // Auth::login($user);
-
-        return redirect(route('login'));
     // Generate OTP
     $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 

@@ -144,7 +144,7 @@
     {{-- KOLOM 1: Kategori Filter Cepat --}}
     <div class="pos-card pos-categories">
         <div style="padding: 14px 16px; font-weight: 700; font-size: 14px; border-bottom: 1px solid var(--border);"><i class="ti ti-layout-grid"></i> Kategori</div>
-        <div class="category-list">
+        <div class="category-list" id="categoryList">
             <div class="cat-item active" id="cat-all" onclick="filterCategory('all')"><i class="ti ti-box"></i> Semua Barang</div>
             <div class="cat-item" id="cat-sofa" onclick="filterCategory('sofa')"><i class="ti ti-sofa"></i> Sofa & Lounge</div>
             <div class="cat-item" id="cat-kursi" onclick="onclick=filterCategory('kursi')"><i class="ti ti-armchair"></i> Kursi</div>
@@ -210,38 +210,46 @@
 </div>
 
 <script>
-    // Master Data Array Produk
-    const posProducts = [
-        { id: 1, nama: 'Sofa Minimalis Grey', harga: 3500000, stok: 14, kategori: 'sofa', img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&auto=format&fit=crop&q=60', tag: 'Aman' },
-        { id: 2, nama: 'Kursi Kerja Ergonomis', harga: 1250000, stok: 3, kategori: 'kursi', img: 'https://images.unsplash.com/photo-1505797149-43b0069ec26b?w=400&auto=format&fit=crop&q=60', tag: 'Menipis' },
-        { id: 3, nama: 'Meja Makan Jati Set', harga: 4800000, stok: 8, kategori: 'meja', img: 'https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?w=400&auto=format&fit=crop&q=60', tag: 'Aman' },
-        { id: 4, nama: 'Lemari Kayu 2 Pintu', harga: 2200000, stok: 19, kategori: 'lemari', img: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=400&auto=format&fit=crop&q=60', tag: 'Aman' },
-        { id: 5, nama: 'Kursi Cafe Industrial', harga: 450000, stok: 2, kategori: 'kursi', img: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=400&auto=format&fit=crop&q=60', tag: 'Menipis' },
-        { id: 6, nama: 'Rak Buku Kayu Minimalis', harga: 750000, stok: 22, kategori: 'lemari', img: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&auto=format&fit=crop&q=60', tag: 'Aman' },
-        { id: 7, nama: 'Sofa Velvet Emerald Luxury', harga: 5700000, stok: 5, kategori: 'sofa', img: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=400&auto=format&fit=crop&q=60', tag: 'Aman' },
-        { id: 8, nama: 'Meja Samping Kayu Walnut', harga: 850000, stok: 11, kategori: 'meja', img: 'https://images.unsplash.com/photo-1532372320978-9b4d7a92b24d?w=400&auto=format&fit=crop&q=60', tag: 'Aman' }
-    ];
-
-    // Array Global untuk menampung item di keranjang belanja
+    let posProducts = [];
     let cart = [];
     let currentSelectedCategory = 'all';
     let currentChannel = 'offline';
     const ongkirValue = 50000;
 
-    // Fungsi Render Daftar Produk ke Grid Tengah
+    async function loadProducts() {
+        try {
+            const res = await fetch('/admin/kasir/produk');
+            posProducts = await res.json();
+            buildCategoryList();
+            renderProducts(posProducts);
+            renderCart();
+        } catch (err) {
+            console.error('Gagal load produk:', err);
+        }
+    }
+
+    function buildCategoryList() {
+        const categories = [...new Set(posProducts.map(p => p.kategori))];
+        const list = document.getElementById('categoryList');
+        if (!list) return;
+        let html = `<div class="cat-item active" id="cat-all" onclick="filterCategory('all')"><i class="ti ti-box"></i> Semua Barang</div>`;
+        categories.forEach(cat => {
+            const label = cat.charAt(0).toUpperCase() + cat.slice(1).replace(/-/g, ' ');
+            html += `<div class="cat-item" id="cat-${cat}" onclick="filterCategory('${cat}')"><i class="ti ti-tag"></i> ${label}</div>`;
+        });
+        list.innerHTML = html;
+    }
+
     function renderProducts(products) {
         const grid = document.getElementById('productGrid');
         grid.innerHTML = '';
-
         if (products.length === 0) {
             grid.innerHTML = `<div class="no-product-msg"><i class="ti ti-package-off"></i>Produk tidak ditemukan</div>`;
             return;
         }
-
         products.forEach(p => {
             const formattedPrice = 'Rp ' + p.harga.toLocaleString('id-ID');
             const badgeLowClass = p.tag === 'Menipis' ? 'low' : '';
-
             grid.innerHTML += `
                 <div class="prod-card" onclick="addToCart(${p.id})">
                     <span class="stock-badge ${badgeLowClass}">${p.stok} Unit</span>
@@ -254,71 +262,53 @@
         });
     }
 
-    // Fungsi Menginput Barang ke Keranjang Belanjaan Kanan
     function addToCart(productId) {
         const product = posProducts.find(p => p.id === productId);
+        if (!product) return;
         const targetCartItem = cart.find(item => item.id === productId);
-
         if (targetCartItem) {
             if (targetCartItem.qty >= product.stok) {
-                alert('Gagal tambah: Batas sisa stok gudang terpenuhi!');
+                Swal.fire('Stok Habis', 'Batas sisa stok gudang terpenuhi!', 'warning');
                 return;
             }
             targetCartItem.qty++;
         } else {
-            cart.push({
-                id: product.id,
-                nama: product.nama,
-                harga: product.harga,
-                qty: 1
-            });
+            cart.push({ id: product.id, nama: product.nama, harga: product.harga, qty: 1 });
         }
         renderCart();
     }
 
-    // Fungsi Mengubah Kuantitas Barang (Plus / Minus) di Keranjang
     function updateQty(productId, amount) {
         const product = posProducts.find(p => p.id === productId);
         const targetCartItem = cart.find(item => item.id === productId);
-
         if (targetCartItem) {
             targetCartItem.qty += amount;
             if (targetCartItem.qty > product.stok) {
-                alert('Stok tidak mencukupi!');
+                Swal.fire('Stok Tidak Cukup', 'Stok tidak mencukupi!', 'warning');
                 targetCartItem.qty = product.stok;
             }
-            if (targetCartItem.qty <= 0) {
-                removeFromCart(productId);
-                return;
-            }
+            if (targetCartItem.qty <= 0) { removeFromCart(productId); return; }
         }
         renderCart();
     }
 
-    // Fungsi Mengeluarkan Barang dari List Belanjaan
     function removeFromCart(productId) {
         cart = cart.filter(item => item.id !== productId);
         renderCart();
     }
 
-    // Fungsi Render Tampilan Kanan Keranjang & Kalkulasi Total Harga Otomatis
     function renderCart() {
         const container = document.getElementById('cartItemsContainer');
         container.innerHTML = '';
-
         if (cart.length === 0) {
             container.innerHTML = `<div class="empty-cart-msg"><i class="ti ti-shopping-cart-x" style="font-size:24px; display:block; margin-bottom:4px; color:var(--text-muted)"></i>Keranjang masih kosong</div>`;
             document.getElementById('summarySubtotal').innerText = 'Rp 0';
             document.getElementById('grand-total').innerText = currentChannel === 'online' ? 'Rp ' + ongkirValue.toLocaleString('id-ID') : 'Rp 0';
             return;
         }
-
         let subtotal = 0;
-
         cart.forEach(item => {
-            const totalItemPrice = item.harga * item.qty;
-            subtotal += totalItemPrice;
-
+            subtotal += item.harga * item.qty;
             container.innerHTML += `
                 <div class="cart-item">
                     <div class="cart-item-details">
@@ -333,96 +323,82 @@
                     <button class="btn-remove-item" onclick="removeFromCart(${item.id})" title="Hapus"><i class="ti ti-trash"></i></button>
                 </div>`;
         });
-
-        let grandTotal = subtotal;
-        if (currentChannel === 'online') {
-            grandTotal += ongkirValue;
-        }
-
+        let grandTotal = subtotal + (currentChannel === 'online' ? ongkirValue : 0);
         document.getElementById('summarySubtotal').innerText = 'Rp ' + subtotal.toLocaleString('id-ID');
         document.getElementById('grand-total').innerText = 'Rp ' + grandTotal.toLocaleString('id-ID');
     }
 
-    // Fungsi Menyaring Berdasarkan Kategori Menu Kiri
     function filterCategory(category) {
         currentSelectedCategory = category;
         document.getElementById('searchInput').value = '';
-
-        const catItems = document.querySelectorAll('.cat-item');
-        catItems.forEach(item => item.classList.remove('active'));
-
-        const targetId = 'cat-' + category;
-        document.getElementById(targetId).classList.add('active');
-
-        if (category === 'all') {
-            renderProducts(posProducts);
-        } else {
-            const filtered = posProducts.filter(p => p.kategori === category);
-            renderProducts(filtered);
-        }
+        document.querySelectorAll('.cat-item').forEach(item => item.classList.remove('active'));
+        const target = document.getElementById('cat-' + category);
+        if (target) target.classList.add('active');
+        renderProducts(category === 'all' ? posProducts : posProducts.filter(p => p.kategori === category));
     }
 
-    // Fungsi Pencarian Real-Time di Kotak Atas
     function searchProduct() {
         const keyword = document.getElementById('searchInput').value.toLowerCase();
-        
-        let baseProducts = posProducts;
-        if (currentSelectedCategory !== 'all') {
-            baseProducts = posProducts.filter(p => p.kategori === currentSelectedCategory);
-        }
-
-        const searchResult = baseProducts.filter(p => p.nama.toLowerCase().includes(keyword));
-        renderProducts(searchResult);
+        let base = currentSelectedCategory === 'all' ? posProducts : posProducts.filter(p => p.kategori === currentSelectedCategory);
+        renderProducts(base.filter(p => p.nama.toLowerCase().includes(keyword)));
     }
 
-    // Saklar Pengubah Saluran (Offline vs Online) yang Mengubah Ongkir Dinamis
     function setChannel(type) {
         currentChannel = type;
-        const btnOffline = document.getElementById('chan-offline');
-        const btnOnline = document.getElementById('chan-online');
-        const rowOngkir = document.getElementById('row-ongkir');
-
-        if(type === 'online') {
-            btnOnline.classList.add('active');
-            btnOffline.classList.remove('active');
-            rowOngkir.style.display = 'flex';
-        } else {
-            btnOffline.classList.add('active');
-            btnOnline.classList.remove('active');
-            rowOngkir.style.display = 'none';
-        }
-        renderCart(); // Jalankan kalkulasi ulang grand total
+        document.getElementById('chan-offline').classList.toggle('active', type === 'offline');
+        document.getElementById('chan-online').classList.toggle('active', type === 'online');
+        document.getElementById('row-ongkir').style.display = type === 'online' ? 'flex' : 'none';
+        renderCart();
     }
 
-    // Fungsi Tombol Bayar / Simpan Cetak Nota POS
-    function checkoutProcess() {
+    async function checkoutProcess() {
         if (cart.length === 0) {
-            alert('Gagal: Masukkan minimal 1 barang ke dalam keranjang belanja!');
+            Swal.fire('Gagal', 'Masukkan minimal 1 barang ke keranjang!', 'warning');
             return;
         }
         const notes = document.getElementById('customerNotes').value;
-        const infoCatatan = notes.trim() !== '' ? `\nCatatan Pembeli: ${notes}` : '';
-        
-        alert(`✨ Transaksi Berhasil Diproses! ✨\nSaluran: Toko ${currentChannel.toUpperCase()}${infoCatatan}\nTotal Nota: ${document.getElementById('grand-total').innerText}\n\nStruk siap dicetak.`);
-        
-        // Reset keranjang setelah transaksi sukses
-        cart = [];
-        document.getElementById('customerNotes').value = '';
-        renderCart();
+        const { isConfirmed } = await Swal.fire({
+            title: 'Proses Pembayaran?',
+            text: `Total: ${document.getElementById('grand-total').innerText}`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Proses',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#5c9e74',
+        });
+        if (!isConfirmed) return;
+        try {
+            const res = await fetch('/admin/kasir/checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    items:   cart.map(i => ({ id: i.id, qty: i.qty, harga: i.harga })),
+                    channel: currentChannel,
+                    notes:   notes,
+                })
+            });
+            const data = await res.json();
+            if (data.success) {
+                await Swal.fire('Berhasil!', `Transaksi ${data.order_number} berhasil!\nTotal: Rp ${Number(data.total).toLocaleString('id-ID')}`, 'success');
+                cart = [];
+                document.getElementById('customerNotes').value = '';
+                renderCart();
+                loadProducts();
+            } else {
+                Swal.fire('Error', 'Transaksi gagal.', 'error');
+            }
+        } catch (err) {
+            Swal.fire('Error', 'Terjadi kesalahan saat proses transaksi.', 'error');
+        }
     }
 
-    // Daftarkan event global shortcut tombol F8 di Keyboard untuk Bayar Cepat
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'F8') {
-            e.preventDefault();
-            checkoutProcess();
-        }
+        if (e.key === 'F8') { e.preventDefault(); checkoutProcess(); }
     });
 
-    // Jalankan render katalog awal saat halaman terbuka
-    document.addEventListener("DOMContentLoaded", function() {
-        renderProducts(posProducts);
-        renderCart();
-    });
+    document.addEventListener('DOMContentLoaded', loadProducts);
 </script>
 @endsection

@@ -100,7 +100,7 @@
     <a href="{{ route('admin.category.index') }}" class="btn-cancel"><i class="ti ti-arrow-left"></i> Kembali</a>
 </div>
 
-<form action="#" method="POST">
+<form action="{{ route('admin.category.update', $category->id) }}" method="POST">
     @csrf
     @method('PUT')
     
@@ -112,12 +112,13 @@
                 
                 <div class="form-group">
                     <label class="form-label" for="nama_kategori">Nama Kategori</label>
-                    <input type="text" id="nama_kategori" name="nama" class="form-control" value="Sofa" required>
+                    <input type="text" id="nama_kategori" name="nama" class="form-control" 
+                        value="{{ old('nama', $category->name) }}" required>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="deskripsi">Deskripsi</label>
-                    <textarea id="deskripsi" name="deskripsi" class="form-control">Berbagai pilihan sofa untuk ruang tamu dengan desain minimalis hingga mewah.</textarea>
+                    <textarea id="deskripsi" name="deskripsi" class="form-control">{{ old('deskripsi', $category->description) }}</textarea>
                 </div>
             </div>
         </div>
@@ -140,10 +141,10 @@
                     <label class="form-label" for="status">Status</label>
                     <div class="select-wrapper">
                         <i class="ti ti-circle-check prefix-icon"></i>
-                        <select id="status" name="status" class="form-control">
-                            <option value="Aktif" selected>Aktif</option>
-                            <option value="Nonaktif">Nonaktif</option>
-                        </select>
+                    <select id="status" name="status" class="form-control">
+                    <option value="Aktif" {{ $category->is_active ? 'selected' : '' }}>Aktif</option>
+                    <option value="Nonaktif" {{ !$category->is_active ? 'selected' : '' }}>Nonaktif</option>
+                    </select>
                     </div>
                 </div>
             </div>

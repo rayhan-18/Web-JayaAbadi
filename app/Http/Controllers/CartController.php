@@ -51,19 +51,24 @@ class CartController extends Controller
     
     public function update(Request $request, CartItem $cartItem)
     {
+        // Pastiin product ada dulu
+        if (!$cartItem->product) {
+            return redirect()->route('cart.index')->with('error', 'Produk tidak ditemukan!');
+        }
+
         $request->validate([
             'quantity' => 'required|integer|min:1|max:' . $cartItem->product->stock
         ]);
-        
+
         $cartItem->update(['quantity' => $request->quantity]);
-        
+
         return redirect()->route('cart.index')->with('success', 'Keranjang berhasil diupdate!');
-    }
-    
-    public function remove(CartItem $cartItem)
+    }    
+    public function remove($id)
     {
+        $cartItem = \App\Models\CartItem::findOrFail($id);
         $cartItem->delete();
-        
+
         return redirect()->route('cart.index')->with('success', 'Produk dihapus dari keranjang!');
     }
     
@@ -74,21 +79,52 @@ class CartController extends Controller
         
         return redirect()->route('cart.index')->with('success', 'Keranjang dikosongkan!');
     }
+
+    public function getCart()
+    {
+    return $this->getOrCreateCart()->load('items.product');
+    }
     
-    private function getOrCreateCart()
+    public function getOrCreateCart()
     {
         if (Auth::check()) {
-            return Cart::firstOrCreate([
-                'user_id' => Auth::id(),
-                'is_active' => true
+            // Cek apakah ada cart guest yang perlu di-merge
+            $sessionId = session()->getId();
+            $guestCart = Cart::where('session_id', $sessionId)
+                            ->where('is_active', true)
+                            ->whereNull('user_id')
+                            ->first();
+
+            $userCart = Cart::firstOrCreate([
+                'user_id'   => Auth::id(),
+                'is_active' => true,
             ]);
+
+            // Merge guest cart ke user cart
+            if ($guestCart && $guestCart->id !== $userCart->id) {
+                foreach ($guestCart->items as $item) {
+                    $existing = $userCart->items()->where('product_id', $item->product_id)->first();
+                    if ($existing) {
+                        $existing->update(['quantity' => $existing->quantity + $item->quantity]);
+                    } else {
+                        $userCart->items()->create([
+                            'product_id' => $item->product_id,
+                            'quantity'   => $item->quantity,
+                            'price'      => $item->price,
+                        ]);
+                    }
+                }
+                $guestCart->items()->delete();
+                $guestCart->delete();
+            }
+
+            return $userCart;
         }
-        
-        // Untuk guest user
+
         $sessionId = session()->getId();
         return Cart::firstOrCreate([
             'session_id' => $sessionId,
-            'is_active' => true
+            'is_active'  => true,
         ]);
     }
 }

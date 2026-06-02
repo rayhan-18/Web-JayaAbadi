@@ -304,57 +304,81 @@
                 <th style="width: 100px; text-align: center;">Aksi</th>
             </tr>
         </thead>
-        <tbody>
-            @php
-                // Array Diperbarui: Kunci 'icon' diganti menjadi 'img' yang mengarah ke link gambar furnitur asli
-                $produk = [
-                    ['no'=>1, 'img'=>'https://images.unsplash.com/photo-1505797149-43b0069ec26b?w=100&auto=format&fit=crop&q=60', 'nama'=>'Kursi Minimalis Kayu', 'kategori'=>'Kursi', 'harga'=>750000, 'stok'=>45, 'status'=>'Aktif'],
-                    ['no'=>2, 'img'=>'https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?w=100&auto=format&fit=crop&q=60', 'nama'=>'Meja Makan Jati Set', 'kategori'=>'Meja', 'harga'=>2500000, 'stok'=>38, 'status'=>'Aktif'],
-                    ['no'=>3, 'img'=>'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=100&auto=format&fit=crop&q=60', 'nama'=>'Lemari Pakaian 3 Pintu', 'kategori'=>'Lemari', 'harga'=>3200000, 'stok'=>30, 'status'=>'Aktif'],
-                    ['no'=>4, 'img'=>'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&auto=format&fit=crop&q=60', 'nama'=>'Sofa Minimalis Grey', 'kategori'=>'Sofa', 'harga'=>4500000, 'stok'=>28, 'status'=>'Aktif'],
-                    ['no'=>5, 'img'=>'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=100&auto=format&fit=crop&q=60', 'nama'=>'Rak Buku Kayu Minimalis', 'kategori'=>'Rak', 'harga'=>850000, 'stok'=>25, 'status'=>'Aktif'],
-                    ['no'=>6, 'img'=>'https://images.unsplash.com/photo-1532372320978-9b4d7a92b24d?w=100&auto=format&fit=crop&q=60', 'nama'=>'Meja Samping Walnut', 'kategori'=>'Meja', 'harga'=>650000, 'stok'=>40, 'status'=>'Aktif'],
-                    ['no'=>7, 'img'=>'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=100&auto=format&fit=crop&q=60', 'nama'=>'Sofa Velvet Emerald Luxury', 'kategori'=>'Sofa', 'harga'=>3750000, 'stok'=>15, 'status'=>'Aktif'],
-                    ['no'=>8, 'img'=>'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&auto=format&fit=crop&q=60', 'nama'=>'Kursi Cafe Industrial', 'kategori'=>'Kursi', 'harga'=>1350000, 'stok'=>33, 'status'=>'Aktif'],
-                ];
-            @endphp
-            @foreach($produk as $item)
-            <tr>
-                <td style="color: var(--text-sec); layout-grid: center;">{{ $item['no'] }}</td>
-                <td>
-                    <div style="display: flex; align-items: center; gap: 12px;">
-                        {{-- SEKARANG MENGGUNAKAN IMAGE TAG DENGAN LINK REALISTIS --}}
-                        <div class="product-img"><img src="{{ $item['img'] }}" alt="{{ $item['nama'] }}"></div>
-                        <div>
-                            <strong style="color: var(--text-main); font-size: 13.5px;">{{ $item['nama'] }}</strong><br>
-                            <span style="font-size:11.5px; color: var(--text-muted);">SKU: {{ strtoupper(substr($item['nama'],0,3)).'-'.str_pad($item['no'],3,'0',STR_PAD_LEFT) }}</span>
-                        </div>
-                    </div>
-                </td>
-                <td>{{ $item['kategori'] }}</td>
-                <td>Rp {{ number_format($item['harga'],0,',','.') }}</td>
-                <td>{{ $item['stok'] }}</td>
-                <td><span class="status-badge">{{ $item['status'] }}</span></td>
-                <td class="action-icons" style="justify-content: center;">
-                    <a href="{{ route('admin.product.edit', $item['no']) }}" class="action-btn" title="Edit"><i class="ti ti-edit"></i></a>
-                    <a href="#" class="action-btn delete" title="Hapus"><i class="ti ti-trash"></i></a>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+<tbody>
+    @forelse($products as $index => $product)
+    <tr>
+        <td style="color: var(--text-sec);">{{ $products->firstItem() + $index }}</td>
+        <td>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div class="product-img">
+                    @if($product->image)
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}">
+                    @else
+                        <img src="https://placehold.co/100x100?text=No+Image" alt="{{ $product->name }}">
+                    @endif
+                </div>
+                <div>
+                    <strong style="color: var(--text-main); font-size: 13.5px;">{{ $product->name }}</strong><br>
+                    <span style="font-size:11.5px; color: var(--text-muted);">{{ $product->slug }}</span>
+                </div>
+            </div>
+        </td>
+        <td>{{ $product->category->name ?? '-' }}</td>
+        <td>Rp {{ number_format($product->price, 0, ',', '.') }}</td>
+        <td>{{ $product->stock }}</td>
+        <td>
+            <span class="status-badge" style="{{ !$product->is_active ? 'background:#fdf5f5; color:#c47a7a;' : '' }}">
+                {{ $product->is_active ? 'Aktif' : 'Nonaktif' }}
+            </span>
+        </td>
+        <td class="action-icons" style="justify-content: center;">
+            <a href="{{ route('admin.product.edit', $product->id) }}" class="action-btn" title="Edit">
+                <i class="ti ti-edit"></i>
+            </a>
+            <form method="POST" action="{{ route('admin.product.destroy', $product->id) }}" onsubmit="return confirm('Hapus produk ini?')">
+                @csrf @method('DELETE')
+                <button type="submit" class="action-btn delete" title="Hapus">
+                    <i class="ti ti-trash"></i>
+                </button>
+            </form>
+        </td>
+    </tr>
+    @empty
+    <tr>
+        <td colspan="7" style="text-align: center; padding: 40px; color: var(--text-muted);">
+            Belum ada produk.
+        </td>
+    </tr>
+    @endforelse
+</tbody>    </table>
 </div>
 
 <div class="pagination">
-    <div>Menampilkan 1 - 8 dari 120 produk</div>
+    <div>Menampilkan {{ $products->firstItem() }} - {{ $products->lastItem() }} dari {{ $products->total() }} produk</div>
     <div class="pagination-links">
-        <a href="#" title="Sebelumnya"><i class="ti ti-chevron-left" style="font-size: 16px;"></i></a>
-        <span class="active">1</span>
-        <a href="#">2</a>
-        <a href="#">3</a>
-        <span style="border: none; background: transparent; padding: 0 4px; min-width: auto; color: var(--text-muted);">...</span>
-        <a href="#">15</a>
-        <a href="#" title="Selanjutnya"><i class="ti ti-chevron-right" style="font-size: 16px;"></i></a>
+        @if($products->onFirstPage())
+            <span style="opacity:0.4; border: 1px solid var(--border); border-radius: 6px; padding: 0 10px; height: 30px; display:inline-flex; align-items:center;">
+                <i class="ti ti-chevron-left" style="font-size: 16px;"></i>
+            </span>
+        @else
+            <a href="{{ $products->previousPageUrl() }}"><i class="ti ti-chevron-left" style="font-size: 16px;"></i></a>
+        @endif
+
+        @foreach($products->getUrlRange(1, $products->lastPage()) as $page => $url)
+            @if($page == $products->currentPage())
+                <span class="active">{{ $page }}</span>
+            @else
+                <a href="{{ $url }}">{{ $page }}</a>
+            @endif
+        @endforeach
+
+        @if($products->hasMorePages())
+            <a href="{{ $products->nextPageUrl() }}"><i class="ti ti-chevron-right" style="font-size: 16px;"></i></a>
+        @else
+            <span style="opacity:0.4; border: 1px solid var(--border); border-radius: 6px; padding: 0 10px; height: 30px; display:inline-flex; align-items:center;">
+                <i class="ti ti-chevron-right" style="font-size: 16px;"></i>
+            </span>
+        @endif
     </div>
 </div>
 @endsection

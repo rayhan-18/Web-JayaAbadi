@@ -116,5 +116,29 @@
             </div>
         </div>
     </footer>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    @if(session('success'))
+        Swal.fire({
+            title: 'Berhasil!',
+            text: '{{ session("success") }}',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#92400e',
+            timer: 3000,
+            timerProgressBar: true,
+        });
+    @endif
+
+    @if(session('error'))
+        Swal.fire({
+            title: 'Oops!',
+            text: '{{ session("error") }}',
+            icon: 'error',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#92400e',
+        });
+    @endif
+</script>
 </body>
 </html>

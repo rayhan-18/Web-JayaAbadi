@@ -103,6 +103,7 @@
     .export-dropdown-content a:last-child { border-bottom: none; }
     .export-dropdown-content a i { color: var(--text-sec); font-size: 15px; }
     .export-dropdown-content a:hover { background: var(--bg-hover); color: var(--accent); }
+    .export-dropdown-content a:hover i { color: var(--accent); }
     .export-dropdown:hover .export-dropdown-content { display: block; }
 
     /* Layout Order & Table Layout */
@@ -127,7 +128,7 @@
     .customer-name { font-weight: 600; color: var(--text-main); font-size: 13.5px; }
     .customer-email { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
 
-    /* Premium Status Muted Badges */
+    /* Premium Status Badges */
     .status-badge {
         display: inline-flex; align-items: center; justify-content: center;
         padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap;
@@ -159,7 +160,7 @@
     .pagination-links a:hover { background: var(--bg-hover); border-color: var(--accent); color: var(--accent); }
     .pagination-links .active { background: var(--accent); border-color: var(--accent); color: white; }
 
-    /* Detail Panel Sidebar - Anti Overlap & Custom Scroll */
+    /* Detail Panel Sidebar */
     .detail-panel {
         width: 360px; flex-shrink: 0; background: #ffffff !important; border-radius: var(--radius-lg);
         border: 1px solid var(--border); display: none; flex-direction: column;
@@ -194,22 +195,27 @@
     .dp-section-title { font-size: 13px; font-weight: 700; color: var(--text-main); margin: 20px 0 12px; text-transform: uppercase; letter-spacing: 0.02em; }
     .dp-divider { border: none; border-top: 1px dashed var(--border); margin: 16px 0; }
     
-    /* Bukti Transfer Image Box (Clean dashed layout, no background color) */
-    .bukti-transfer-box {
-        width: 100%; height: 180px; border: 2px dashed var(--border); border-radius: var(--radius-md);
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        gap: 8px; color: var(--text-sec); cursor: pointer; transition: all 0.2s; margin-top: 8px;
+    /* Bukti Pembayaran Frame */
+    .receipt-frame {
+        width: 100%; border: 1px solid var(--border); border-radius: var(--radius-md);
+        overflow: hidden; background: var(--bg-hover); position: relative; margin-top: 8px;
+        box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
     }
-    .bukti-transfer-box:hover { border-color: var(--accent); background: var(--bg-hover); color: var(--accent); }
-    .bukti-transfer-box i { font-size: 28px; }
-    .bukti-transfer-box span { font-size: 12px; font-weight: 600; }
+    .receipt-img {
+        width: 100%; height: auto; max-height: 380px; object-fit: contain; 
+        display: block; cursor: zoom-in;
+    }
+    .receipt-overlay-tip {
+        padding: 8px; background: var(--bg-hover); border-top: 1px solid var(--border);
+        text-align: center; font-size: 11px; color: var(--text-sec); font-weight: 600;
+    }
 
-    /* Button Action Panel (Mempunyai mikro interaksi membal) */
+    /* Button Action Panel */
     .btn-payment-action {
         width: 100%; padding: 12px; color: #ffffff !important;
         border: none; border-radius: 10px; font-size: 13px; font-weight: 600;
         cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-        outline: none; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); -webkit-tap-highlight-color: transparent;
+        outline: none; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .btn-payment-action.approve { background-color: #5c9e74 !important; box-shadow: 0 2px 6px rgba(92, 158, 116, 0.2); margin-top: 20px; }
     .btn-payment-action.approve:hover { background-color: #3a5c48 !important; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(58, 92, 72, 0.3); }
@@ -240,22 +246,22 @@
     <div class="stat-card total">
         <div class="stat-icon"><i class="ti ti-report-money"></i></div>
         <div class="stat-label">Total Masuk</div>
-        <div class="stat-value">Rp 48.210.000</div>
+        <div class="stat-value">Rp {{ number_format($stats['total'] ?? 0, 0, ',', '.') }}</div>
     </div>
     <div class="stat-card pending">
         <div class="stat-icon"><i class="ti ti-clock-bolt"></i></div>
         <div class="stat-label">Perlu Konfirmasi</div>
-        <div class="stat-value">5</div>
+        <div class="stat-value">{{ $stats['pending'] ?? 0 }}</div>
     </div>
     <div class="stat-card success">
         <div class="stat-icon"><i class="ti ti-circle-check"></i></div>
         <div class="stat-label">Pembayaran Sukses</div>
-        <div class="stat-value">112</div>
+        <div class="stat-value">{{ $stats['success'] ?? 0 }}</div>
     </div>
     <div class="stat-card failed">
         <div class="stat-icon"><i class="ti ti-circle-x"></i></div>
         <div class="stat-label">Pembayaran Gagal</div>
-        <div class="stat-value">3</div>
+        <div class="stat-value">{{ $stats['failed'] ?? 0 }}</div>
     </div>
 </div>
 
@@ -270,7 +276,6 @@
             <option>Semua Metode</option>
             <option>Transfer Bank Manual</option>
             <option>E-Wallet (OVO/DANA)</option>
-            <option>Credit Card</option>
         </select>
     </div>
     <div class="select-wrapper">
@@ -301,42 +306,40 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php
-                        $payments = [
-                            ['invoice'=>'INV/240526/FH/089', 'order_id'=>'#ORD-00123', 'nama'=>'Rayhan Maulana', 'email'=>'rayhan@gmail.com', 'tanggal'=>'26 Mei 2024 10:32', 'metode'=>'Transfer Bank Mandiri', 'jumlah'=>2800000, 'status'=>'Menunggu Konfirmasi', 'bank_sender'=>'Rayhan M', 'rek_num'=>'157000xxxx890'],
-                            ['invoice'=>'INV/240525/FH/088', 'order_id'=>'#ORD-00122', 'nama'=>'Siti Aisyah', 'email'=>'aisyah@gmail.com', 'tanggal'=>'25 Mei 2024 15:46', 'metode'=>'E-Wallet OVO', 'jumlah'=>1900000, 'status'=>'Berhasil', 'bank_sender'=>'-', 'rek_num'=>'-'],
-                            ['invoice'=>'INV/240525/FH/087', 'order_id'=>'#ORD-00121', 'nama'=>'Budi Santoso', 'email'=>'budi@gmail.com', 'tanggal'=>'25 Mei 2024 11:21', 'metode'=>'Transfer Bank Mandiri', 'jumlah'=>3275000, 'status'=>'Berhasil', 'bank_sender'=>'Budi Santoso', 'rek_num'=>'123000xxxx567'],
-                            ['invoice'=>'INV/240524/FH/086', 'order_id'=>'#ORD-00119', 'nama'=>'Ahmad Fauzi', 'email'=>'ahmad@gmail.com', 'tanggal'=>'24 Mei 2024 16:55', 'metode'=>'Credit Card VISA', 'jumlah'=>4600000, 'status'=>'Berhasil', 'bank_sender'=>'-', 'rek_num'=>'-'],
-                            ['invoice'=>'INV/240523/FH/085', 'order_id'=>'#ORD-00118', 'nama'=>'Nina Karlina', 'email'=>'nina@gmail.com', 'tanggal'=>'23 Mei 2024 12:12', 'metode'=>'E-Wallet DANA', 'jumlah'=>1300000, 'status'=>'Berhasil', 'bank_sender'=>'-', 'rek_num'=>'-'],
-                            ['invoice'=>'INV/240522/FH/084', 'order_id'=>'#ORD-00116', 'nama'=>'Larasati Putri', 'email'=>'larasati@gmail.com', 'tanggal'=>'22 Mei 2024 14:40', 'metode'=>'Credit Card Mastercard', 'jumlah'=>3870000, 'status'=>'Gagal', 'bank_sender'=>'-', 'rek_num'=>'-'],
-                        ];
-                    @endphp
                     @foreach($payments as $index => $p)
                     <tr>
-                        <td><a href="#" class="invoice-link">{{ $p['invoice'] }}</a></td>
-                        <td style="font-weight: 600;">{{ $p['order_id'] }}</td>
+                        <td><a href="#" class="invoice-link" onclick="showPaymentDetail({{ $index }}); return false;">{{ $p->order_number }}</a></td>
+                        <td style="font-weight: 600;">{{ $p->order_number }}</td>
                         <td>
                             <div class="customer-info">
-                                <div class="customer-name">{{ $p['nama'] }}</div>
-                                <div class="customer-email">{{ $p['email'] }}</div>
+                                <div class="customer-name">{{ $p->user->name ?? 'Guest' }}</div>
+                                <div class="customer-email">{{ $p->user->email ?? '-' }}</div>
                             </div>
                         </td>
-                        <td style="color: var(--text-sec); font-size: 12.5px;">{{ $p['tanggal'] }}</td>
-                        <td style="color: var(--text-sec); font-size: 12.5px;">{{ $p['metode'] }}</td>
-                        <td style="font-weight: 600;">Rp {{ number_format($p['jumlah'], 0, ',', '.') }}</td>
+                        <td style="color: var(--text-sec); font-size: 12.5px;">{{ $p->created_at->format('d M Y H:i') }}</td>
+                        <td style="color: var(--text-sec); font-size: 12.5px;">{{ ucfirst($p->payment_method) }}</td>
+                        <td style="font-weight: 600;">Rp {{ number_format($p->total_amount, 0, ',', '.') }}</td>
                         <td>
                             @php
-                                $cls = match($p['status']) {
-                                    'Menunggu Konfirmasi' => 'status-konfirmasi',
-                                    'Berhasil' => 'status-berhasil',
-                                    'Gagal' => 'status-gagal',
-                                    default => ''
+                                $cls = match($p->payment_status) {
+                                    'unpaid' => 'status-konfirmasi',
+                                    'paid'   => 'status-berhasil',
+                                    'failed' => 'status-gagal',
+                                    default  => ''
+                                };
+                                $label = match($p->payment_status) {
+                                    'unpaid' => 'Menunggu Konfirmasi',
+                                    'paid'   => 'Berhasil',
+                                    'failed' => 'Gagal',
+                                    default  => ucfirst($p->payment_status)
                                 };
                             @endphp
-                            <span class="status-badge {{ $cls }}">{{ $p['status'] }}</span>
+                            <span class="status-badge {{ $cls }}">{{ $label }}</span>
                         </td>
                         <td style="text-align: center;">
-                            <div class="action-btn" onclick="showPaymentDetail({{ $index }})" title="Tinjau Pembayaran"><i class="ti ti-zoom-in"></i></div>
+                            <div class="action-btn" onclick="showPaymentDetail({{ $index }})" title="Tinjau Pembayaran">
+                                <i class="ti ti-zoom-in"></i>
+                            </div>
                         </td>
                     </tr>
                     @endforeach
@@ -345,12 +348,25 @@
         </div>
         
         <div class="pagination">
-            <div>Menampilkan 1 - 6 dari 120 transaksi</div>
+            <div>Menampilkan {{ $payments->firstItem() ?? 0 }} - {{ $payments->lastItem() ?? 0 }} dari {{ $payments->total() }} transaksi</div>
             <div class="pagination-links">
-                <span class="active">1</span>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#">→</a>
+                @if($payments->onFirstPage())
+                    <span style="opacity:0.4;">←</span>
+                @else
+                    <a href="{{ $payments->previousPageUrl() }}">←</a>
+                @endif
+                @foreach($payments->getUrlRange(1, $payments->lastPage()) as $page => $url)
+                    @if($page == $payments->currentPage())
+                        <span class="active">{{ $page }}</span>
+                    @else
+                        <a href="{{ $url }}">{{ $page }}</a>
+                    @endif
+                @endforeach
+                @if($payments->hasMorePages())
+                    <a href="{{ $payments->nextPageUrl() }}">→</a>
+                @else
+                    <span style="opacity:0.4;">→</span>
+                @endif
             </div>
         </div>
     </div>
@@ -365,10 +381,11 @@
 </div>
 
 <script>
-    const payments = @json($payments);
+    const payments = @json($paymentsJson);
+    const storageUrl = "{{ asset('storage') }}";
 
     function formatRupiah(n) {
-        return 'Rp ' + n.toLocaleString('id-ID');
+        return 'Rp ' + Number(n).toLocaleString('id-ID');
     }
 
     function getStatusClass(status) {
@@ -385,35 +402,35 @@
         const panel = document.getElementById('paymentPanel');
         const body = document.getElementById('paymentBody');
 
-        // Logic if payment needs manual verification (Transfer Bank)
-        let manualTransferHtml = '';
-        if(p.metode.includes('Transfer Bank')) {
-            manualTransferHtml = `
+        // Logika penampilan foto bukti transaksi
+        let receiptHtml = '';
+        if (p.metode.toLowerCase() !== 'cash') {
+            const imgSrc = p.bukti_foto ? `${storageUrl}/${p.bukti_foto}` : 'https://placehold.co/400&text=Bukti+Belum+Diunggah';
+            
+            receiptHtml = `
                 <hr class="dp-divider">
-                <div class="dp-section-title">Verifikasi Transfer Manual</div>
-                <div class="dp-row">
-                    <div class="dp-label">Nama Pengirim</div>
-                    <div class="dp-value">${p.bank_sender}</div>
-                </div>
-                <div class="dp-row">
-                    <div class="dp-label">No. Rekening</div>
-                    <div class="dp-value">${p.rek_num}</div>
-                </div>
-                <div class="dp-label" style="margin-bottom:6px;">Bukti Transfer</div>
-                <div class="bukti-transfer-box" onclick="alert('Buka lampiran gambar asli...')">
-                    <i class="ti ti-file-search"></i>
-                    <span>Lihat Lampiran Gambar</span>
-                    <p style="font-size:11px; color: var(--text-muted); margin:0;">bukti_transfer_id_${index}.jpg</p>
+                <div class="dp-section-title">Dokumen Bukti Transaksi</div>
+                <div class="receipt-frame">
+                    <a href="${imgSrc}" target="_blank" title="Klik untuk memperbesar gambar">
+                        <img src="${imgSrc}" class="receipt-img" alt="Bukti Transfer ${p.invoice}">
+                    </a>
+                    <div class="receipt-overlay-tip">
+                        <i class="ti ti-maximize"></i> Klik gambar untuk memperbesar
+                    </div>
                 </div>
             `;
         }
 
-        // Action buttons based on status
+        // Memastikan logic validasi status murni terbaca dari string aslinya
         let actionButtonsHtml = '';
-        if(p.status === 'Menunggu Konfirmasi') {
+        if (p.status_raw === 'unpaid') {
             actionButtonsHtml = `
-                <button class="btn-payment-action approve" onclick="event.stopPropagation(); alert('Pembayaran ${p.invoice} berhasil disetujui!')"><i class="ti ti-circle-check"></i> Terima Pembayaran</button>
-                <button class="btn-payment-action reject" onclick="event.stopPropagation(); alert('Pembayaran ditolak.')">Tolak Bukti Transfer</button>
+                <button class="btn-payment-action approve" onclick="confirmPayment(${p.order_db_id})">
+                    <i class="ti ti-circle-check"></i> Terima Pembayaran
+                </button>
+                <button class="btn-payment-action reject" onclick="rejectPayment(${p.order_db_id})">
+                    Tolak Bukti Transfer
+                </button>
             `;
         }
 
@@ -432,7 +449,7 @@
                 <div class="dp-value">${p.tanggal}</div>
             </div>
             <div class="dp-row">
-                <div class="dp-label">Metode Sistem</div>
+                <div class="dp-label">Metode</div>
                 <div class="dp-value">${p.metode}</div>
             </div>
             <div class="dp-row">
@@ -442,15 +459,12 @@
                     <div style="color: var(--text-sec); font-size:11.5px;">${p.email}</div>
                 </div>
             </div>
-            
-            ${manualTransferHtml}
-            
+            ${receiptHtml}
             <hr class="dp-divider">
             <div class="dp-total-row grand">
                 <span class="lbl">Total Nominal</span>
                 <span class="val">${formatRupiah(p.jumlah)}</span>
             </div>
-            
             ${actionButtonsHtml}
         `;
 
@@ -459,6 +473,66 @@
 
     function closePaymentDetail() {
         document.getElementById('paymentPanel').classList.remove('open');
+    }
+
+    function confirmPayment(orderId) {
+        Swal.fire({
+            title: 'Konfirmasi Pembayaran?',
+            text: 'Pembayaran akan ditandai sebagai berhasil.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Terima',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#5c9e74',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/admin/pembayaran/${orderId}/status`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ payment_status: 'paid' })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire('Berhasil!', 'Pembayaran telah dikonfirmasi.', 'success')
+                            .then(() => location.reload());
+                    }
+                });
+            }
+        });
+    }
+
+    function rejectPayment(orderId) {
+        Swal.fire({
+            title: 'Tolak Pembayaran?',
+            text: 'Pembayaran akan ditandai sebagai gagal.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Tolak',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#c47a7a',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/admin/pembayaran/${orderId}/status`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ payment_status: 'failed' })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire('Ditolak!', 'Pembayaran telah ditolak.', 'success')
+                            .then(() => location.reload());
+                    }
+                });
+            }
+        });
     }
 </script>
 @endsection

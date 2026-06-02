@@ -100,7 +100,7 @@
     <a href="{{ route('admin.category.index') }}" class="btn-cancel"><i class="ti ti-arrow-left"></i> Kembali</a>
 </div>
 
-<form action="#" method="POST">
+<form action="{{ route('admin.category.store') }}" method="POST">
     @csrf
     <div class="form-grid">
         {{-- KOLOM KIRI: Informasi Utama --}}
@@ -115,7 +115,7 @@
 
                 <div class="form-group">
                     <label class="form-label" for="deskripsi">Deskripsi</label>
-                    <textarea id="deskripsi" name="deskripsi" class="form-control" placeholder="Tuliskan penjelasan singkat mengenai kategori ini..."></textarea>
+                    <textarea id="deskripsi" name="deskripsi" class="form-control" placeholder="..."></textarea>
                 </div>
             </div>
         </div>
@@ -129,7 +129,7 @@
                     <label class="form-label" for="ikon">Ikon Kategori (Tabler Class)</label>
                     <div class="select-wrapper">
                         <i class="ti ti-icons prefix-icon"></i>
-                        <input type="text" id="ikon" name="ikon" class="form-control" placeholder="Contoh: ti-sofa" style="padding-left: 34px;">
+                        <input type="text" id="ikon" name="image" class="form-control" placeholder="ti ti-armchair">
                     </div>
                     <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 6px;">Cari referensi ikon di <a href="https://tabler.io/icons" target="_blank" style="color: var(--accent);">tabler.io/icons</a></span>
                 </div>

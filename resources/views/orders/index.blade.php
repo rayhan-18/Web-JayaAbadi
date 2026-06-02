@@ -21,7 +21,7 @@
                 <tbody class="divide-y divide-gray-200">
                     @foreach($orders as $order)
                     <tr>
-                        <td class="px-6 py-4 text-sm">{{ $order->invoice_number }}</td>
+                        <td class="text-sm">{{ $order->order_number }}</td>
                         <td class="px-6 py-4 text-sm">{{ $order->created_at->format('d/m/Y') }}</td>
                         <td class="px-6 py-4 text-sm font-medium">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
                         <td class="px-6 py-4">

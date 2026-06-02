@@ -4,7 +4,6 @@
 
 @section('styles')
 <style>
-    /* Premium Variables (Konsisten dengan halaman sebelumnya) */
     :root {
         --accent: #5c9e74;
         --accent-dark: #3a5c48;
@@ -20,7 +19,6 @@
 
     body { color: var(--text-main); }
 
-    /* Page Header */
     .page-header {
         display: flex;
         justify-content: space-between;
@@ -40,21 +38,16 @@
         margin-top: 4px;
     }
 
-    /* Two Column Grid Setup */
     .form-grid {
         display: grid;
         grid-template-columns: 1fr 360px;
         gap: 20px;
         align-items: start;
     }
-
     @media (max-width: 992px) {
-        .form-grid {
-            grid-template-columns: 1fr;
-        }
+        .form-grid { grid-template-columns: 1fr; }
     }
 
-    /* Premium Cards */
     .card {
         background: var(--bg-surface);
         border-radius: var(--radius-lg);
@@ -72,18 +65,10 @@
         align-items: center;
         gap: 8px;
     }
-    .card-title i {
-        color: var(--accent);
-        font-size: 18px;
-    }
+    .card-title i { color: var(--accent); font-size: 18px; }
 
-    /* Form Layout Elements */
-    .form-group {
-        margin-bottom: 18px;
-    }
-    .form-group:last-child {
-        margin-bottom: 0;
-    }
+    .form-group { margin-bottom: 18px; }
+    .form-group:last-child { margin-bottom: 0; }
     .form-label {
         display: block;
         font-size: 13px;
@@ -91,8 +76,7 @@
         color: var(--text-main);
         margin-bottom: 8px;
     }
-    
-    /* Inputs, Selects, and Textareas */
+
     .form-control {
         width: 100%;
         height: 40px;
@@ -119,7 +103,6 @@
         min-height: 120px;
     }
 
-    /* Input Prefix Wrapper (Untuk Rp / IDR) */
     .input-prefix-group {
         position: relative;
         display: flex;
@@ -133,14 +116,9 @@
         color: var(--text-sec);
         pointer-events: none;
     }
-    .input-prefix-group .form-control {
-        padding-left: 38px;
-    }
+    .input-prefix-group .form-control { padding-left: 38px; }
 
-    /* Select Wrapper with Prefix Icon */
-    .select-wrapper {
-        position: relative;
-    }
+    .select-wrapper { position: relative; }
     .select-wrapper i.prefix-icon {
         position: absolute;
         left: 12px;
@@ -158,57 +136,59 @@
         cursor: pointer;
     }
 
-    /* Premium Image Drag & Drop Area (Tanpa Solid Background) */
+    /* Image Preview */
+    .img-preview-wrapper {
+        width: 100%;
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        border: 1px solid var(--border);
+        margin-bottom: 12px;
+        background: var(--bg-hover);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 140px;
+    }
+    .img-preview-wrapper img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        display: block;
+    }
+    .img-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 24px;
+        color: var(--text-muted);
+    }
+    .img-placeholder i { font-size: 32px; }
+    .img-placeholder span { font-size: 12px; }
+
     .upload-zone {
         border: 2px dashed var(--border);
         border-radius: var(--radius-md);
-        padding: 24px 16px;
+        padding: 20px 16px;
         text-align: center;
         cursor: pointer;
         transition: all 0.2s ease;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
     }
     .upload-zone:hover {
         border-color: var(--accent);
         background: var(--bg-hover);
     }
-    .upload-zone i {
-        font-size: 24px;
-        color: var(--text-sec);
-    }
-    .upload-zone span {
-        font-size: 12px;
-        font-weight: 500;
-        color: var(--text-main);
-    }
+    .upload-zone i { font-size: 24px; color: var(--text-sec); }
+    .upload-zone span { font-size: 12px; font-weight: 500; color: var(--text-main); }
+    .upload-zone p { font-size: 11px; color: var(--text-muted); margin: 0; }
 
-    /* Thumbnail Preview current image */
-    .current-img-preview {
-        width: 100%;
-        height: 120px;
-        border: 1px solid var(--border);
-        border-radius: var(--radius-md);
-        margin-bottom: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 42px;
-        color: var(--text-sec);
-    }
+    .form-row { display: flex; gap: 16px; }
+    .form-row .form-group { flex: 1; }
 
-    /* Row Form Group Flex */
-    .form-row {
-        display: flex;
-        gap: 16px;
-    }
-    .form-row .form-group {
-        flex: 1;
-    }
-
-    /* Action Buttons (Menggunakan Direct Hex untuk mencegah crash visual) */
     .form-actions {
         display: flex;
         align-items: center;
@@ -216,7 +196,7 @@
         gap: 12px;
         margin-top: 10px;
     }
-    
+
     .btn-submit {
         background-color: #5c9e74 !important;
         color: #ffffff !important;
@@ -232,7 +212,6 @@
         box-shadow: 0 2px 6px rgba(92, 158, 116, 0.2);
         outline: none;
         cursor: pointer;
-        -webkit-tap-highlight-color: transparent;
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .btn-submit:hover {
@@ -264,6 +243,18 @@
         color: var(--text-main);
         border-color: #d1d6cf;
     }
+
+    /* Alert error */
+    .alert-error {
+        background: #fdf5f5;
+        border: 1px solid #e8caca;
+        border-radius: var(--radius-md);
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        font-size: 13px;
+        color: #c47a7a;
+    }
+    .alert-error ul { margin: 4px 0 0 16px; padding: 0; }
 </style>
 @endsection
 
@@ -273,49 +264,68 @@
         <h1>Edit Produk</h1>
         <div class="breadcrumb">FurniHome / Produk / Edit</div>
     </div>
-    <a href="{{ route('admin.product.index') }}" class="btn-cancel"><i class="ti ti-arrow-left"></i> Kembali</a>
+    <a href="{{ route('admin.product.index') }}" class="btn-cancel">
+        <i class="ti ti-arrow-left"></i> Kembali
+    </a>
 </div>
 
-{{-- Diarahkan menggunakan metode PUT --}}
-<form action="#" method="POST" enctype="multipart/form-data">
+@if($errors->any())
+    <div class="alert-error">
+        <strong>Terdapat kesalahan:</strong>
+        <ul>
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+<form action="{{ route('admin.product.update', $product->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
-    
+
     <div class="form-grid">
-        
-        {{-- KOLOM KIRI: Utama --}}
+
+        {{-- KOLOM KIRI --}}
         <div class="form-left">
             <div class="card">
                 <div class="card-title"><i class="ti ti-info-circle"></i> Informasi Produk</div>
-                
+
                 <div class="form-group">
-                    <label class="form-label" for="nama_produk">Nama Produk</label>
-                    <input type="text" id="nama_produk" name="nama" class="form-control" value="Kursi Minimalis Kayu" required>
+                    <label class="form-label">Nama Produk</label>
+                    <input type="text" name="name" class="form-control"
+                           value="{{ old('name', $product->name) }}"
+                           placeholder="Contoh: Kursi Minimalis Kayu Jati" required>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label" for="kategori">Kategori</label>
+                        <label class="form-label">Kategori</label>
                         <div class="select-wrapper">
                             <i class="ti ti-category prefix-icon"></i>
-                            <select id="kategori" name="kategori_id" class="form-control" required>
-                                <option value="1" selected>Kursi</option>
-                                <option value="2">Meja</option>
-                                <option value="3">Lemari</option>
-                                <option value="4">Sofa</option>
-                                <option value="5">Rak</option>
+                            <select name="category_id" class="form-control" required>
+                                <option value="" disabled>Pilih Kategori</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}"
+                                        {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="sku">SKU (Kode Produk)</label>
-                        <input type="text" id="sku" name="sku" class="form-control" value="KRS-001">
+                        <label class="form-label">SKU (Kode Produk)</label>
+                        <input type="text" name="sku" class="form-control"
+                               value="{{ old('sku', $product->slug) }}"
+                               placeholder="Contoh: KRS-001">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="deskripsi">Deskripsi Lengkap</label>
-                    <textarea id="deskripsi" name="deskripsi" class="form-control">Kursi minimalis terbuat dari kayu jati berkualitas tinggi dengan finishing halus alami. Sangat cocok diletakkan di ruang tamu maupun ruang makan untuk mempercantik estetika rumah Anda.</textarea>
+                    <label class="form-label">Deskripsi Lengkap</label>
+                    <textarea name="description" class="form-control"
+                              placeholder="Tuliskan deskripsi produk...">{{ old('description', $product->description) }}</textarea>
                 </div>
             </div>
 
@@ -323,48 +333,75 @@
                 <div class="card-title"><i class="ti ti-receipt"></i> Harga & Stok</div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label" for="harga">Harga Jual</label>
+                        <label class="form-label">Harga Jual</label>
                         <div class="input-prefix-group">
                             <span class="input-prefix">Rp</span>
-                            <input type="number" id="harga" name="harga" class="form-control" value="750000" required>
+                            <input type="number" name="price" class="form-control"
+                                   value="{{ old('price', $product->price) }}"
+                                   placeholder="0" required>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="stok">Jumlah Stok</label>
-                        <input type="number" id="stok" name="stok" class="form-control" value="45" required>
+                        <label class="form-label">Harga Diskon (opsional)</label>
+                        <div class="input-prefix-group">
+                            <span class="input-prefix">Rp</span>
+                            <input type="number" name="sale_price" class="form-control"
+                                   value="{{ old('sale_price', $product->sale_price) }}"
+                                   placeholder="0">
+                        </div>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Jumlah Stok</label>
+                    <input type="number" name="stock" class="form-control"
+                           value="{{ old('stock', $product->stock) }}"
+                           placeholder="0" required>
                 </div>
             </div>
         </div>
 
-        {{-- KOLOM KANAN: Media & Status --}}
+        {{-- KOLOM KANAN --}}
         <div class="form-right">
             <div class="card">
                 <div class="card-title"><i class="ti ti-photo"></i> Foto Produk</div>
-                
-                {{-- Preview Foto Saat Ini (menggunakan placeholder ikon sesuai dengan index dummy) --}}
-                <div class="current-img-preview">
-                    <i class="ti ti-armchair"></i>
+
+                {{-- Preview foto saat ini --}}
+                <div class="img-preview-wrapper" id="preview-wrapper">
+                    @if($product->image)
+                        <img src="{{ asset('storage/' . $product->image) }}"
+                             alt="{{ $product->name }}" id="image-preview">
+                    @else
+                        <div class="img-placeholder" id="img-placeholder">
+                            <i class="ti ti-photo-off"></i>
+                            <span>Belum ada foto</span>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="form-group">
                     <div class="upload-zone" onclick="document.getElementById('file-input').click()">
                         <i class="ti ti-cloud-upload"></i>
-                        <span>Ganti Foto Baru</span>
-                        <input type="file" id="file-input" name="foto" style="display: none;" accept="image/*">
+                        <span id="upload-text">Ganti Foto Baru</span>
+                        <p>Format PNG, JPG, JPEG maks. 2MB</p>
                     </div>
+                    <input type="file" id="file-input" name="image"
+                           style="display: none;" accept="image/*">
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-title"><i class="ti ti-toggle-channels"></i> Visibilitas</div>
                 <div class="form-group">
-                    <label class="form-label" for="status">Status Produk</label>
+                    <label class="form-label">Status Produk</label>
                     <div class="select-wrapper">
                         <i class="ti ti-circle-check prefix-icon"></i>
-                        <select id="status" name="status" class="form-control">
-                            <option value="Aktif" selected>Aktif (Tampil di Toko)</option>
-                            <option value="Nonaktif">Nonaktif (Arsip)</option>
+                        <select name="is_active" class="form-control">
+                            <option value="1" {{ old('is_active', $product->is_active) == 1 ? 'selected' : '' }}>
+                                Aktif (Tampil di Toko)
+                            </option>
+                            <option value="0" {{ old('is_active', $product->is_active) == 0 ? 'selected' : '' }}>
+                                Nonaktif (Arsip)
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -372,10 +409,27 @@
 
             <div class="form-actions">
                 <a href="{{ route('admin.product.index') }}" class="btn-cancel">Batal</a>
-                <button type="submit" class="btn-submit"><i class="ti ti-device-floppy"></i> Update Produk</button>
+                <button type="submit" class="btn-submit">
+                    <i class="ti ti-device-floppy"></i> Update Produk
+                </button>
             </div>
         </div>
 
     </div>
 </form>
+
+<script>
+    document.getElementById('file-input').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            document.getElementById('upload-text').innerText = file.name;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const wrapper = document.getElementById('preview-wrapper');
+                wrapper.innerHTML = `<img src="${e.target.result}" alt="Preview" id="image-preview" style="width:100%; height:160px; object-fit:cover; display:block;">`;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
 @endsection

@@ -22,7 +22,8 @@
             <div class="lg:col-span-2 space-y-6">
                 @foreach($cart->items as $item)
                 <div class="flex flex-col sm:flex-row gap-5 bg-white border border-gray-100 rounded-xl p-5 shadow-sm">
-                    <img src="{{ $item->product->image ?? 'https://placehold.co/120x120?text=Produk' }}" class="w-28 h-28 object-cover rounded-lg">
+                    <img src="{{ $item->product->image ? asset('storage/' . $item->product->image) : 'https://placehold.co/120x120?text=Produk' }}" 
+                        class="w-24 h-24 object-cover rounded-lg flex-shrink-0">
                     <div class="flex-1 flex flex-col sm:flex-row sm:justify-between gap-4">
                         <div class="flex-1">
                             <h3 class="font-semibold text-gray-800 text-lg">{{ $item->product->name }}</h3>

@@ -11,11 +11,11 @@ class OrderController extends Controller
     {
         $orders = Order::where('user_id', auth()->id())
             ->latest()
-            ->get();
+            ->paginate(10); // ganti get() ke paginate()
 
         return view('orders.index', compact('orders'));
     }
-
+ 
     public function show(Order $order)
     {
         // Pastiin user hanya bisa lihat order miliknya
