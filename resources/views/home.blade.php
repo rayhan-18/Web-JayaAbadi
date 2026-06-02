@@ -201,10 +201,19 @@
                         <span class="text-sm text-gray-500 ml-1">{{ number_format($rating,1) }}</span>
                     </div>
                     <p class="text-amber-700 font-bold mt-2">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
+                @auth
                     <form action="{{ route('cart.add', $product->id) }}" method="POST" class="mt-3">
                         @csrf
-                        <button type="submit" class="w-full bg-gray-900 text-white py-2 rounded-full text-sm hover:bg-amber-700 transition">Tambah ke Keranjang</button>
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="w-full bg-gray-900 text-white py-2 rounded-full text-sm hover:bg-amber-700 transition">
+                            Tambah ke Keranjang
+                        </button>
                     </form>
+                @else
+                    <button onclick="showLoginAlert()" class="w-full bg-gray-900 text-white py-2 rounded-full text-sm hover:bg-amber-700 transition mt-3">
+                        Tambah ke Keranjang
+                    </button>
+                @endauth
                 </div>
             </div>
             @empty
@@ -320,5 +329,22 @@
         window.addEventListener('load', alreadyVisible);
         window.addEventListener('resize', alreadyVisible);
     })();
+
+    function showLoginAlert() {
+    Swal.fire({
+        title: 'Login Diperlukan',
+        text: 'Kamu harus login terlebih dahulu untuk menambahkan produk ke keranjang.',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Login Sekarang',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#92400e',
+        cancelButtonColor: '#6b7280',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '{{ route("login") }}';
+        }
+    });
+}
 </script>
 @endsection

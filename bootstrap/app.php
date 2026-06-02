@@ -7,6 +7,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
@@ -15,4 +16,30 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
+    })
+    
+    ->withMiddleware(function (Middleware $middleware): void {
+    $middleware->alias([
+        'supabase.auth' => \App\Http\Middleware\SupabaseAuth::class,
+    ]);
+    })
+    
+    ->withMiddleware(function (Middleware $middleware): void {
+    $middleware->validateCsrfTokens(except: [
+        'register',
+        'login',
+    ]);
+    $middleware->alias([
+        'supabase.auth' => \App\Http\Middleware\SupabaseAuth::class,
+    ]);
+    })
+    ->withMiddleware(function (Middleware $middleware): void {
+    $middleware->validateCsrfTokens(except: [
+        'register',
+        'login',
+    ]);
+    $middleware->alias([
+        'supabase.auth' => \App\Http\Middleware\SupabaseAuth::class,
+        'admin'         => \App\Http\Middleware\AdminMiddleware::class, // ← tambah ini
+    ]);
     })->create();

@@ -111,10 +111,9 @@
         <h1>Edit Kategori</h1>
         <div class="breadcrumb">FurniHome / Kategori / Edit</div>
     </div>
-    {{-- Tombol "Kembali" sudah dihapus --}}
 </div>
 
-<form action="#" method="POST">
+<form action="{{ route('admin.category.update', $category->id) }}" method="POST">
     @csrf
     @method('PUT')
     
@@ -126,12 +125,13 @@
                 
                 <div class="form-group">
                     <label class="form-label" for="nama_kategori">Nama Kategori</label>
-                    <input type="text" id="nama_kategori" name="nama" class="form-control" value="Sofa" required>
+                    <input type="text" id="nama_kategori" name="nama" class="form-control" 
+                        value="{{ old('nama', $category->name) }}" required>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="deskripsi">Deskripsi Singkat</label>
-                    <textarea id="deskripsi" name="deskripsi" class="form-control">Berbagai pilihan sofa untuk ruang tamu dengan desain minimalis hingga mewah.</textarea>
+                    <textarea id="deskripsi" name="deskripsi" class="form-control">{{ old('deskripsi', $category->description) }}</textarea>
                 </div>
             </div>
         </div>
@@ -141,12 +141,11 @@
             <div class="card">
                 <div class="card-title"><i class="ti ti-settings"></i> Pengaturan Kategori</div>
                 
-                {{-- UPDATE: Diubah dari Icon Tabler menjadi Image URL dengan value bawaan --}}
                 <div class="form-group">
                     <label class="form-label" for="img_url">Link Gambar Visual</label>
                     <div class="input-group">
                         <i class="ti ti-photo prefix"></i>
-                        <input type="url" id="img_url" name="img_url" class="form-control" value="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&auto=format&fit=crop&q=60" required>
+                        <input type="url" id="img_url" name="image" class="form-control" value="{{ old('image', $category->image ?? 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&auto=format&fit=crop&q=60') }}" required>
                     </div>
                     <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 6px; line-height: 1.4;">
                         Masukkan link URL gambar HD. Rasio disarankan 1:1 (Persegi).
@@ -158,8 +157,8 @@
                     <div class="select-wrapper">
                         <i class="ti ti-eye prefix-icon"></i>
                         <select id="status" name="status" class="form-control">
-                            <option value="Aktif" selected>Aktif (Ditampilkan)</option>
-                            <option value="Nonaktif">Nonaktif (Disembunyikan)</option>
+                            <option value="Aktif" {{ $category->is_active ? 'selected' : '' }}>Aktif (Ditampilkan)</option>
+                            <option value="Nonaktif" {{ !$category->is_active ? 'selected' : '' }}>Nonaktif (Disembunyikan)</option>
                         </select>
                     </div>
                 </div>

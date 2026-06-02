@@ -114,10 +114,9 @@
         <h1>Tambah Kategori</h1>
         <div class="breadcrumb">FurniHome / Kategori / Tambah Baru</div>
     </div>
-    {{-- Tombol Kembali dihilangkan dari sini --}}
 </div>
 
-<form action="#" method="POST">
+<form action="{{ route('admin.category.store') }}" method="POST">
     @csrf
     <div class="form-grid">
         {{-- KOLOM KIRI: Informasi Utama --}}
@@ -146,7 +145,7 @@
                     <label class="form-label" for="img_url">Link Gambar Visual</label>
                     <div class="input-group">
                         <i class="ti ti-photo prefix"></i>
-                        <input type="url" id="img_url" name="img_url" class="form-control" placeholder="https://unsplash.com/..." required>
+                        <input type="url" id="img_url" name="image" class="form-control" placeholder="https://unsplash.com/..." required>
                     </div>
                     <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 6px; line-height: 1.4;">
                         Masukkan link URL gambar HD. Rasio disarankan 1:1 (Persegi).

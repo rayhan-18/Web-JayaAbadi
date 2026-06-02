@@ -150,7 +150,7 @@
         </div>
         <div class="date-filter">
             <i class="ti ti-calendar-event"></i>
-            <span>Bulan Ini (Mei 2024)</span>
+            <span>Bulan Ini ({{ now()->translatedFormat('F Y') }})</span>
             <i class="ti ti-chevron-down" style="font-size: 14px; color: var(--text-muted);"></i>
         </div>
     </div>
@@ -160,26 +160,29 @@
     <div class="stat-card revenue">
         <div class="stat-icon"><i class="ti ti-coin"></i></div>
         <div class="stat-label">Total Pendapatan</div>
-        <div class="stat-value">Rp 148.500.000</div>
-        <div class="stat-trend up"><i class="ti ti-trending-up"></i> +15.2% vs Apr</div>
+        <div class="stat-value">Rp {{ number_format($stats['revenue'] ?? 0, 0, ',', '.') }}</div>
+        <div class="stat-trend {{ ($stats['trend_revenue'] ?? 0) >= 0 ? 'up' : 'down' }}">
+            <i class="ti ti-trending-{{ ($stats['trend_revenue'] ?? 0) >= 0 ? 'up' : 'down' }}"></i> 
+            {{ number_format(abs($stats['trend_revenue'] ?? 0), 1) }}% vs Bulan Lalu
+        </div>
     </div>
     <div class="stat-card orders">
         <div class="stat-icon"><i class="ti ti-shopping-cart"></i></div>
         <div class="stat-label">Total Pesanan</div>
-        <div class="stat-value">345</div>
-        <div class="stat-trend up"><i class="ti ti-trending-up"></i> +8.4% vs Apr</div>
+        <div class="stat-value">{{ number_format($stats['orders'] ?? 0, 0, ',', '.') }}</div>
+        <div class="stat-trend up"><i class="ti ti-trending-up"></i> Terhubung</div>
     </div>
     <div class="stat-card aov">
         <div class="stat-icon"><i class="ti ti-receipt"></i></div>
         <div class="stat-label">Rata-rata Transaksi</div>
-        <div class="stat-value">Rp 430.434</div>
-        <div class="stat-trend up"><i class="ti ti-trending-up"></i> +2.1% vs Apr</div>
+        <div class="stat-value">Rp {{ number_format($stats['aov'] ?? 0, 0, ',', '.') }}</div>
+        <div class="stat-trend up"><i class="ti ti-trending-up"></i> Dinamis</div>
     </div>
     <div class="stat-card items">
         <div class="stat-icon"><i class="ti ti-packages"></i></div>
         <div class="stat-label">Produk Terjual</div>
-        <div class="stat-value">512</div>
-        <div class="stat-trend down"><i class="ti ti-trending-down"></i> -3.5% vs Apr</div>
+        <div class="stat-value">{{ number_format($stats['items'] ?? 0, 0, ',', '.') }}</div>
+        <div class="stat-trend up"><i class="ti ti-trending-up"></i> Real-time</div>
     </div>
 </div>
 
@@ -199,15 +202,33 @@
             <line x1="28" y1="120" x2="860" y2="120" stroke="var(--bg-hover)" stroke-width="1"/>
             <line x1="28" y1="170" x2="860" y2="170" stroke="var(--border)" stroke-width="1"/>
             
-            <polyline points="40,150 110,130 180,140 250,90 320,60 390,100 460,80 530,30 600,50 670,40 740,70 810,20"
+            @php
+                $points = [];
+                if(isset($chartData) && count($chartData) > 0) {
+                    foreach($chartData as $index => $data) {
+                        $x = 40 + ($index * 70);
+                        $points[] = "$x," . ($data['y_pixel'] ?? 170);
+                    }
+                }
+                $pointsString = implode(' ', $points);
+            @endphp
+
+            @if(!empty($pointsString))
+            <polyline points="{{ $pointsString }}"
                 fill="none" stroke="var(--accent)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-            @foreach([[40,150],[110,130],[180,140],[250,90],[320,60],[390,100],[460,80],[530,30],[600,50],[670,40],[740,70],[810,20]] as [$x,$y])
-            <circle cx="{{ $x }}" cy="{{ $y }}" r="4" fill="var(--bg-surface)" stroke="var(--accent)" stroke-width="2"/>
-            @endforeach
-            
-            @foreach(['01','03','05','07','09','11','13','15','17','19','21','23'] as $i => $tgl)
-            <text x="{{ 40+($i*70) }}" y="195" font-size="11" fill="var(--text-sec)" text-anchor="middle">{{ $tgl }} Mei</text>
-            @endforeach
+            @endif
+
+            @if(isset($chartData))
+                @foreach($chartData as $index => $data)
+                    @php $x = 40 + ($index * 70); @endphp
+                    <circle cx="{{ $x }}" cy="{{ $data['y_pixel'] ?? 170 }}" r="4" fill="var(--bg-surface)" stroke="var(--accent)" stroke-width="2"/>
+                @endforeach
+                
+                @foreach($chartData as $index => $data)
+                    @php $x = 40 + ($index * 70); @endphp
+                    <text x="{{ $x }}" y="195" font-size="11" fill="var(--text-sec)" text-anchor="middle">{{ $data['tgl'] }} {{ now()->translatedFormat('M') }}</text>
+                @endforeach
+            @endif
         </svg>
     </div>
 </div>
@@ -223,7 +244,7 @@
                     <th>Tanggal</th>
                     <th>Order ID</th>
                     <th>Pelanggan</th>
-                    <th>Kuantitas</th>
+                    <th style="text-align: center;">Kuantitas</th>
                     <th>Subtotal</th>
                     <th>Diskon</th>
                     <th>Total Bersih</th>
@@ -231,30 +252,36 @@
                 </tr>
             </thead>
             <tbody>
-                @php
-                    $sales = [
-                        ['tgl'=>'26 Mei 2024', 'id'=>'#ORD-00123', 'nama'=>'Rayhan Maulana', 'qty'=>1, 'subtotal'=>2800000, 'diskon'=>0, 'total'=>2800000, 'status'=>'Berhasil'],
-                        ['tgl'=>'25 Mei 2024', 'id'=>'#ORD-00122', 'nama'=>'Siti Aisyah', 'qty'=>1, 'subtotal'=>1900000, 'diskon'=>50000, 'total'=>1850000, 'status'=>'Berhasil'],
-                        ['tgl'=>'25 Mei 2024', 'id'=>'#ORD-00121', 'nama'=>'Budi Santoso', 'qty'=>2, 'subtotal'=>3300000, 'diskon'=>100000, 'total'=>3200000, 'status'=>'Berhasil'],
-                        ['tgl'=>'23 Mei 2024', 'id'=>'#ORD-00115', 'nama'=>'Ahmad Fauzi', 'qty'=>1, 'subtotal'=>4500000, 'diskon'=>0, 'total'=>4500000, 'status'=>'Refund'],
-                        ['tgl'=>'21 Mei 2024', 'id'=>'#ORD-00112', 'nama'=>'Larasati Putri', 'qty'=>3, 'subtotal'=>1400000, 'diskon'=>150000, 'total'=>1250000, 'status'=>'Berhasil'],
-                    ];
-                @endphp
-                @foreach($sales as $s)
+                @forelse($recentSales ?? [] as $order)
                 <tr>
-                    <td style="color: var(--text-sec); font-size: 12.5px;">{{ $s['tgl'] }}</td>
-                    <td style="font-weight: 600; color: var(--text-main);">{{ $s['id'] }}</td>
-                    <td>{{ $s['nama'] }}</td>
-                    <td style="text-align: center;">{{ $s['qty'] }}</td>
-                    <td class="val-currency">Rp {{ number_format($s['subtotal'], 0, ',', '.') }}</td>
-                    <td class="val-currency val-negative">- Rp {{ number_format($s['diskon'], 0, ',', '.') }}</td>
-                    <td class="val-currency" style="color: var(--accent-dark); font-weight: 700;">Rp {{ number_format($s['total'], 0, ',', '.') }}</td>
+                    <td style="color: var(--text-sec); font-size: 12.5px;">{{ $order->created_at->format('d M Y') }}</td>
+                    <td style="font-weight: 600; color: var(--text-main);">{{ $order->order_number }}</td>
+                    <td>{{ $order->user->name ?? 'Guest' }}</td>
+                    <td style="text-align: center;">{{ $order->items->sum('quantity') }}</td>
+                    <td class="val-currency">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
+                    <td class="val-currency val-negative">- Rp 0</td>
+                    <td class="val-currency" style="color: var(--accent-dark); font-weight: 700;">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
                     <td>
-                        @php $cls = $s['status'] == 'Berhasil' ? 'status-berhasil' : 'status-refund'; @endphp
-                        <span class="status-badge {{ $cls }}">{{ $s['status'] }}</span>
+                        @php 
+                            $isSuccess = in_array($order->status, ['paid', 'shipping', 'delivered', 'Selesai']);
+                            $cls = $isSuccess ? 'status-berhasil' : 'status-refund';
+                            $statusLabel = match($order->status) {
+                                'pending'   => 'Pending',
+                                'paid'      => 'Diproses',
+                                'shipping'  => 'Dikirim',
+                                'delivered' => 'Berhasil',
+                                'cancelled' => 'Batal',
+                                default     => ucfirst($order->status)
+                            };
+                        @endphp
+                        <span class="status-badge {{ $cls }}">{{ $statusLabel }}</span>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="8" style="text-align: center; padding: 40px; color: var(--text-muted);">Tidak ada data transaksi di bulan ini.</td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>

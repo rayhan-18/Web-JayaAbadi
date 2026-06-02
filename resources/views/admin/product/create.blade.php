@@ -266,7 +266,7 @@
     </div>
 </div>
 
-<form action="#" method="POST" enctype="multipart/form-data">
+<form action="{{ route('admin.product.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="form-grid">
         
@@ -277,7 +277,7 @@
                 
                 <div class="form-group">
                     <label class="form-label" for="nama_produk">Nama Produk</label>
-                    <input type="text" id="nama_produk" name="nama" class="form-control" placeholder="Contoh: Kursi Minimalis Kayu Jati" required>
+                    <input type="text" id="nama_produk" name="name" class="form-control" placeholder="Contoh: Kursi Minimalis Kayu Jati" required>
                 </div>
 
                 <div class="form-row">
@@ -285,14 +285,12 @@
                         <label class="form-label" for="kategori">Kategori</label>
                         <div class="select-wrapper">
                             <i class="ti ti-category prefix-icon"></i>
-                            <select id="kategori" name="kategori_id" class="form-control" required>
-                                <option value="" disabled selected>Pilih Kategori</option>
-                                <option value="1">Kursi</option>
-                                <option value="2">Meja</option>
-                                <option value="3">Lemari</option>
-                                <option value="4">Sofa</option>
-                                <option value="5">Rak</option>
-                            </select>
+                        <select id="kategori" name="category_id" class="form-control" required>
+                            <option value="" disabled selected>Pilih Kategori</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
                         </div>
                     </div>
                     <div class="form-group">
@@ -303,7 +301,7 @@
 
                 <div class="form-group">
                     <label class="form-label" for="deskripsi">Deskripsi Lengkap</label>
-                    <textarea id="deskripsi" name="deskripsi" class="form-control" placeholder="Tuliskan deskripsi produk, bahan, ukuran, dan detail lainnya dengan jelas..."></textarea>
+                    <textarea id="deskripsi" name="description" class="form-control" placeholder="Tuliskan deskripsi produk, bahan, ukuran, dan detail lainnya dengan jelas..."></textarea>
                 </div>
             </div>
 
@@ -311,30 +309,32 @@
                 <div class="card-title"><i class="ti ti-receipt"></i> Harga & Stok</div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label" for="harga">Harga Jual</label>
+                        <label class="form-label" for="price">Harga Jual</label>
                         <div class="input-prefix-group">
                             <span class="input-prefix">Rp</span>
-                            <input type="number" id="harga" name="harga" class="form-control" placeholder="0" required>
+                            <input type="number" id="harga" name="price" class="form-control" placeholder="0" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="stok">Jumlah Stok</label>
-                        <input type="number" id="stok" name="stok" class="form-control" placeholder="0" required>
+                        <input type="number" id="stok" name="stock" class="form-control" placeholder="0" required>
                     </div>
                 </div>
             </div>
         </div>
 
         {{-- KOLOM KANAN: Media & Status --}}
-        <div class="form-right">
             <div class="card">
                 <div class="card-title"><i class="ti ti-photo"></i> Foto Produk</div>
                 <div class="form-group">
                     <div class="upload-zone" onclick="document.getElementById('file-input').click()">
                         <i class="ti ti-cloud-upload"></i>
-                        <span>Pilih atau Taruh Foto</span>
+                        <span id="upload-text">Pilih atau Taruh Foto</span>
                         <p>Format PNG, JPG, JPEG maks. 2MB</p>
-                        <input type="file" id="file-input" name="foto" style="display: none;" accept="image/*">
+                    </div>
+                    <input type="file" id="file-input" name="image" style="display: none;" accept="image/*">
+                    <div id="preview-container" style="margin-top: 10px; display: none;">
+                        <img id="image-preview" src="" style="width: 100%; border-radius: 8px; object-fit: cover; max-height: 200px;">
                     </div>
                 </div>
             </div>
@@ -345,10 +345,10 @@
                     <label class="form-label" for="status">Status Produk</label>
                     <div class="select-wrapper">
                         <i class="ti ti-circle-check prefix-icon"></i>
-                        <select id="status" name="status" class="form-control">
-                            <option value="Aktif">Aktif (Tampil di Toko)</option>
-                            <option value="Nonaktif">Nonaktif (Arsip)</option>
-                        </select>
+                    <select id="status" name="is_active" class="form-control">
+                        <option value="1">Aktif (Tampil di Toko)</option>
+                        <option value="0">Nonaktif (Arsip)</option>
+                    </select>
                     </div>
                 </div>
             </div>
@@ -361,4 +361,19 @@
 
     </div>
 </form>
+
+<script>
+    document.getElementById('file-input').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            document.getElementById('upload-text').innerText = file.name;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('image-preview').src = e.target.result;
+                document.getElementById('preview-container').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
 @endsection

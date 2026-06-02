@@ -123,7 +123,6 @@
     .customer-name { font-weight: 600; color: var(--text-main); font-size: 13.5px; }
     .customer-email { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
 
-    /* Muted Premium Badges */
     .status-badge {
         display: inline-flex; align-items: center; justify-content: center;
         padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap;
@@ -139,7 +138,10 @@
     .status-dikirim::before  { background: #9269c4; }
     .status-selesai::before  { background: var(--accent); }
 
+<<<<<<< HEAD
     /* Premium Channel Badges */
+=======
+>>>>>>> c55123633a00732c0f33cfe7d814dd106d913b73
     .channel-badge {
         display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap;
@@ -216,16 +218,24 @@
     .dp-total-row.grand { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
     .dp-total-row.grand .lbl { font-weight: 700; color: var(--text-main); font-size: 14px; }
     .dp-total-row.grand .val { font-weight: 700; color: var(--accent); font-size: 18px; }
+
+    .status-select {
+        width: 100%; height: 40px; padding: 0 14px; border: 1px solid var(--border);
+        border-radius: var(--radius-md); font-size: 13px; color: var(--text-main);
+        background: var(--bg-surface); margin-top: 16px; cursor: pointer;
+    }
+    .status-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(92, 158, 116, 0.15); }
     
     .btn-update {
         width: 100%; padding: 12px; background-color: #5c9e74 !important; color: #ffffff !important;
         border: none; border-radius: 10px; font-size: 13px; font-weight: 600;
-        cursor: pointer; margin-top: 24px; display: flex; align-items: center; justify-content: center; gap: 8px;
+        cursor: pointer; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;
         box-shadow: 0 2px 6px rgba(92, 158, 116, 0.2); outline: none; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); -webkit-tap-highlight-color: transparent;
     }
     .btn-update:hover { background-color: #3a5c48 !important; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(58, 92, 72, 0.3); }
     .btn-update:active { transform: scale(0.97); background-color: #2d4a3a !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); transition: all 0.1s; }
 
+<<<<<<< HEAD
     /* =========================================
        SISTEM RESPONSIVE (MOBILE & TABLET)
        ========================================= */
@@ -256,6 +266,16 @@
 
     @media (max-width: 480px) {
         .stats-row { grid-template-columns: 1fr; }
+=======
+    /* MEDIA PRINT LOGIC: Untuk layout preview PDF resmi bersih dari komponen admin */
+    @media print {
+        aside, nav, header, .sidebar, .main-header, .breadcrumb, #filterForm, .action-btn, th:last-child, td:last-child { display: none !important; }
+        body, .content-wrapper, main, .container { background: #fff !important; color: #000 !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; }
+        .table-wrapper { border: none !important; box-shadow: none !important; overflow: visible !important; }
+        table { min-width: 100% !important; width: 100% !important; }
+        th { background: #f5f5f5 !important; color: #000 !important; border-bottom: 2px solid #000 !important; }
+        td { border-bottom: 1px solid #ccc !important; }
+>>>>>>> c55123633a00732c0f33cfe7d814dd106d913b73
     }
 </style>
 @endsection
@@ -266,48 +286,60 @@
         <h1>Pesanan</h1>
         <div class="breadcrumb">FurniHome / Pesanan</div>
     </div>
-    <div class="export-dropdown">
-        <button class="btn-export"><i class="ti ti-download"></i> Export Laporan <i class="ti ti-chevron-down" style="font-size: 14px;"></i></button>
-        <div class="export-dropdown-content">
-            <a href="#"><i class="ti ti-file-type-pdf"></i> Export PDF</a>
-            <a href="#"><i class="ti ti-file-spreadsheet"></i> Export Excel</a>
-            <a href="#"><i class="ti ti-file-type-csv"></i> Export CSV</a>
-        </div>
-    </div>
 </div>
 
 <div class="stats-row">
-    <div class="stat-card all"><div class="stat-icon"><i class="ti ti-package"></i></div><div class="stat-label">Semua Pesanan</div><div class="stat-value">120</div></div>
-    <div class="stat-card pending"><div class="stat-icon"><i class="ti ti-clock-hour-4"></i></div><div class="stat-label">Pending</div><div class="stat-value">12</div></div>
-    <div class="stat-card proses"><div class="stat-icon"><i class="ti ti-settings"></i></div><div class="stat-label">Diproses</div><div class="stat-value">25</div></div>
-    <div class="stat-card kirim"><div class="stat-icon"><i class="ti ti-truck"></i></div><div class="stat-label">Dikirim</div><div class="stat-value">45</div></div>
-    <div class="stat-card selesai"><div class="stat-icon"><i class="ti ti-circle-check"></i></div><div class="stat-label">Selesai</div><div class="stat-value">38</div></div>
+    <div class="stat-card all"><div class="stat-icon"><i class="ti ti-package"></i></div><div class="stat-label">Semua Pesanan</div><div class="stat-value">{{ $stats['all'] }}</div></div>
+    <div class="stat-card pending"><div class="stat-icon"><i class="ti ti-clock-hour-4"></i></div><div class="stat-label">Pending</div><div class="stat-value">{{ $stats['pending'] }}</div></div>
+    <div class="stat-card proses"><div class="stat-icon"><i class="ti ti-settings"></i></div><div class="stat-label">Diproses</div><div class="stat-value">{{ $stats['paid'] }}</div></div>
+    <div class="stat-card kirim"><div class="stat-icon"><i class="ti ti-truck"></i></div><div class="stat-label">Dikirim</div><div class="stat-value">{{ $stats['shipping'] }}</div></div>
+    <div class="stat-card selesai"><div class="stat-icon"><i class="ti ti-circle-check"></i></div><div class="stat-label">Selesai</div><div class="stat-value">{{ $stats['delivered'] }}</div></div>
 </div>
 
-<div class="filter-bar">
+<form action="{{ route('admin.order.index') }}" method="GET" class="filter-bar" id="filterForm">
+    
     <div class="search-box">
         <i class="ti ti-search"></i>
-        <input type="text" placeholder="Cari Order ID, Pelanggan...">
+        <input type="text" name="search" id="searchInput" placeholder="Cari Order ID, Pelanggan..." value="{{ request('search') }}" onchange="document.getElementById('filterForm').submit()">
     </div>
+    
     <div class="select-wrapper">
         <i class="ti ti-filter prefix-icon"></i>
-        <select class="filter-select">
-            <option>Semua Saluran</option>
-            <option>Website Online</option>
-            <option>POS Cashier</option>
+        <select class="filter-select" name="channel" onchange="document.getElementById('filterForm').submit()">
+            <option value="">Semua Saluran</option>
+            <option value="website" {{ request('channel') === 'website' ? 'selected' : '' }}>Website Online</option>
+            <option value="pos" {{ request('channel') === 'pos' ? 'selected' : '' }}>Kasir POS Offline</option>
         </select>
     </div>
+    
     <div class="select-wrapper">
         <i class="ti ti-circle-check prefix-icon"></i>
-        <select class="filter-select">
-            <option>Semua Status</option>
-            <option>Pending</option>
-            <option>Diproses</option>
-            <option>Dikirim</option>
-            <option>Selesai</option>
+        <select class="filter-select" name="status" onchange="document.getElementById('filterForm').submit()">
+            <option value="">Semua Status</option>
+            <option value="pending"   {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
+            <option value="paid"      {{ request('status') === 'paid' ? 'selected' : '' }}>Diproses</option>
+            <option value="shipping"  {{ request('status') === 'shipping' ? 'selected' : '' }}>Dikirim</option>
+            <option value="delivered" {{ request('status') === 'delivered' ? 'selected' : '' }}>Selesai</option>
+            <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
         </select>
     </div>
-</div>
+
+    <div class="export-dropdown">
+        <button type="button" class="btn-export"><i class="ti ti-download"></i> Export Laporan <i class="ti ti-chevron-down" style="font-size: 14px;"></i></button>
+        <div class="export-dropdown-content">
+            <a href="#" onclick="previewAndPdf()"><i class="ti ti-file-type-pdf"></i> Export PDF</a>
+            <a href="#" onclick="doExport('excel')"><i class="ti ti-file-spreadsheet"></i> Export Excel</a>
+        </div>
+    </div>
+
+    <input type="hidden" name="export" id="exportFormat" value="">
+
+    @if(request('search') || request('channel') || request('status'))
+        <a href="{{ route('admin.order.index') }}" class="action-btn" style="height: 40px; padding: 0 16px; border-color: #c47a7a; color: #c47a7a;">
+            <i class="ti ti-refresh"></i> Reset Filter
+        </a>
+    @endif
+</form>
 
 <div class="layout-order">
     <div class="table-section">
@@ -326,6 +358,7 @@
                     </tr>
                 </thead>
                 <tbody>
+<<<<<<< HEAD
                     @php
                         // UPDATE: Gambar item pakai URL Unsplash
                         $orders = [
@@ -343,53 +376,86 @@
                     <tr>
                         <td style="font-weight:600; color: var(--text-main);">{{ $o['id'] }}</td>
                         
+=======
+                    @forelse($orders as $index => $order)
+                    <tr>
+                        <td style="font-weight:600; color: var(--text-main);">{{ $order->order_number }}</td>
+>>>>>>> c55123633a00732c0f33cfe7d814dd106d913b73
                         <td>
-                            @if($o['channel'] == 'Online')
-                                <span class="channel-badge channel-online"><i class="ti ti-world"></i> Website</span>
+                            @if($order->payment_method === 'cash')
+                                <span class="channel-badge channel-offline"><i class="ti ti-store"></i> Kasir POS</span>
                             @else
-                                <span class="channel-badge channel-offline"><i class="ti ti-building-store"></i> POS Kasir</span>
+                                <span class="channel-badge channel-online"><i class="ti ti-world"></i> Website</span>
                             @endif
                         </td>
-
                         <td>
                             <div class="customer-info">
-                                <div class="customer-name">{{ $o['nama'] }}</div>
-                                <div class="customer-email">{{ $o['email'] }}</div>
+                                <div class="customer-name">{{ $order->user->name ?? 'Guest' }}</div>
+                                <div class="customer-email">{{ $order->user->email ?? '-' }}</div>
                             </div>
                         </td>
-                        <td style="color: var(--text-sec); font-size: 12.5px;">{{ $o['tanggal'] }}</td>
-                        <td style="font-weight: 500;">Rp {{ number_format($o['total'], 0, ',', '.') }}</td>
-                        <td style="color: var(--text-sec); font-size: 12.5px;">{{ $o['metode'] }}</td>
+                        <td style="color: var(--text-sec); font-size: 12.5px;">{{ $order->created_at->format('d M Y H:i') }}</td>
+                        <td style="font-weight: 500;">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
+                        <td style="color: var(--text-sec); font-size: 12.5px;">{{ ucfirst($order->payment_method) }}</td>
                         <td>
                             @php
-                                $statusClass = match($o['status']) {
-                                    'Pending' => 'status-pending',
-                                    'Diproses' => 'status-diproses',
-                                    'Dikirim' => 'status-dikirim',
-                                    'Selesai' => 'status-selesai',
-                                    default => ''
+                                $statusClass = match($order->status) {
+                                    'pending'   => 'status-pending',
+                                    'paid'      => 'status-diproses',
+                                    'shipping'  => 'status-dikirim',
+                                    'delivered' => 'status-selesai',
+                                    default     => ''
+                                };
+                                $statusLabel = match($order->status) {
+                                    'pending'   => 'Pending',
+                                    'paid'      => 'Diproses',
+                                    'shipping'  => 'Dikirim',
+                                    'delivered' => 'Selesai',
+                                    'cancelled' => 'Dibatalkan',
+                                    default     => ucfirst($order->status)
                                 };
                             @endphp
-                            <span class="status-badge {{ $statusClass }}">{{ $o['status'] }}</span>
+                            <span class="status-badge {{ $statusClass }}">{{ $statusLabel }}</span>
                         </td>
                         <td style="text-align: center;">
                             <div class="action-btn" onclick="showDetail({{ $index }})" title="Lihat Detail"><i class="ti ti-eye"></i></div>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 40px; color: var(--text-muted);">Belum ada pesanan.</td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
+
         <div class="pagination">
-            <div>Menampilkan 1 - 8 dari 120 pesanan</div>
+            <div>Menampilkan {{ $orders->firstItem() ?? 0 }} - {{ $orders->lastItem() ?? 0 }} dari {{ $orders->total() }} pesanan</div>
             <div class="pagination-links">
-                <a href="#" title="Sebelumnya"><i class="ti ti-chevron-left" style="font-size: 16px;"></i></a>
-                <span class="active">1</span>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <span style="border: none; background: transparent; padding: 0 4px; min-width: auto; color: var(--text-muted);">...</span>
-                <a href="#">15</a>
-                <a href="#" title="Selanjutnya"><i class="ti ti-chevron-right" style="font-size: 16px;"></i></a>
+                @if($orders->onFirstPage())
+                    <span style="opacity:0.4; border:1px solid var(--border); border-radius:6px; padding:0 10px; height:30px; display:inline-flex; align-items:center;">
+                        <i class="ti ti-chevron-left" style="font-size:16px;"></i>
+                    </span>
+                @else
+                    <a href="{{ $orders->previousPageUrl() }}"><i class="ti ti-chevron-left" style="font-size:16px;"></i></a>
+                @endif
+
+                @foreach($orders->getUrlRange(1, $orders->lastPage()) as $page => $url)
+                    @if($page == $orders->currentPage())
+                        <span class="active">{{ $page }}</span>
+                    @else
+                        <a href="{{ $url }}">{{ $page }}</a>
+                    @endif
+                @endforeach
+
+                @if($orders->hasMorePages())
+                    <a href="{{ $orders->nextPageUrl() }}"><i class="ti ti-chevron-right" style="font-size:16px;"></i></a>
+                @else
+                    <span style="opacity:0.4; border:1px solid var(--border); border-radius:6px; padding:0 10px; height:30px; display:inline-flex; align-items:center;">
+                        <i class="ti ti-chevron-right" style="font-size:16px;"></i>
+                    </span>
+                @endif
             </div>
         </div>
     </div>
@@ -404,18 +470,37 @@
 </div>
 
 <script>
-    const orders = @json($orders);
+    const orders = @json($ordersJson);
 
     function formatRupiah(n) {
-        return 'Rp ' + n.toLocaleString('id-ID');
+        return 'Rp ' + Number(n).toLocaleString('id-ID');
+    }
+
+    // Melakukan submit form filter dibarengi instruksi cetak dokumen data ter-filter
+    function doExport(format) {
+        const form = document.getElementById('filterForm');
+        const exportInput = document.getElementById('exportFormat');
+        
+        exportInput.value = format;
+        form.submit();
+        
+        setTimeout(() => {
+            exportInput.value = '';
+        }, 500);
+    }
+
+    // Membuka Print Preview Browser untuk disimpan ke PDF
+    function previewAndPdf() {
+        window.print();
     }
 
     function getStatusClass(status) {
         const map = {
-            'Pending': 'status-pending',
-            'Diproses': 'status-diproses',
-            'Dikirim': 'status-dikirim',
-            'Selesai': 'status-selesai'
+            'Pending'    : 'status-pending',
+            'Diproses'   : 'status-diproses',
+            'Dikirim'    : 'status-dikirim',
+            'Selesai'    : 'status-selesai',
+            'Dibatalkan' : ''
         };
         return map[status] || '';
     }
@@ -439,9 +524,16 @@
             </div>
         `).join('');
 
+<<<<<<< HEAD
         const channelHtml = o.channel === 'Online' 
             ? `<span class="channel-badge channel-online"><i class="ti ti-world"></i> Website</span>`
             : `<span class="channel-badge channel-offline"><i class="ti ti-building-store"></i> POS Kasir</span>`;
+=======
+        const isOffline = o.metode.toLowerCase() === 'cash';
+        const channelHtml = isOffline 
+            ? `<span class="channel-badge channel-offline"><i class="ti ti-store"></i> Kasir POS</span>`
+            : `<span class="channel-badge channel-online"><i class="ti ti-world"></i> Website</span>`;
+>>>>>>> c55123633a00732c0f33cfe7d814dd106d913b73
 
         body.innerHTML = `
             <div class="dp-order-id">${o.id}</div>
@@ -466,7 +558,7 @@
                 </div>
             </div>
             <div class="dp-row">
-                <div class="dp-label">Alamat / Logistik</div>
+                <div class="dp-label">Alamat</div>
                 <div class="dp-value" style="font-size:12.5px; line-height: 1.5;">${o.alamat}</div>
             </div>
             <div class="dp-row">
@@ -480,11 +572,18 @@
                 <span class="lbl">Total Pembayaran</span>
                 <span class="val">${formatRupiah(o.total2)}</span>
             </div>
-            <div style="display:flex; justify-content: space-between; font-size: 11.5px; color: var(--text-sec); margin-top: 6px;">
-                <span>Subtotal: ${formatRupiah(o.subtotal)}</span>
-                <span>Ongkir: ${formatRupiah(o.ongkir)}</span>
-            </div>
-            <button class="btn-update" onclick="event.stopPropagation(); alert('Update status untuk ${o.id}')"><i class="ti ti-refresh"></i> Update Status Pesanan</button>
+            <hr class="dp-divider">
+            <div class="dp-section-title">Update Status</div>
+            <select id="statusSelect-${o.order_id}" class="status-select">
+                <option value="pending"   ${o.status_raw === 'pending'   ? 'selected' : ''}>Pending</option>
+                <option value="paid"      ${o.status_raw === 'paid'      ? 'selected' : ''}>Diproses</option>
+                <option value="shipping"  ${o.status_raw === 'shipping'  ? 'selected' : ''}>Dikirim</option>
+                <option value="delivered" ${o.status_raw === 'delivered' ? 'selected' : ''}>Selesai</option>
+                <option value="cancelled" ${o.status_raw === 'cancelled' ? 'selected' : ''}>Dibatalkan</option>
+            </select>
+            <button class="btn-update" onclick="updateStatus(${o.order_id})">
+                <i class="ti ti-refresh"></i> Update Status Pesanan
+            </button>
         `;
 
         panel.classList.add('open');
@@ -493,5 +592,40 @@
     function closeDetail() {
         document.getElementById('detailPanel').classList.remove('open');
     }
+
+    function updateStatus(orderId) {
+        const status = document.getElementById('statusSelect-' + orderId).value;
+        fetch(`/admin/pesanan/${orderId}/status`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({ status })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Status pesanan berhasil diupdate.',
+                    icon: 'success',
+                    confirmButtonColor: '#5c9e74',
+                }).then(() => location.reload());
+            }
+        })
+        .catch(() => {
+            Swal.fire('Error', 'Gagal update status.', 'error');
+        });
+    }
+
+    // Submit otomatis saat menekan enter pada input text search
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            document.getElementById('exportFormat').value = ''; 
+            document.getElementById('filterForm').submit();
+        }
+    });
 </script>
 @endsection

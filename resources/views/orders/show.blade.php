@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Pesanan #' . $order->invoice_number)
+@section('title', 'Detail Pesanan #' . $order->order_number)
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 py-10">
@@ -13,7 +13,7 @@
         <div class="grid md:grid-cols-2 gap-6 mb-8">
             <div>
                 <h2 class="font-semibold text-gray-900 mb-3">Informasi Pesanan</h2>
-                <p class="text-sm"><strong>No. Invoice:</strong> {{ $order->invoice_number }}</p>
+                <p class="text-sm"><strong>No. Invoice:</strong> {{ $order->order_number }}</p>
                 <p class="text-sm mt-1"><strong>Tanggal:</strong> {{ $order->created_at->format('d/m/Y H:i') }}</p>
                 <p class="text-sm mt-1"><strong>Status:</strong>
                     <span class="px-2 py-1 rounded-full text-xs font-semibold

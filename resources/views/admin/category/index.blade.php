@@ -181,6 +181,10 @@
         content: ''; width: 6px; height: 6px; border-radius: 50%;
         background: var(--accent); margin-right: 6px;
     }
+    .status-badge.nonaktif {
+        background: #fdf5f5; color: #c47a7a;
+    }
+    .status-badge.nonaktif::before { background: #c47a7a; }
 
     /* Action Buttons */
     .action-icons { display: flex; gap: 8px; justify-content: center; }
@@ -251,34 +255,46 @@
             </tr>
         </thead>
         <tbody>
-            @php
-                // Array Update: Menambahkan link gambar asli dari Unsplash pengganti icon
-                $categories = [
-                    ['id'=>1, 'img'=>'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&auto=format&fit=crop&q=60', 'nama'=>'Sofa', 'deskripsi'=>'Berbagai pilihan sofa untuk ruang tamu dengan desain minimalis hingga mewah.', 'jumlah'=>24, 'status'=>'Aktif'],
-                    ['id'=>2, 'img'=>'https://images.unsplash.com/photo-1505797149-43b0069ec26b?w=100&auto=format&fit=crop&q=60', 'nama'=>'Kursi', 'deskripsi'=>'Kursi minimalis, kursi makan, kursi kerja, dan berbagai model lainnya.', 'jumlah'=>18, 'status'=>'Aktif'],
-                    ['id'=>3, 'img'=>'https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?w=100&auto=format&fit=crop&q=60', 'nama'=>'Meja', 'deskripsi'=>'Meja makan, meja tamu, meja kerja, dan berbagai jenis meja lainnya.', 'jumlah'=>27, 'status'=>'Aktif'],
-                    ['id'=>4, 'img'=>'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=100&auto=format&fit=crop&q=60', 'nama'=>'Lemari', 'deskripsi'=>'Lemari pakaian, lemari penyimpanan, dengan berbagai ukuran.', 'jumlah'=>15, 'status'=>'Aktif'],
-                    ['id'=>5, 'img'=>'https://images.unsplash.com/photo-1505693314120-0d443867891c?w=100&auto=format&fit=crop&q=60', 'nama'=>'Tempat Tidur', 'deskripsi'=>'Tempat tidur single, queen, king size dengan material berkualitas.', 'jumlah'=>12, 'status'=>'Aktif'],
-                    ['id'=>6, 'img'=>'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=100&auto=format&fit=crop&q=60', 'nama'=>'Rak & Penyimpanan', 'deskripsi'=>'Rak buku, rak dinding, rak sepatu, dan solusi penyimpanan lainnya.', 'jumlah'=>20, 'status'=>'Aktif'],
-                    ['id'=>7, 'img'=>'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=100&auto=format&fit=crop&q=60', 'nama'=>'Meja Kerja', 'deskripsi'=>'Meja kerja minimalis dan ergonomis untuk produktivitas.', 'jumlah'=>10, 'status'=>'Aktif'],
-                ];
-            @endphp
             @foreach($categories as $item)
             <tr>
-                <td style="color: var(--text-sec);">{{ $item['id'] }}</td>
+                <td style="color: var(--text-sec);">
+                    {{ $loop->iteration ?? $item->id }}
+                </td>
+
                 <td>
-                    {{-- IMPLEMENTASI GAMBAR --}}
                     <div class="category-img">
-                        <img src="{{ $item['img'] }}" alt="{{ $item['nama'] }}">
+                        <img src="{{ $item->image ?? 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&auto=format&fit=crop&q=60' }}" alt="{{ $item->name }}">
                     </div>
                 </td>
-                <td><strong style="color: var(--text-main); font-size: 13.5px;">{{ $item['nama'] }}</strong></td>
-                <td style="color: var(--text-sec); font-size: 12.5px; line-height: 1.4;">{{ $item['deskripsi'] }}</td>
-                <td><strong>{{ $item['jumlah'] }}</strong> <span style="color: var(--text-sec); font-size: 12px;">Item</span></td>
-                <td><span class="status-badge">{{ $item['status'] }}</span></td>
+
+                <td>
+                    <strong style="color: var(--text-main); font-size: 13.5px;">
+                        {{ $item->name }}
+                    </strong>
+                </td>
+
+                <td style="color: var(--text-sec); font-size: 12.5px; line-height: 1.4;">
+                    {{ $item->description }}
+                </td>
+
+                <td>
+                    <strong>{{ $item->products_count ?? 0 }}</strong>
+                    <span style="color: var(--text-sec); font-size: 12px;">Item</span>
+                </td>
+
+                <td>
+                    <span class="status-badge {{ !$item->is_active ? 'nonaktif' : '' }}">
+                        {{ $item->is_active ? 'Aktif' : 'Nonaktif' }}
+                    </span>
+                </td>
+
                 <td class="action-icons">
-                    <a href="{{ route('admin.category.edit', $item['id']) }}" class="action-btn" title="Edit"><i class="ti ti-edit"></i></a>
-                    <a href="#" class="action-btn delete" title="Hapus"><i class="ti ti-trash"></i></a>
+                    <a href="{{ route('admin.category.edit', $item->id) }}" class="action-btn" title="Edit">
+                        <i class="ti ti-edit"></i>
+                    </a>
+                    <a href="#" class="action-btn delete" title="Hapus">
+                        <i class="ti ti-trash"></i>
+                    </a>
                 </td>
             </tr>
             @endforeach
@@ -287,7 +303,7 @@
 </div>
 
 <div class="pagination">
-    <div>Menampilkan 1 - 7 dari 7 kategori</div>
+    <div>Menampilkan data kategori</div>
     <div class="pagination-links">
         <a href="#" title="Sebelumnya"><i class="ti ti-chevron-left" style="font-size: 16px;"></i></a>
         <span class="active">1</span>
