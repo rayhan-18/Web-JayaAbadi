@@ -23,7 +23,7 @@
 
     /* Page Header */
     .page-header {
-        display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
+        display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;
     }
     .page-title h1 {
         font-size: 22px; font-weight: 700; color: var(--text-main); margin: 0; letter-spacing: -0.02em;
@@ -32,9 +32,9 @@
         font-size: 13px; color: var(--text-sec); margin-top: 4px;
     }
 
-    /* Stats Grid */
+    /* Stats Grid - Menjadi 3 Kolom */
     .stats-row {
-        display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;
     }
     .stat-card {
         background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border);
@@ -48,9 +48,7 @@
         font-size: 24px; margin: 0 auto 12px;
     }
     
-    /* Icon Colors - Transparent Backgrounds */
     .stat-card.total .stat-icon   { background: transparent; color: var(--accent); }
-    .stat-card.member .stat-icon  { background: transparent; color: #b89247; }
     .stat-card.active .stat-icon  { background: transparent; color: #5c7b9e; }
     .stat-card.new .stat-icon     { background: transparent; color: #865c9e; }
 
@@ -86,7 +84,7 @@
     .btn-export {
         background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border);
         padding: 0 16px; height: 40px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
-        display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s;
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.2s;
     }
     .btn-export i { font-size: 16px; color: var(--text-sec); }
     .btn-export:hover { background: var(--bg-hover); border-color: #d1d6cf; }
@@ -109,7 +107,7 @@
     .table-section { flex: 1; min-width: 0; }
     
     .table-wrapper { background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border); overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 800px; } 
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 700px; } 
     th {
         text-align: left; padding: 14px 20px; background: var(--bg-hover); font-weight: 600;
         color: var(--text-sec); border-bottom: 1px solid var(--border); font-size: 12px;
@@ -126,23 +124,10 @@
         color: var(--accent-dark); display: flex; align-items: center; justify-content: center;
         font-weight: 700; font-size: 14px; flex-shrink: 0; border: 1px solid var(--border);
     }
-    .customer-avatar.vip { background: #fcf6e8; color: #b89247; border-color: #f0e1c0; }
     
     .customer-info { line-height: 1.4; }
     .customer-name { font-weight: 600; color: var(--text-main); font-size: 13.5px; }
     .customer-email { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
-
-    /* Badges Status/Tipe */
-    .status-badge {
-        display: inline-flex; align-items: center; justify-content: center;
-        padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap;
-    }
-    .badge-vip     { background: #fcf6e8; color: #b89247; }
-    .badge-regular { background: #f0f4f8; color: #4a6b8c; }
-    
-    .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; }
-    .badge-vip::before     { background: #d99e52; }
-    .badge-regular::before { background: #6993c4; }
 
     .action-btn {
         width: 32px; height: 32px; border-radius: 8px; background: var(--bg-surface);
@@ -152,7 +137,7 @@
     .action-btn:hover { background: var(--bg-hover); color: var(--accent); border-color: #d1d6cf; }
 
     /* Pagination */
-    .pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; font-size: 13px; color: var(--text-sec); }
+    .pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; font-size: 13px; color: var(--text-sec); flex-wrap: wrap; gap: 12px;}
     .pagination-links { display: flex; gap: 6px; }
     .pagination-links a, .pagination-links span {
         display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 30px; padding: 0 10px;
@@ -197,7 +182,6 @@
         color: var(--accent-dark); display: flex; align-items: center; justify-content: center;
         font-weight: 700; font-size: 28px; margin-bottom: 12px; border: 2px solid var(--border);
     }
-    .dp-profile-avatar.vip { background: #fcf6e8; color: #b89247; border-color: #f0e1c0; }
     .dp-profile-name { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
     .dp-profile-join { font-size: 12px; color: var(--text-muted); }
 
@@ -220,6 +204,30 @@
     }
     .btn-action:hover { background: var(--bg-hover); border-color: #d1d6cf; }
     .btn-action:active { transform: scale(0.97); background: #f0f2ef; }
+
+    /* =========================================
+       SISTEM RESPONSIVE (MOBILE & TABLET)
+       ========================================= */
+    @media (max-width: 1024px) {
+        .stats-row { grid-template-columns: repeat(3, 1fr); }
+        .layout-order { flex-direction: column; }
+        
+        .detail-panel.open {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            width: 100%; max-height: 100vh; z-index: 1000;
+            border-radius: 0; border: none;
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+    }
+
+    @media (max-width: 768px) {
+        .stats-row { grid-template-columns: 1fr; }
+        .filter-bar { flex-direction: column; align-items: stretch; }
+        .search-box, .select-wrapper, .filter-select { max-width: 100%; width: 100%; min-width: 100%; }
+        .page-header { flex-direction: column; align-items: flex-start; }
+        .export-dropdown, .btn-export { width: 100%; }
+    }
 </style>
 @endsection
 
@@ -244,11 +252,6 @@
         <div class="stat-label">Total Pelanggan</div>
         <div class="stat-value">1,248</div>
     </div>
-    <div class="stat-card member">
-        <div class="stat-icon"><i class="ti ti-vip"></i></div>
-        <div class="stat-label">Member VIP</div>
-        <div class="stat-value">156</div>
-    </div>
     <div class="stat-card active">
         <div class="stat-icon"><i class="ti ti-shopping-cart-check"></i></div>
         <div class="stat-label">Aktif Belanja (Bulan Ini)</div>
@@ -265,14 +268,6 @@
     <div class="search-box">
         <i class="ti ti-search"></i>
         <input type="text" placeholder="Cari Nama, Email, atau No. HP...">
-    </div>
-    <div class="select-wrapper">
-        <i class="ti ti-badge prefix-icon"></i>
-        <select class="filter-select">
-            <option>Semua Tipe</option>
-            <option>Member VIP</option>
-            <option>Regular</option>
-        </select>
     </div>
     <div class="select-wrapper">
         <i class="ti ti-sort-descending prefix-icon"></i>
@@ -293,20 +288,19 @@
                         <th>Profil Pelanggan</th>
                         <th>No. Telepon</th>
                         <th style="text-align: center;">Total Order</th>
-                        <th>Tipe</th>
                         <th style="text-align: center;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @php
-                        // Dummy Data Pelanggan
+                        // Dummy Data Pelanggan Bersih
                         $customers = [
-                            ['id'=>'CST-0089', 'nama'=>'Rayhan Maulana', 'email'=>'rayhan@gmail.com', 'hp'=>'0812-3456-7890', 'total_order'=>12, 'total_spent'=>15500000, 'tipe'=>'VIP', 'join_date'=>'12 Jan 2023', 'alamat'=>'Jl. Merdeka No. 123, Bandung, Jawa Barat'],
-                            ['id'=>'CST-0088', 'nama'=>'Siti Aisyah', 'email'=>'aisyah@gmail.com', 'hp'=>'0812-9876-5432', 'total_order'=>3, 'total_spent'=>3200000, 'tipe'=>'Regular', 'join_date'=>'05 Mei 2024', 'alamat'=>'Jl. Kenanga No. 5, Sumur Bandung, Bandung'],
-                            ['id'=>'CST-0087', 'nama'=>'Budi Santoso', 'email'=>'budi@gmail.com', 'hp'=>'0856-1234-5678', 'total_order'=>8, 'total_spent'=>8750000, 'tipe'=>'VIP', 'join_date'=>'20 Nov 2023', 'alamat'=>'Jl. Sudirman No. 88, Menteng, Jakarta Pusat'],
-                            ['id'=>'CST-0086', 'nama'=>'Dewi Anggraini', 'email'=>'dewii@gmail.com', 'hp'=>'0877-0001-1234', 'total_order'=>1, 'total_spent'=>950000, 'tipe'=>'Regular', 'join_date'=>'24 Mei 2024', 'alamat'=>'Jl. Mawar No. 12, Gubeng, Surabaya'],
-                            ['id'=>'CST-0085', 'nama'=>'Ahmad Fauzi', 'email'=>'ahmad@gmail.com', 'hp'=>'0821-5555-6666', 'total_order'=>5, 'total_spent'=>6800000, 'tipe'=>'Regular', 'join_date'=>'10 Feb 2024', 'alamat'=>'Jl. Gatot Subroto No. 45, Semarang Selatan'],
-                            ['id'=>'CST-0084', 'nama'=>'Nina Karlina', 'email'=>'nina@gmail.com', 'hp'=>'0812-8888-9999', 'total_order'=>2, 'total_spent'=>2100000, 'tipe'=>'Regular', 'join_date'=>'15 Mar 2024', 'alamat'=>'Jl. Pahlawan No. 3, Sleman, Yogyakarta'],
+                            ['id'=>'CST-0089', 'nama'=>'Rayhan Maulana', 'email'=>'rayhan@gmail.com', 'hp'=>'0812-3456-7890', 'total_order'=>12, 'total_spent'=>15500000, 'join_date'=>'12 Jan 2023', 'alamat'=>'Jl. Merdeka No. 123, Bandung, Jawa Barat'],
+                            ['id'=>'CST-0088', 'nama'=>'Siti Aisyah', 'email'=>'aisyah@gmail.com', 'hp'=>'0812-9876-5432', 'total_order'=>3, 'total_spent'=>3200000, 'join_date'=>'05 Mei 2024', 'alamat'=>'Jl. Kenanga No. 5, Sumur Bandung, Bandung'],
+                            ['id'=>'CST-0087', 'nama'=>'Budi Santoso', 'email'=>'budi@gmail.com', 'hp'=>'0856-1234-5678', 'total_order'=>8, 'total_spent'=>8750000, 'join_date'=>'20 Nov 2023', 'alamat'=>'Jl. Sudirman No. 88, Menteng, Jakarta Pusat'],
+                            ['id'=>'CST-0086', 'nama'=>'Dewi Anggraini', 'email'=>'dewii@gmail.com', 'hp'=>'0877-0001-1234', 'total_order'=>1, 'total_spent'=>950000, 'join_date'=>'24 Mei 2024', 'alamat'=>'Jl. Mawar No. 12, Gubeng, Surabaya'],
+                            ['id'=>'CST-0085', 'nama'=>'Ahmad Fauzi', 'email'=>'ahmad@gmail.com', 'hp'=>'0821-5555-6666', 'total_order'=>5, 'total_spent'=>6800000, 'join_date'=>'10 Feb 2024', 'alamat'=>'Jl. Gatot Subroto No. 45, Semarang Selatan'],
+                            ['id'=>'CST-0084', 'nama'=>'Nina Karlina', 'email'=>'nina@gmail.com', 'hp'=>'0812-8888-9999', 'total_order'=>2, 'total_spent'=>2100000, 'join_date'=>'15 Mar 2024', 'alamat'=>'Jl. Pahlawan No. 3, Sleman, Yogyakarta'],
                         ];
                     @endphp
                     @foreach($customers as $index => $c)
@@ -316,9 +310,8 @@
                             <div class="customer-profile">
                                 @php
                                     $inisial = substr($c['nama'], 0, 1);
-                                    $vipClass = $c['tipe'] == 'VIP' ? 'vip' : '';
                                 @endphp
-                                <div class="customer-avatar {{ $vipClass }}">{{ $inisial }}</div>
+                                <div class="customer-avatar">{{ $inisial }}</div>
                                 <div class="customer-info">
                                     <div class="customer-name">{{ $c['nama'] }}</div>
                                     <div class="customer-email">{{ $c['email'] }}</div>
@@ -327,12 +320,6 @@
                         </td>
                         <td style="color: var(--text-sec); font-size: 12.5px;">{{ $c['hp'] }}</td>
                         <td style="text-align: center; font-weight: 600;">{{ $c['total_order'] }}</td>
-                        <td>
-                            @php
-                                $badgeClass = $c['tipe'] == 'VIP' ? 'badge-vip' : 'badge-regular';
-                            @endphp
-                            <span class="status-badge {{ $badgeClass }}">{{ $c['tipe'] }}</span>
-                        </td>
                         <td style="text-align: center;">
                             <div class="action-btn" onclick="showCustomerDetail({{ $index }})" title="Lihat Detail"><i class="ti ti-user-search"></i></div>
                         </td>
@@ -376,14 +363,11 @@
         const panel = document.getElementById('customerPanel');
         const body = document.getElementById('customerBody');
 
-        const isVip = c.tipe === 'VIP';
-        const avatarClass = isVip ? 'vip' : '';
-        const badgeClass = isVip ? 'badge-vip' : 'badge-regular';
         const inisial = c.nama.charAt(0);
 
         body.innerHTML = `
             <div class="dp-profile-header">
-                <div class="dp-profile-avatar ${avatarClass}">${inisial}</div>
+                <div class="dp-profile-avatar">${inisial}</div>
                 <div class="dp-profile-name">${c.nama}</div>
                 <div class="dp-profile-join">Bergabung sejak ${c.join_date}</div>
             </div>
@@ -407,10 +391,6 @@
             <div class="dp-row">
                 <div class="dp-label"><i class="ti ti-phone" style="font-size:16px; vertical-align:middle; margin-right:4px;"></i> No. HP</div>
                 <div class="dp-value">${c.hp}</div>
-            </div>
-            <div class="dp-row">
-                <div class="dp-label"><i class="ti ti-badge" style="font-size:16px; vertical-align:middle; margin-right:4px;"></i> Tipe Akun</div>
-                <div class="dp-value"><span class="status-badge ${badgeClass}">${c.tipe}</span></div>
             </div>
 
             <div class="dp-section-title">Alamat Pengiriman Utama</div>

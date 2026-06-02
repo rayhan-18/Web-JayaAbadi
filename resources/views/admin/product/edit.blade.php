@@ -273,7 +273,6 @@
         <h1>Edit Produk</h1>
         <div class="breadcrumb">FurniHome / Produk / Edit</div>
     </div>
-    <a href="{{ route('admin.product.index') }}" class="btn-cancel"><i class="ti ti-arrow-left"></i> Kembali</a>
 </div>
 
 {{-- Diarahkan menggunakan metode PUT --}}
