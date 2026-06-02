@@ -22,7 +22,7 @@
     body { color: var(--text-main); }
 
     .page-header {
-        display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
+        display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;
     }
     .page-title h1 {
         font-size: 22px; font-weight: 700; color: var(--text-main); margin: 0; letter-spacing: -0.02em;
@@ -31,6 +31,7 @@
         font-size: 13px; color: var(--text-sec); margin-top: 4px;
     }
 
+    /* Stats Grid - Menyesuaikan dengan tambahan Member VIP dari branch main */
     .stats-row {
         display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;
     }
@@ -81,7 +82,7 @@
     .btn-export {
         background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border);
         padding: 0 16px; height: 40px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
-        display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s;
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.2s;
     }
     .btn-export i { font-size: 16px; color: var(--text-sec); }
     .btn-export:hover { background: var(--bg-hover); border-color: #d1d6cf; }
@@ -103,7 +104,7 @@
     .table-section { flex: 1; min-width: 0; }
     
     .table-wrapper { background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border); overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 800px; } 
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 700px; } 
     th {
         text-align: left; padding: 14px 20px; background: var(--bg-hover); font-weight: 600;
         color: var(--text-sec); border-bottom: 1px solid var(--border); font-size: 12px;
@@ -119,7 +120,6 @@
         color: var(--accent-dark); display: flex; align-items: center; justify-content: center;
         font-weight: 700; font-size: 14px; flex-shrink: 0; border: 1px solid var(--border);
     }
-    .customer-avatar.vip { background: #fcf6e8; color: #b89247; border-color: #f0e1c0; }
     
     .customer-info { line-height: 1.4; }
     .customer-name { font-weight: 600; color: var(--text-main); font-size: 13.5px; }
@@ -143,7 +143,8 @@
     }
     .action-btn:hover { background: var(--bg-hover); color: var(--accent); border-color: #d1d6cf; }
 
-    .pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; font-size: 13px; color: var(--text-sec); }
+    /* Pagination */
+    .pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; font-size: 13px; color: var(--text-sec); flex-wrap: wrap; gap: 12px;}
     .pagination-links { display: flex; gap: 6px; }
     .pagination-links a, .pagination-links span {
         display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 30px; padding: 0 10px;
@@ -186,7 +187,6 @@
         color: var(--accent-dark); display: flex; align-items: center; justify-content: center;
         font-weight: 700; font-size: 28px; margin-bottom: 12px; border: 2px solid var(--border);
     }
-    .dp-profile-avatar.vip { background: #fcf6e8; color: #b89247; border-color: #f0e1c0; }
     .dp-profile-name { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
     .dp-profile-join { font-size: 12px; color: var(--text-muted); }
 
@@ -209,6 +209,30 @@
     }
     .btn-action:hover { background: var(--bg-hover); border-color: #d1d6cf; }
     .btn-action:active { transform: scale(0.97); background: #f0f2ef; }
+
+    /* =========================================
+       SISTEM RESPONSIVE (MOBILE & TABLET)
+       ========================================= */
+    @media (max-width: 1024px) {
+        .stats-row { grid-template-columns: repeat(2, 1fr); }
+        .layout-order { flex-direction: column; }
+        
+        .detail-panel.open {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            width: 100%; max-height: 100vh; z-index: 1000;
+            border-radius: 0; border: none;
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+    }
+
+    @media (max-width: 768px) {
+        .stats-row { grid-template-columns: 1fr; }
+        .filter-bar { flex-direction: column; align-items: stretch; }
+        .search-box, .select-wrapper, .filter-select { max-width: 100%; width: 100%; min-width: 100%; }
+        .page-header { flex-direction: column; align-items: flex-start; }
+        .export-dropdown, .btn-export { width: 100%; }
+    }
 </style>
 @endsection
 
@@ -256,14 +280,6 @@
         <input type="text" placeholder="Cari Nama, Email, atau No. HP...">
     </div>
     <div class="select-wrapper">
-        <i class="ti ti-badge prefix-icon"></i>
-        <select class="filter-select">
-            <option>Semua Tipe</option>
-            <option>Member VIP</option>
-            <option>Regular</option>
-        </select>
-    </div>
-    <div class="select-wrapper">
         <i class="ti ti-sort-descending prefix-icon"></i>
         <select class="filter-select">
             <option>Urutkan: Terbaru</option>
@@ -283,7 +299,7 @@
                         <th>Profil Pelanggan</th>
                         <th>No. Telepon</th>
                         <th style="text-align: center;">Total Order</th>
-                        <th>Tipe</th>
+                        <th style="text-align: center;">Status</th>
                         <th style="text-align: center;">Aksi</th>
                     </tr>
                 </thead>
@@ -298,7 +314,7 @@
                                     $tipe = $c->orders_count >= 5 ? 'VIP' : 'Regular';
                                     $vipClass = $tipe == 'VIP' ? 'vip' : '';
                                 @endphp
-                                <div class="customer-avatar {{ $vipClass }}">{{ $inisial }}</div>
+                                <div class="customer-avatar">{{ $inisial }}</div>
                                 <div class="customer-info">
                                     <div class="customer-name">{{ $c->name }}</div>
                                     <div class="customer-email">{{ $c->email }}</div>
@@ -307,7 +323,7 @@
                         </td>
                         <td style="color: var(--text-sec); font-size: 12.5px;">{{ $c->phone ?? '-' }}</td>
                         <td style="text-align: center; font-weight: 600;">{{ $c->orders_count }}</td>
-                        <td>
+                        <td style="text-align: center;">
                             @php $badgeClass = $tipe == 'VIP' ? 'badge-vip' : 'badge-regular'; @endphp
                             <span class="status-badge {{ $badgeClass }}">{{ $tipe }}</span>
                         </td>
@@ -373,51 +389,50 @@
         const panel = document.getElementById('customerPanel');
         const body = document.getElementById('customerBody');
 
-        const isVip = c.tipe === 'VIP';
-        const avatarClass = isVip ? 'vip' : '';
-        const badgeClass = isVip ? 'badge-vip' : 'badge-regular';
-        const inisial = c.nama.charAt(0);
+        // Menggunakan OR (||) agar kompatibel dengan data dummy lamamu atau data database baru
+        const nama = c.name || c.nama;
+        const inisial = nama.charAt(0);
+        const hp = c.phone || c.hp || '-';
+        const totalOrder = c.orders_count || c.total_order || 0;
+        const alamat = c.address || c.alamat || 'Alamat tidak tersedia';
+        const tglJoin = c.join_date || c.created_at || '-';
+        const idAsli = c.id_asli || c.id;
 
         body.innerHTML = `
             <div class="dp-profile-header">
-                <div class="dp-profile-avatar ${avatarClass}">${inisial}</div>
-                <div class="dp-profile-name">${c.nama}</div>
-                <div class="dp-profile-join">Bergabung sejak ${c.join_date}</div>
+                <div class="dp-profile-avatar">${inisial}</div>
+                <div class="dp-profile-name">${nama}</div>
+                <div class="dp-profile-join">Bergabung sejak ${tglJoin}</div>
             </div>
 
             <div class="dp-stat-grid">
                 <div class="dp-stat-box">
                     <div class="lbl">Total Order</div>
-                    <div class="val">${c.total_order}x</div>
+                    <div class="val">${totalOrder}x</div>
                 </div>
                 <div class="dp-stat-box">
                     <div class="lbl">Total Belanja</div>
-                    <div class="val" style="font-size:14px;">${formatRupiah(c.total_spent)}</div>
+                    <div class="val" style="font-size:14px;">${formatRupiah(c.total_spent || 0)}</div>
                 </div>
             </div>
 
             <div class="dp-section-title">Informasi Kontak</div>
             <div class="dp-row">
                 <div class="dp-label"><i class="ti ti-mail" style="font-size:16px; vertical-align:middle; margin-right:4px;"></i> Email</div>
-                <div class="dp-value">${c.email}</div>
+                <div class="dp-value">${c.email || '-'}</div>
             </div>
             <div class="dp-row">
                 <div class="dp-label"><i class="ti ti-phone" style="font-size:16px; vertical-align:middle; margin-right:4px;"></i> No. HP</div>
-                <div class="dp-value">${c.hp}</div>
-            </div>
-            <div class="dp-row">
-                <div class="dp-label"><i class="ti ti-badge" style="font-size:16px; vertical-align:middle; margin-right:4px;"></i> Tipe Akun</div>
-                <div class="dp-value"><span class="status-badge ${badgeClass}">${c.tipe}</span></div>
+                <div class="dp-value">${hp}</div>
             </div>
 
             <div class="dp-section-title">Alamat Pengiriman Utama</div>
             <div style="font-size:12.5px; color:var(--text-main); line-height:1.5; padding: 12px; background: var(--bg-hover); border-radius: 8px; border: 1px solid var(--border);">
-                ${c.alamat}
+                ${alamat}
             </div>
 
             <div style="margin-top: 24px;">
-                <!-- Ganti c.id.replace... menjadi c.id_asli -->
-                <button class="btn-action" id="btn-riwayat" onclick="loadOrderHistory('${c.id_asli}')">
+                <button class="btn-action" id="btn-riwayat" onclick="loadOrderHistory('${idAsli}')">
                     <i class="ti ti-history"></i> Riwayat Pesanan Lengkap
                 </button>
                 <div id="history-container" style="margin-top: 14px; display: none;"></div>
@@ -433,53 +448,50 @@
     }
 
     function loadOrderHistory(userId) {
-    const container = document.getElementById('history-container');
-    const btn = document.getElementById('btn-riwayat');
-    
-    // Beri efek loading teks pada tombol
-    btn.innerHTML = `<i class="ti ti-loader animate-spin"></i> Mengambil Data...`;
-    btn.disabled = true;
+        const container = document.getElementById('history-container');
+        const btn = document.getElementById('btn-riwayat');
+        
+        btn.innerHTML = `<i class="ti ti-loader animate-spin"></i> Mengambil Data...`;
+        btn.disabled = true;
 
-    // Ambil data ke Route/API Laravel yang kita buat di langkah 1
-    fetch(`/admin/customers/${userId}/orders`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.orders.length === 0) {
-                container.innerHTML = `<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:10px; background:var(--bg-hover); border-radius:8px;">Belum ada riwayat pesanan.</div>`;
-            } else {
-                let html = `
-                    <div class="dp-section-title" style="margin: 10px 0 8px 0;">Daftar Transaksi</div>
-                    <div style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;">
-                `;
-                
-                data.orders.forEach(order => {
-                    html += `
-                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:var(--bg-hover); border-radius:8px; border:1px solid var(--border); font-size:12px;">
-                            <div>
-                                <strong style="color:var(--text-main); font-family:monospace;">${order.invoice}</strong>
-                                <div style="color:var(--text-muted); font-size:11px; margin-top:2px;">${order.tanggal}</div>
-                            </div>
-                            <div style="text-align:right;">
-                                <span style="font-weight:700; color:var(--accent);">${formatRupiah(order.total)}</span>
-                                <div style="font-size:10px; color:var(--text-sec); font-weight:600; text-transform:uppercase;">${order.status}</div>
-                            </div>
-                        </div>
+        fetch(`/admin/customers/${userId}/orders`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.orders.length === 0) {
+                    container.innerHTML = `<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:10px; background:var(--bg-hover); border-radius:8px;">Belum ada riwayat pesanan.</div>`;
+                } else {
+                    let html = `
+                        <div class="dp-section-title" style="margin: 10px 0 8px 0;">Daftar Transaksi</div>
+                        <div style="max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;">
                     `;
-                });
+                    
+                    data.orders.forEach(order => {
+                        html += `
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:var(--bg-hover); border-radius:8px; border:1px solid var(--border); font-size:12px;">
+                                <div>
+                                    <strong style="color:var(--text-main); font-family:monospace;">${order.invoice}</strong>
+                                    <div style="color:var(--text-muted); font-size:11px; margin-top:2px;">${order.tanggal}</div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <span style="font-weight:700; color:var(--accent);">${formatRupiah(order.total)}</span>
+                                    <div style="font-size:10px; color:var(--text-sec); font-weight:600; text-transform:uppercase;">${order.status}</div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `</div>`;
+                    container.innerHTML = html;
+                }
                 
-                html += `</div>`;
-                container.innerHTML = html;
-            }
-            
-            // Tampilkan container riwayat & sembunyikan tombol utamanya
-            container.style.display = 'block';
-            btn.style.display = 'none';
-        })
-        .catch(error => {
-            alert('Gagal mengambil data riwayat pesanan.');
-            btn.innerHTML = `<i class="ti ti-history"></i> Riwayat Pesanan Lengkap`;
-            btn.disabled = false;
-        });
-}
+                container.style.display = 'block';
+                btn.style.display = 'none';
+            })
+            .catch(error => {
+                alert('Gagal mengambil data riwayat pesanan.');
+                btn.innerHTML = `<i class="ti ti-history"></i> Riwayat Pesanan Lengkap`;
+                btn.disabled = false;
+            });
+    }
 </script>
 @endsection

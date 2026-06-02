@@ -408,8 +408,7 @@
             </div>
 
             <div class="form-actions">
-                <a href="{{ route('admin.product.index') }}" class="btn-cancel">Batal</a>
-                <button type="submit" class="btn-submit">
+                <button type="submit" class="btn-submit" style="width: 100%; justify-content: center;">
                     <i class="ti ti-device-floppy"></i> Update Produk
                 </button>
             </div>

@@ -4,6 +4,7 @@
 
 @section('styles')
 <style>
+    /* Premium Variables */
     :root {
         --accent: #5c9e74;
         --accent-dark: #3a5c48;
@@ -20,8 +21,9 @@
 
     body { color: var(--text-main); }
 
+    /* Page Header */
     .page-header {
-        display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
+        display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;
     }
     .page-title h1 {
         font-size: 22px; font-weight: 700; color: var(--text-main); margin: 0; letter-spacing: -0.02em;
@@ -30,6 +32,7 @@
         font-size: 13px; color: var(--text-sec); margin-top: 4px;
     }
 
+    /* Stats Grid */
     .stats-row {
         display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px;
     }
@@ -54,6 +57,7 @@
     .stat-label { font-size: 12.5px; font-weight: 600; color: var(--text-sec); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.02em; }
     .stat-value { font-size: 26px; font-weight: 700; color: var(--text-main); letter-spacing: -0.02em; }
     
+    /* Filters */
     .filter-bar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
     .search-box {
         display: flex; align-items: center; background: var(--bg-surface);
@@ -77,11 +81,12 @@
     .filter-select:hover { background-color: var(--bg-hover); border-color: #d1d6cf; }
     .filter-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(92, 158, 116, 0.15); }
 
+    /* Export Laporan Dropdown */
     .export-dropdown { position: relative; display: inline-block; }
     .btn-export {
         background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border);
         padding: 0 16px; height: 40px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
-        display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s;
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.2s;
     }
     .btn-export i { font-size: 16px; color: var(--text-sec); }
     .btn-export:hover { background: var(--bg-hover); border-color: #d1d6cf; }
@@ -96,11 +101,10 @@
         color: var(--text-main); font-size: 13px; font-weight: 500; border-bottom: 1px solid #f0f2ef;
     }
     .export-dropdown-content a:last-child { border-bottom: none; }
-    .export-dropdown-content a i { color: var(--text-sec); font-size: 15px; }
     .export-dropdown-content a:hover { background: var(--bg-hover); color: var(--accent); }
-    .export-dropdown-content a:hover i { color: var(--accent); }
     .export-dropdown:hover .export-dropdown-content { display: block; }
 
+    /* Layout & Table */
     .layout-order { display: flex; gap: 20px; align-items: flex-start; }
     .table-section { flex: 1; min-width: 0; }
     
@@ -134,14 +138,17 @@
     .status-dikirim::before  { background: #9269c4; }
     .status-selesai::before  { background: var(--accent); }
 
+<<<<<<< HEAD
+    /* Premium Channel Badges */
+=======
+>>>>>>> c55123633a00732c0f33cfe7d814dd106d913b73
     .channel-badge {
         display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap;
     }
     .channel-online  { background: #eef7f2; color: #3b7a54; border: 1px solid #dbeee3; }
     .channel-offline { background: #f1f3f5; color: #495057; border: 1px solid #e9ecef; }
-    .channel-badge i { font-size: 13px; }
-
+    
     .action-btn {
         width: 32px; height: 32px; border-radius: 8px; background: var(--bg-surface);
         border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center;
@@ -149,7 +156,8 @@
     }
     .action-btn:hover { background: var(--bg-hover); color: var(--accent); border-color: #d1d6cf; }
 
-    .pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; font-size: 13px; color: var(--text-sec); }
+    /* Pagination */
+    .pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; font-size: 13px; color: var(--text-sec); flex-wrap: wrap; gap: 12px; }
     .pagination-links { display: flex; gap: 6px; }
     .pagination-links a, .pagination-links span {
         display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 30px; padding: 0 10px;
@@ -159,6 +167,7 @@
     .pagination-links a:hover { background: var(--bg-hover); border-color: var(--accent); color: var(--accent); }
     .pagination-links .active { background: var(--accent); border-color: var(--accent); color: white; }
 
+    /* Detail Panel Sidebar */
     .detail-panel {
         width: 360px; flex-shrink: 0; background: #ffffff !important; border-radius: var(--radius-lg);
         border: 1px solid var(--border); display: none; flex-direction: column;
@@ -171,7 +180,6 @@
     .detail-panel::-webkit-scrollbar { width: 5px; }
     .detail-panel::-webkit-scrollbar-track { background: transparent; }
     .detail-panel::-webkit-scrollbar-thumb { background: #d1d6cf; border-radius: 10px; }
-    .detail-panel::-webkit-scrollbar-thumb:hover { background: #9aada2; }
 
     .dp-header {
         display: flex; justify-content: space-between; align-items: center; padding: 18px 20px;
@@ -193,12 +201,13 @@
     .dp-section-title { font-size: 13px; font-weight: 700; color: var(--text-main); margin: 20px 0 14px; text-transform: uppercase; letter-spacing: 0.02em; }
     .dp-divider { border: none; border-top: 1px dashed var(--border); margin: 16px 0; }
     
+    /* Gambar Produk di Detail Panel */
     .dp-product { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
     .dp-product-img {
-        width: 42px; height: 42px; border-radius: 10px; background: transparent;
-        border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
-        font-size: 20px; color: var(--text-sec); flex-shrink: 0;
+        width: 46px; height: 46px; border-radius: 8px; background: var(--bg-hover);
+        border: 1px solid var(--border); overflow: hidden; flex-shrink: 0;
     }
+    .dp-product-img img { width: 100%; height: 100%; object-fit: cover; }
     .dp-product-name { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 2px; }
     .dp-product-qty { font-size: 11.5px; color: var(--text-muted); }
     .dp-product-price { margin-left: auto; font-size: 13.5px; font-weight: 600; color: var(--text-main); white-space: nowrap; }
@@ -226,6 +235,38 @@
     .btn-update:hover { background-color: #3a5c48 !important; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(58, 92, 72, 0.3); }
     .btn-update:active { transform: scale(0.97); background-color: #2d4a3a !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); transition: all 0.1s; }
 
+<<<<<<< HEAD
+    /* =========================================
+       SISTEM RESPONSIVE (MOBILE & TABLET)
+       ========================================= */
+    @media (max-width: 1200px) {
+        .stats-row { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 1024px) {
+        .layout-order { flex-direction: column; }
+        
+        /* Modal Panel Mobile */
+        .detail-panel.open {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            width: 100%; max-height: 100vh; z-index: 1000;
+            border-radius: 0; border: none;
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+    }
+
+    @media (max-width: 768px) {
+        .stats-row { grid-template-columns: repeat(2, 1fr); }
+        .filter-bar { flex-direction: column; align-items: stretch; }
+        .search-box, .select-wrapper, .filter-select { max-width: 100%; width: 100%; min-width: 100%; }
+        .page-header { flex-direction: column; align-items: flex-start; }
+        .export-dropdown, .btn-export { width: 100%; }
+    }
+
+    @media (max-width: 480px) {
+        .stats-row { grid-template-columns: 1fr; }
+=======
     /* MEDIA PRINT LOGIC: Untuk layout preview PDF resmi bersih dari komponen admin */
     @media print {
         aside, nav, header, .sidebar, .main-header, .breadcrumb, #filterForm, .action-btn, th:last-child, td:last-child { display: none !important; }
@@ -234,6 +275,7 @@
         table { min-width: 100% !important; width: 100% !important; }
         th { background: #f5f5f5 !important; color: #000 !important; border-bottom: 2px solid #000 !important; }
         td { border-bottom: 1px solid #ccc !important; }
+>>>>>>> c55123633a00732c0f33cfe7d814dd106d913b73
     }
 </style>
 @endsection
@@ -316,9 +358,29 @@
                     </tr>
                 </thead>
                 <tbody>
+<<<<<<< HEAD
+                    @php
+                        // UPDATE: Gambar item pakai URL Unsplash
+                        $orders = [
+                            ['id'=>'#ORD-00123','channel'=>'Online','nama'=>'Rayhan Maulana','email'=>'rayhan@gmail.com','tanggal'=>'26 Mei 2024 10:30','total'=>2750000,'metode'=>'E-Wallet OVO','status'=>'Diproses','alamat'=>'Jl. Merdeka No. 123, Bandung','items'=>[['nama'=>'Kursi Minimalis Kayu','qty'=>1,'harga'=>2750000,'img'=>'https://images.unsplash.com/photo-1505797149-43b0069ec26b?w=100&auto=format&fit=crop&q=60']],'subtotal'=>2750000,'ongkir'=>50000,'total2'=>2800000,'hp'=>'081234567890'],
+                            ['id'=>'#ORD-00122','channel'=>'POS Cashier','nama'=>'Siti Aisyah','email'=>'aisyah@gmail.com','tanggal'=>'25 Mei 2024 15:45','total'=>1850000,'metode'=>'OVO','status'=>'Diproses','alamat'=>'Ambil di Toko (Walk-in)','items'=>[['nama'=>'Meja Samping Walnut','qty'=>1,'harga'=>1850000,'img'=>'https://images.unsplash.com/photo-1532372320978-9b4d7a92b24d?w=100&auto=format&fit=crop&q=60']],'subtotal'=>1850000,'ongkir'=>0,'total2'=>1850000,'hp'=>'081298765432'],
+                            ['id'=>'#ORD-00121','channel'=>'Online','nama'=>'Budi Santoso','email'=>'budi@gmail.com','tanggal'=>'25 Mei 2024 11:20','total'=>3200000,'metode'=>'Transfer Mandiri ****5678','status'=>'Diproses','alamat'=>'Jl. Sudirman No. 88, Jakarta Pusat','items'=>[['nama'=>'Sofa 3 Seater Premium','qty'=>1,'harga'=>3200000,'img'=>'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&auto=format&fit=crop&q=60']],'subtotal'=>3200000,'ongkir'=>75000,'total2'=>3275000,'hp'=>'085612345678'],
+                            ['id'=>'#ORD-00120','channel'=>'POS Cashier','nama'=>'Dewi Anggraini','email'=>'dewii@gmail.com','tanggal'=>'24 Mei 2024 09:15','total'=>950000,'metode'=>'COD Bayar di tempat','status'=>'Pending','alamat'=>'Jl. Mawar No. 12, Surabaya','items'=>[['nama'=>'Rak Buku Minimalis','qty'=>1,'harga'=>950000,'img'=>'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=100&auto=format&fit=crop&q=60']],'subtotal'=>950000,'ongkir'=>0,'total2'=>950000,'hp'=>'087700011234'],
+                            ['id'=>'#ORD-00119','channel'=>'Online','nama'=>'Ahmad Fauzi','email'=>'ahmad@gmail.com','tanggal'=>'24 Mei 2024 16:50','total'=>4500000,'metode'=>'Credit Card VISA ****4567','status'=>'Dikirim','alamat'=>'Jl. Gatot Subroto No. 45, Semarang','items'=>[['nama'=>'Tempat Tidur King Size','qty'=>1,'harga'=>3500000,'img'=>'https://images.unsplash.com/photo-1505693314120-0d443867891c?w=100&auto=format&fit=crop&q=60'],['nama'=>'Nakas Minimalis','qty'=>2,'harga'=>500000,'img'=>'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=100&auto=format&fit=crop&q=60']],'subtotal'=>4500000,'ongkir'=>100000,'total2'=>4600000,'hp'=>'082155556666'],
+                            ['id'=>'#ORD-00118','channel'=>'POS Cashier','nama'=>'Nina Karlina','email'=>'nina@gmail.com','tanggal'=>'23 Mei 2024 12:10','total'=>1250000,'metode'=>'E-Wallet DANA','status'=>'Selesai','alamat'=>'Ambil di Toko (Walk-in)','items'=>[['nama'=>'Kursi Makan Set 4','qty'=>1,'harga'=>1250000,'img'=>'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&auto=format&fit=crop&q=60']],'subtotal'=>1250000,'ongkir'=>0,'total2'=>1250000,'hp'=>'081288889999'],
+                            ['id'=>'#ORD-00117','channel'=>'Online','nama'=>'Rizky Pratama','email'=>'rizky@gmail.com','tanggal'=>'23 Mei 2024 10:05','total'=>2150000,'metode'=>'Transfer BNI ****7890','status'=>'Selesai','alamat'=>'Jl. Diponegoro No. 77, Malang','items'=>[['nama'=>'Lemari Hias Minimalis','qty'=>1,'harga'=>1650000,'img'=>'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=100&auto=format&fit=crop&q=60'],['nama'=>'Cermin Dinding Oval','qty'=>1,'harga'=>500000,'img'=>'https://images.unsplash.com/photo-1505797149-43b0069ec26b?w=100&auto=format&fit=crop&q=60']],'subtotal'=>2150000,'ongkir'=>50000,'total2'=>2200000,'hp'=>'085677778888'],
+                            ['id'=>'#ORD-00116','channel'=>'POS Cashier','nama'=>'Larasati Putri','email'=>'larasati@gmail.com','tanggal'=>'22 Mei 2024 14:35','total'=>3750000,'metode'=>'Credit Card MC ****3210','status'=>'Dikirim','alamat'=>'Jl. Ahmad Yani No. 20, Medan','items'=>[['nama'=>'Meja Kerja Ergonomis','qty'=>1,'harga'=>3750000,'img'=>'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=100&auto=format&fit=crop&q=60']],'subtotal'=>3750000,'ongkir'=>120000,'total2'=>3870000,'hp'=>'081344443333'],
+                        ];
+                    @endphp
+                    @foreach($orders as $index => $o)
+                    <tr>
+                        <td style="font-weight:600; color: var(--text-main);">{{ $o['id'] }}</td>
+                        
+=======
                     @forelse($orders as $index => $order)
                     <tr>
                         <td style="font-weight:600; color: var(--text-main);">{{ $order->order_number }}</td>
+>>>>>>> c55123633a00732c0f33cfe7d814dd106d913b73
                         <td>
                             @if($order->payment_method === 'cash')
                                 <span class="channel-badge channel-offline"><i class="ti ti-store"></i> Kasir POS</span>
@@ -448,9 +510,12 @@
         const panel = document.getElementById('detailPanel');
         const body = document.getElementById('detailBody');
 
+        // UPDATE: Implementasi render image asli
         const itemsHtml = o.items.map(item => `
             <div class="dp-product">
-                <div class="dp-product-img"><i class="ti ${item.icon}"></i></div>
+                <div class="dp-product-img">
+                    <img src="${item.img}" alt="${item.nama}">
+                </div>
                 <div>
                     <div class="dp-product-name">${item.nama}</div>
                     <div class="dp-product-qty">Qty: ${item.qty}</div>
@@ -459,10 +524,16 @@
             </div>
         `).join('');
 
+<<<<<<< HEAD
+        const channelHtml = o.channel === 'Online' 
+            ? `<span class="channel-badge channel-online"><i class="ti ti-world"></i> Website</span>`
+            : `<span class="channel-badge channel-offline"><i class="ti ti-building-store"></i> POS Kasir</span>`;
+=======
         const isOffline = o.metode.toLowerCase() === 'cash';
         const channelHtml = isOffline 
             ? `<span class="channel-badge channel-offline"><i class="ti ti-store"></i> Kasir POS</span>`
             : `<span class="channel-badge channel-online"><i class="ti ti-world"></i> Website</span>`;
+>>>>>>> c55123633a00732c0f33cfe7d814dd106d913b73
 
         body.innerHTML = `
             <div class="dp-order-id">${o.id}</div>

@@ -1,99 +1,81 @@
 <style>
+    /* ── Sidebar Utama ── */
     .sidebar {
         width: 218px; background: #0f1610;
         display: flex; flex-direction: column;
         position: fixed; top: 0; left: 0; bottom: 0;
-        z-index: 100; transition: transform 0.3s ease;
+        z-index: 1000; /* Paling depan */
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         border-right: 1px solid #1a2b1e;
     }
-    .sidebar.hidden { transform: translateX(-100%); }
 
-    .sb-logo {
-        display: flex; align-items: center; gap: 11px;
-        padding: 16px 16px 14px; border-bottom: 1px solid #1c2e20;
+    /* ── Layar Gelap (Backdrop) ── */
+    .sb-backdrop {
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.55);
+        z-index: 990; /* Tepat di bawah sidebar */
+        opacity: 0; visibility: hidden; 
+        transition: opacity 0.3s ease, visibility 0.3s ease;
     }
-    .sb-icon-wrap {
-        width: 34px; height: 34px; border-radius: 9px;
-        background: #1e2e23; border: 1px solid #2a4030;
-        display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    .sb-backdrop.visible {
+        opacity: 1; visibility: visible; 
     }
+
+    /* ── Aturan Responsif ── */
+    @media (max-width: 1024px) {
+        .sidebar { transform: translateX(-100%); } 
+        .sidebar.mobile-open { transform: translateX(0); } 
+    }
+    @media (min-width: 1025px) {
+        .sidebar { transform: translateX(0); }
+        .sidebar.hidden { transform: translateX(-100%); }
+    }
+
+    /* ── Styling Konten (Menu & Logo) ── */
+    .sb-logo { display: flex; align-items: center; gap: 11px; padding: 16px; border-bottom: 1px solid #1c2e20; }
+    .sb-icon-wrap { width: 34px; height: 34px; border-radius: 9px; background: #1e2e23; border: 1px solid #2a4030; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .sb-icon-wrap i { font-size: 18px; color: #5c9e74; }
     .sb-name { color: #e8f0eb; font-size: 13px; font-weight: 600; letter-spacing: -.01em; }
-    .sb-tag {
-        display: inline-flex; align-items: center; margin-top: 2px;
-        background: #1c2e20; border: 1px solid #2a4030; border-radius: 4px;
-        padding: 1px 6px; font-size: 9px; color: #4d7a5c;
-        letter-spacing: .04em; font-weight: 600;
-    }
-
+    .sb-tag { display: inline-flex; align-items: center; margin-top: 2px; background: #1c2e20; border: 1px solid #2a4030; border-radius: 4px; padding: 1px 6px; font-size: 9px; color: #4d7a5c; letter-spacing: .04em; font-weight: 600; }
     .sb-nav { flex: 1; padding: 10px 8px; overflow-y: auto; }
     .sb-nav::-webkit-scrollbar { display: none; }
-
-    .sb-sec {
-        padding: 10px 8px 3px; font-size: 9px; font-weight: 700;
-        text-transform: uppercase; letter-spacing: .14em; color: #2a4030;
-    }
-
-    .nav-row {
-        display: flex; align-items: center; gap: 9px;
-        padding: 8px 10px; color: #4d7060; font-size: 12.5px;
-        cursor: pointer; text-decoration: none; border: none;
-        background: none; width: 100%; border-radius: 7px;
-        transition: background .12s, color .12s; white-space: nowrap;
-    }
+    .sb-sec { padding: 10px 8px 3px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .14em; color: #2a4030; }
+    
+    .nav-row { display: flex; align-items: center; gap: 9px; padding: 8px 10px; color: #4d7060; font-size: 12.5px; cursor: pointer; text-decoration: none; border: none; background: none; width: 100%; border-radius: 7px; transition: background .12s, color .12s; white-space: nowrap; }
     .nav-row:hover { background: #162018; color: #a0c4ae; }
     .nav-row.active { background: #1a2e22; color: #e8f0eb; }
     .nav-row.active .nr-icon-wrap { background: #243d2c; border-color: #2e5038; }
     .nav-row.active .nr-icon-wrap i { color: #5c9e74; }
-
-    .nr-icon-wrap {
-        width: 26px; height: 26px; border-radius: 6px;
-        background: #141f16; border: 1px solid #1e3022;
-        display: flex; align-items: center; justify-content: center;
-        flex-shrink: 0; transition: background .12s;
-    }
+    
+    .nr-icon-wrap { width: 26px; height: 26px; border-radius: 6px; background: #141f16; border: 1px solid #1e3022; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .12s; }
     .nr-icon-wrap i { font-size: 14px; color: #3a5c48; transition: color .12s; }
     .nav-row:hover .nr-icon-wrap { background: #1c2e22; border-color: #274030; }
     .nav-row:hover .nr-icon-wrap i { color: #5c9e74; }
-
-    .nav-row .badge {
-        margin-left: auto; background: #7a2222; color: #ffb0b0;
-        font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 5px;
-    }
-    .nav-row .chev {
-        margin-left: auto; font-size: 12px; color: #2a4030;
-        transition: transform .2s; width: auto !important;
-    }
+    
+    .nav-row .badge { margin-left: auto; background: #7a2222; color: #ffb0b0; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 5px; }
+    .nav-row .chev { margin-left: auto; font-size: 12px; color: #2a4030; transition: transform .2s; }
     .nav-row:hover .chev, .nav-row.active .chev { color: #4d7060; }
     .parent.open > .nav-row .chev { transform: rotate(90deg); }
-
+    
     .sub { max-height: 0; overflow: hidden; transition: max-height .22s ease; }
     .parent.open .sub { max-height: 300px; }
-
-    .sub-row {
-        display: flex; align-items: center; gap: 8px;
-        padding: 6px 10px 6px 44px; color: #2e4d3a; font-size: 12px;
-        text-decoration: none; border-radius: 6px;
-        transition: background .12s, color .12s; margin: 1px 0;
-    }
+    
+    .sub-row { display: flex; align-items: center; gap: 8px; padding: 6px 10px 6px 44px; color: #2e4d3a; font-size: 12px; text-decoration: none; border-radius: 6px; transition: background .12s, color .12s; margin: 1px 0; }
     .sub-row:hover { background: #162018; color: #7ab894; }
     .sub-row.active { color: #7ab894; background: #162018; }
     .sub-dot { width: 3px; height: 3px; border-radius: 50%; background: #243d2c; flex-shrink: 0; }
     .sub-row:hover .sub-dot, .sub-row.active .sub-dot { background: #5c9e74; }
-
+    
     .sb-foot { padding: 8px; border-top: 1px solid #1c2e20; }
-    .sb-logout {
-        display: flex; align-items: center; gap: 9px; padding: 8px 10px;
-        color: #3a5248; font-size: 12.5px; cursor: pointer; border-radius: 7px;
-        border: none; background: none; width: 100%;
-        transition: background .12s, color .12s;
-    }
+    .sb-logout { display: flex; align-items: center; gap: 9px; padding: 8px 10px; color: #3a5248; font-size: 12.5px; cursor: pointer; border-radius: 7px; border: none; background: none; width: 100%; transition: background .12s, color .12s; }
     .sb-logout:hover { background: #1c1212; color: #c47a7a; }
     .sb-logout .nr-icon-wrap { background: #1a1010; border-color: #2a1a1a; }
     .sb-logout .nr-icon-wrap i { color: #4d3030; }
     .sb-logout:hover .nr-icon-wrap { background: #2a1515; border-color: #3a2020; }
     .sb-logout:hover .nr-icon-wrap i { color: #c47a7a; }
 </style>
+
+<div class="sb-backdrop" id="sbBackdrop" onclick="window.closeAdminSidebar()"></div>
 
 <aside class="sidebar" id="sidebar">
     <div class="sb-logo">
@@ -178,19 +160,6 @@
         </div>
 
         <div class="sb-sec">Saluran</div>
-        <div class="parent {{ request()->routeIs('admin.online.*') ? 'open' : '' }}" id="p-online">
-            <div class="nav-row" onclick="tog('p-online')">
-                <div class="nr-icon-wrap"><i class="ti ti-shopping-cart"></i></div> Online
-                <i class="ti ti-chevron-right chev"></i>
-            </div>
-            <div class="sub">
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Toko Online</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Promosi</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Banner & Slider</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Ulasan Produk</a>
-            </div>
-        </div>
-
         <div class="parent {{ request()->routeIs('admin.kasir.*') ? 'open' : '' }}" id="p-kasir">
             <div class="nav-row" onclick="tog('p-kasir')">
                 <div class="nr-icon-wrap"><i class="ti ti-cash-register"></i></div> Kasir
@@ -198,9 +167,6 @@
             </div>
             <div class="sub">
                 <a href="{{ route('admin.kasir.pos') }}" class="sub-row {{ request()->routeIs('admin.casier.pos') ? 'active' : '' }}"><span class="sub-dot"></span>Transaksi POS</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Shift Kasir</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Diskon & Voucher</a>
-                <a href="#" class="sub-row"><span class="sub-dot"></span>Riwayat Kasir</a>
             </div>
         </div>
     </nav>
@@ -216,5 +182,30 @@
 </aside>
 
 <script>
+    // Logika buka-tutup list dropdown menu internal sidebar
     function tog(id) { document.getElementById(id).classList.toggle('open'); }
+
+    // ── KELOLA BODY SCROLL LOCK SECARA TERPUSAT ──
+    window._bodyLockCount = window._bodyLockCount || 0;
+
+    window._lockBodyScroll = function() {
+        window._bodyLockCount++;
+        document.body.style.overflow = 'hidden';
+    };
+
+    window._unlockBodyScroll = function() {
+        window._bodyLockCount = Math.max(0, window._bodyLockCount - 1);
+        if (window._bodyLockCount === 0) {
+            document.body.style.overflow = '';
+        }
+    };
+
+    // Fungsi Global Penutup Sidebar (Dipakai saat backdrop diklik)
+    window.closeAdminSidebar = function() {
+        const sidebar = document.getElementById('sidebar');
+        const backdrop = document.getElementById('sbBackdrop');
+        if (sidebar) sidebar.classList.remove('mobile-open');
+        if (backdrop) backdrop.classList.remove('visible');
+        window._unlockBodyScroll();
+    };
 </script>
