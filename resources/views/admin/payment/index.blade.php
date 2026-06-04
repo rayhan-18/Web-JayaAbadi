@@ -373,7 +373,7 @@
 
     <div class="detail-panel" id="paymentPanel">
         <div class="dp-header">
-            <h3>Rincian Pembayaran</h3>
+            <h3>Rincian Pembayaran Payment</h3>
             <div class="dp-close" onclick="closePaymentDetail()"><i class="ti ti-x"></i></div>
         </div>
         <div class="dp-body" id="paymentBody"></div>
