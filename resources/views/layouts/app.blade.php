@@ -27,7 +27,7 @@
                 </div>
 
                 <!-- Desktop Menu -->
-                <div class="hidden md:flex space-x-8 text-sm font-medium">
+                <div class="md:flex space-x-8 text-sm font-medium">
                     <a href="{{ route('products.category', 'ruang-tamu') }}" class="text-gray-700 hover:text-amber-700 transition">Ruang Tamu</a>
                     <a href="{{ route('products.category', 'kamar-tidur') }}" class="text-gray-700 hover:text-amber-700 transition">Kamar Tidur</a>
                     <a href="{{ route('products.category', 'ruang-makan') }}" class="text-gray-700 hover:text-amber-700 transition">Ruang Makan</a>
