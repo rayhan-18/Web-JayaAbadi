@@ -138,10 +138,7 @@
     .status-dikirim::before  { background: #9269c4; }
     .status-selesai::before  { background: var(--accent); }
 
-<<<<<<< HEAD
     /* Premium Channel Badges */
-=======
->>>>>>> c55123633a00732c0f33cfe7d814dd106d913b73
     .channel-badge {
         display: inline-flex; align-items: center; justify-content: center; gap: 4px;
         padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap;
@@ -235,7 +232,6 @@
     .btn-update:hover { background-color: #3a5c48 !important; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(58, 92, 72, 0.3); }
     .btn-update:active { transform: scale(0.97); background-color: #2d4a3a !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); transition: all 0.1s; }
 
-<<<<<<< HEAD
     /* =========================================
        SISTEM RESPONSIVE (MOBILE & TABLET)
        ========================================= */
@@ -266,16 +262,6 @@
 
     @media (max-width: 480px) {
         .stats-row { grid-template-columns: 1fr; }
-=======
-    /* MEDIA PRINT LOGIC: Untuk layout preview PDF resmi bersih dari komponen admin */
-    @media print {
-        aside, nav, header, .sidebar, .main-header, .breadcrumb, #filterForm, .action-btn, th:last-child, td:last-child { display: none !important; }
-        body, .content-wrapper, main, .container { background: #fff !important; color: #000 !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; }
-        .table-wrapper { border: none !important; box-shadow: none !important; overflow: visible !important; }
-        table { min-width: 100% !important; width: 100% !important; }
-        th { background: #f5f5f5 !important; color: #000 !important; border-bottom: 2px solid #000 !important; }
-        td { border-bottom: 1px solid #ccc !important; }
->>>>>>> c55123633a00732c0f33cfe7d814dd106d913b73
     }
 </style>
 @endsection
@@ -358,29 +344,9 @@
                     </tr>
                 </thead>
                 <tbody>
-<<<<<<< HEAD
-                    @php
-                        // UPDATE: Gambar item pakai URL Unsplash
-                        $orders = [
-                            ['id'=>'#ORD-00123','channel'=>'Online','nama'=>'Rayhan Maulana','email'=>'rayhan@gmail.com','tanggal'=>'26 Mei 2024 10:30','total'=>2750000,'metode'=>'E-Wallet OVO','status'=>'Diproses','alamat'=>'Jl. Merdeka No. 123, Bandung','items'=>[['nama'=>'Kursi Minimalis Kayu','qty'=>1,'harga'=>2750000,'img'=>'https://images.unsplash.com/photo-1505797149-43b0069ec26b?w=100&auto=format&fit=crop&q=60']],'subtotal'=>2750000,'ongkir'=>50000,'total2'=>2800000,'hp'=>'081234567890'],
-                            ['id'=>'#ORD-00122','channel'=>'POS Cashier','nama'=>'Siti Aisyah','email'=>'aisyah@gmail.com','tanggal'=>'25 Mei 2024 15:45','total'=>1850000,'metode'=>'OVO','status'=>'Diproses','alamat'=>'Ambil di Toko (Walk-in)','items'=>[['nama'=>'Meja Samping Walnut','qty'=>1,'harga'=>1850000,'img'=>'https://images.unsplash.com/photo-1532372320978-9b4d7a92b24d?w=100&auto=format&fit=crop&q=60']],'subtotal'=>1850000,'ongkir'=>0,'total2'=>1850000,'hp'=>'081298765432'],
-                            ['id'=>'#ORD-00121','channel'=>'Online','nama'=>'Budi Santoso','email'=>'budi@gmail.com','tanggal'=>'25 Mei 2024 11:20','total'=>3200000,'metode'=>'Transfer Mandiri ****5678','status'=>'Diproses','alamat'=>'Jl. Sudirman No. 88, Jakarta Pusat','items'=>[['nama'=>'Sofa 3 Seater Premium','qty'=>1,'harga'=>3200000,'img'=>'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&auto=format&fit=crop&q=60']],'subtotal'=>3200000,'ongkir'=>75000,'total2'=>3275000,'hp'=>'085612345678'],
-                            ['id'=>'#ORD-00120','channel'=>'POS Cashier','nama'=>'Dewi Anggraini','email'=>'dewii@gmail.com','tanggal'=>'24 Mei 2024 09:15','total'=>950000,'metode'=>'COD Bayar di tempat','status'=>'Pending','alamat'=>'Jl. Mawar No. 12, Surabaya','items'=>[['nama'=>'Rak Buku Minimalis','qty'=>1,'harga'=>950000,'img'=>'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=100&auto=format&fit=crop&q=60']],'subtotal'=>950000,'ongkir'=>0,'total2'=>950000,'hp'=>'087700011234'],
-                            ['id'=>'#ORD-00119','channel'=>'Online','nama'=>'Ahmad Fauzi','email'=>'ahmad@gmail.com','tanggal'=>'24 Mei 2024 16:50','total'=>4500000,'metode'=>'Credit Card VISA ****4567','status'=>'Dikirim','alamat'=>'Jl. Gatot Subroto No. 45, Semarang','items'=>[['nama'=>'Tempat Tidur King Size','qty'=>1,'harga'=>3500000,'img'=>'https://images.unsplash.com/photo-1505693314120-0d443867891c?w=100&auto=format&fit=crop&q=60'],['nama'=>'Nakas Minimalis','qty'=>2,'harga'=>500000,'img'=>'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=100&auto=format&fit=crop&q=60']],'subtotal'=>4500000,'ongkir'=>100000,'total2'=>4600000,'hp'=>'082155556666'],
-                            ['id'=>'#ORD-00118','channel'=>'POS Cashier','nama'=>'Nina Karlina','email'=>'nina@gmail.com','tanggal'=>'23 Mei 2024 12:10','total'=>1250000,'metode'=>'E-Wallet DANA','status'=>'Selesai','alamat'=>'Ambil di Toko (Walk-in)','items'=>[['nama'=>'Kursi Makan Set 4','qty'=>1,'harga'=>1250000,'img'=>'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=100&auto=format&fit=crop&q=60']],'subtotal'=>1250000,'ongkir'=>0,'total2'=>1250000,'hp'=>'081288889999'],
-                            ['id'=>'#ORD-00117','channel'=>'Online','nama'=>'Rizky Pratama','email'=>'rizky@gmail.com','tanggal'=>'23 Mei 2024 10:05','total'=>2150000,'metode'=>'Transfer BNI ****7890','status'=>'Selesai','alamat'=>'Jl. Diponegoro No. 77, Malang','items'=>[['nama'=>'Lemari Hias Minimalis','qty'=>1,'harga'=>1650000,'img'=>'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=100&auto=format&fit=crop&q=60'],['nama'=>'Cermin Dinding Oval','qty'=>1,'harga'=>500000,'img'=>'https://images.unsplash.com/photo-1505797149-43b0069ec26b?w=100&auto=format&fit=crop&q=60']],'subtotal'=>2150000,'ongkir'=>50000,'total2'=>2200000,'hp'=>'085677778888'],
-                            ['id'=>'#ORD-00116','channel'=>'POS Cashier','nama'=>'Larasati Putri','email'=>'larasati@gmail.com','tanggal'=>'22 Mei 2024 14:35','total'=>3750000,'metode'=>'Credit Card MC ****3210','status'=>'Dikirim','alamat'=>'Jl. Ahmad Yani No. 20, Medan','items'=>[['nama'=>'Meja Kerja Ergonomis','qty'=>1,'harga'=>3750000,'img'=>'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=100&auto=format&fit=crop&q=60']],'subtotal'=>3750000,'ongkir'=>120000,'total2'=>3870000,'hp'=>'081344443333'],
-                        ];
-                    @endphp
-                    @foreach($orders as $index => $o)
-                    <tr>
-                        <td style="font-weight:600; color: var(--text-main);">{{ $o['id'] }}</td>
-                        
-=======
                     @forelse($orders as $index => $order)
                     <tr>
                         <td style="font-weight:600; color: var(--text-main);">{{ $order->order_number }}</td>
->>>>>>> c55123633a00732c0f33cfe7d814dd106d913b73
                         <td>
                             @if($order->payment_method === 'cash')
                                 <span class="channel-badge channel-offline"><i class="ti ti-store"></i> Kasir POS</span>
@@ -524,16 +490,9 @@
             </div>
         `).join('');
 
-<<<<<<< HEAD
         const channelHtml = o.channel === 'Online' 
             ? `<span class="channel-badge channel-online"><i class="ti ti-world"></i> Website</span>`
             : `<span class="channel-badge channel-offline"><i class="ti ti-building-store"></i> POS Kasir</span>`;
-=======
-        const isOffline = o.metode.toLowerCase() === 'cash';
-        const channelHtml = isOffline 
-            ? `<span class="channel-badge channel-offline"><i class="ti ti-store"></i> Kasir POS</span>`
-            : `<span class="channel-badge channel-online"><i class="ti ti-world"></i> Website</span>`;
->>>>>>> c55123633a00732c0f33cfe7d814dd106d913b73
 
         body.innerHTML = `
             <div class="dp-order-id">${o.id}</div>
