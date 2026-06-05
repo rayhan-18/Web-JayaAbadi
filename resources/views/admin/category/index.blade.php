@@ -27,6 +27,8 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 12px;
     }
     .page-title h1 {
         font-size: 22px;
@@ -41,7 +43,7 @@
         margin-top: 4px;
     }
 
-    /* Premium Button Style - DISAMAKAN PERSIS DENGAN PRODUK */
+    /* Premium Button Style */
     .btn-primary {
         background-color: #5c9e74 !important;
         color: #ffffff !important;
@@ -60,21 +62,18 @@
         -webkit-tap-highlight-color: transparent;
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
-
     .btn-primary:hover {
         background-color: #3a5c48 !important;
         transform: translateY(-2px);
         box-shadow: 0 6px 15px rgba(58, 92, 72, 0.3);
     }
-
     .btn-primary:active {
         transform: scale(0.95);
         background-color: #2d4a3a !important;
         box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-        transition: all 0.1s;
     }
 
-    /* Filter Bar Layout */
+    /* Filter Bar Layout Responsive */
     .filter-bar {
         display: flex;
         justify-content: space-between;
@@ -97,7 +96,6 @@
         max-width: 320px;
         height: 40px;
         transition: all 0.2s ease;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.01);
     }
     .search-box:focus-within {
         border-color: var(--accent);
@@ -122,17 +120,25 @@
         background: var(--bg-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a9080' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
         appearance: none; font-size: 13px; font-weight: 500;
         color: var(--text-main); cursor: pointer; transition: all 0.2s ease;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.01); min-width: 160px;
+        min-width: 160px;
     }
     .filter-select:hover { background-color: var(--bg-hover); border-color: #d1d6cf; }
     .filter-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(92, 158, 116, 0.15); }
 
-    /* Table Design */
+    /* MOBILE RESPONSIVE TWEAKS */
+    @media (max-width: 768px) {
+        .filter-bar { flex-direction: column; align-items: stretch; }
+        .search-box { max-width: 100%; }
+        .select-wrapper, .filter-select { width: 100%; min-width: 100%; }
+        .btn-primary { width: 100%; justify-content: center; }
+    }
+
+    /* Table Design Anti Pecah */
     .table-wrapper {
         background: var(--bg-surface); border-radius: var(--radius-lg);
         border: 1px solid var(--border); overflow-x: auto;
     }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 800px; }
     th {
         text-align: left; padding: 14px 20px; background: var(--bg-hover);
         font-weight: 600; color: var(--text-sec); border-bottom: 1px solid var(--border);
@@ -143,15 +149,25 @@
         color: var(--text-main); font-weight: 500; vertical-align: middle;
     }
     tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--bg-hover); }
 
-    /* Category Icon */
-    .category-icon {
-        width: 40px; height: 40px;
-        background: transparent; 
+    /* AKTIF: Style Modifikasi untuk Gambar Kategori */
+    .category-img {
+        width: 44px; height: 44px;
+        background: var(--bg-hover); 
         border: 1px solid var(--border);
-        border-radius: 10px;
+        border-radius: 8px;
+        overflow: hidden;
         display: flex; align-items: center; justify-content: center;
-        font-size: 20px; color: var(--text-sec);
+        margin: 0 auto;
+    }
+    .category-img img {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        transition: transform 0.2s ease;
+    }
+    tbody tr:hover .category-img img {
+        transform: scale(1.08); /* Efek zoom halus */
     }
 
     /* Badges */
@@ -165,12 +181,16 @@
         content: ''; width: 6px; height: 6px; border-radius: 50%;
         background: var(--accent); margin-right: 6px;
     }
+    .status-badge.nonaktif {
+        background: #fdf5f5; color: #c47a7a;
+    }
+    .status-badge.nonaktif::before { background: #c47a7a; }
 
     /* Action Buttons */
     .action-icons { display: flex; gap: 8px; justify-content: center; }
     .action-btn {
         display: inline-flex; align-items: center; justify-content: center;
-        width: 30px; height: 30px; border-radius: 8px;
+        width: 32px; height: 32px; border-radius: 8px;
         background: var(--bg-surface); border: 1px solid var(--border);
         color: var(--text-sec); text-decoration: none;
         transition: all 0.15s; font-size: 15px;
@@ -181,7 +201,7 @@
     /* Pagination */
     .pagination {
         display: flex; justify-content: space-between; align-items: center;
-        margin-top: 24px; font-size: 13px; color: var(--text-sec);
+        margin-top: 24px; font-size: 13px; color: var(--text-sec); flex-wrap: wrap; gap: 12px;
     }
     .pagination-links { display: flex; gap: 6px; }
     .pagination-links span, .pagination-links a {
@@ -226,7 +246,7 @@
         <thead>
             <tr>
                 <th style="width: 50px;">#</th>
-                <th style="width: 60px; text-align: center;">Ikon</th>
+                <th style="width: 80px; text-align: center;">Gambar</th>
                 <th>Kategori</th>
                 <th style="width: 35%;">Deskripsi</th>
                 <th>Total Produk</th>
@@ -235,24 +255,21 @@
             </tr>
         </thead>
         <tbody>
-
             @foreach($categories as $item)
-
             <tr>
-
                 <td style="color: var(--text-sec);">
-                    {{ $item->id }}
+                    {{ $loop->iteration ?? $item->id }}
                 </td>
 
                 <td>
-                    <div class="category-icon" style="margin: 0 auto;">
-                        <i class="ti {{ $item->icon }}"></i>
+                    <div class="category-img">
+                        <img src="{{ $item->image ?? 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&auto=format&fit=crop&q=60' }}" alt="{{ $item->name }}">
                     </div>
                 </td>
 
                 <td>
                     <strong style="color: var(--text-main); font-size: 13.5px;">
-                        {{ $item->name}}
+                        {{ $item->name }}
                     </strong>
                 </td>
 
@@ -262,47 +279,31 @@
 
                 <td>
                     <strong>{{ $item->products_count ?? 0 }}</strong>
-                    <span style="color: var(--text-sec); font-size: 12px;">
-                        Item
-                    </span>
+                    <span style="color: var(--text-sec); font-size: 12px;">Item</span>
                 </td>
 
                 <td>
-                    <span class="status-badge">
-                        {{ $item->status }}
+                    <span class="status-badge {{ !$item->is_active ? 'nonaktif' : '' }}">
+                        {{ $item->is_active ? 'Aktif' : 'Nonaktif' }}
                     </span>
                 </td>
 
                 <td class="action-icons">
-
-                    <a href="{{ route('admin.category.edit', $item->id) }}"
-                    class="action-btn"
-                    title="Edit">
-
+                    <a href="{{ route('admin.category.edit', $item->id) }}" class="action-btn" title="Edit">
                         <i class="ti ti-edit"></i>
-
                     </a>
-
-                    <a href="#"
-                    class="action-btn delete"
-                    title="Hapus">
-
-                    <i class="ti ti-trash"></i>
-
+                    <a href="#" class="action-btn delete" title="Hapus">
+                        <i class="ti ti-trash"></i>
                     </a>
-
                 </td>
-
             </tr>
-
             @endforeach
-
         </tbody>
     </table>
 </div>
 
 <div class="pagination">
-    <div>Menampilkan 1 - 7 dari 7 kategori</div>
+    <div>Menampilkan data kategori</div>
     <div class="pagination-links">
         <a href="#" title="Sebelumnya"><i class="ti ti-chevron-left" style="font-size: 16px;"></i></a>
         <span class="active">1</span>

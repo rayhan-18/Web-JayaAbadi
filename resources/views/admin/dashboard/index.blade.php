@@ -26,12 +26,15 @@
         align-items: center;
         justify-content: space-between;
         margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 16px;
     }
     .page-title h1 {
         font-size: 22px;
         font-weight: 700;
         color: var(--text-main);
         letter-spacing: -0.02em;
+        margin: 0;
     }
     .page-title p {
         font-size: 13px;
@@ -97,10 +100,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 20px;
+        font-size: 24px;
         flex-shrink: 0;
     }
-    /* Premium Icon Colors - Tanpa Background */
+    
     .icon-green { background: transparent; color: var(--accent); }
     .icon-blue  { background: transparent; color: #5c7b9e; }
     .icon-gold  { background: transparent; color: #b89247; }
@@ -176,12 +179,12 @@
     .legend-line { width: 16px; height: 3px; border-radius: 2px; }
     .legend-line.solid  { background: var(--accent); }
     .legend-line.dashed { background: repeating-linear-gradient(90deg, var(--text-muted) 0 4px, transparent 4px 8px); height: 2px; }
-    .chart-area { padding: 12px 20px 24px; }
-    .chart-svg { width: 100%; height: 220px; overflow: visible; }
+    .chart-area { padding: 12px 20px 24px; overflow-x: auto; }
+    .chart-svg { width: 100%; height: 220px; overflow: visible; min-width: 600px; }
 
     /* Table Design */
     .overflow-x-auto { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 600px; }
     th {
         text-align: left; padding: 14px 20px;
         background: var(--bg-hover); font-weight: 600;
@@ -222,12 +225,23 @@
     }
     .list-item:last-child { border-bottom: none; padding-bottom: 0; }
     
+    /* Style untuk Ikon (Pendapatan) */
     .item-thumb {
         width: 42px; height: 42px; background: var(--bg-hover);
         border-radius: 10px; display: flex; align-items: center;
         justify-content: center; font-size: 20px; color: var(--text-sec);
-        border: 1px solid var(--border);
+        border: 1px solid var(--border); flex-shrink: 0;
     }
+    
+    /* Style BARU untuk Gambar Produk (Produk Terlaris) */
+    .prod-thumb {
+        width: 44px; height: 44px; background: var(--bg-hover);
+        border-radius: 8px; display: flex; align-items: center;
+        justify-content: center; overflow: hidden; border: 1px solid var(--border);
+        flex-shrink: 0;
+    }
+    .prod-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
     .item-info { flex: 1; }
     .item-name { font-weight: 600; color: var(--text-main); font-size: 13.5px; margin-bottom: 2px; }
     .item-sub { font-size: 12px; color: var(--text-muted); }
@@ -244,6 +258,18 @@
     .revenue-item .item-thumb { background: var(--accent-light); color: var(--accent); border: none; }
     .revenue-item .item-value { color: var(--accent); font-size: 15px; }
 
+    /* =========================================
+       SISTEM RESPONSIVE DASHBOARD
+       ========================================= */
+    @media (max-width: 1024px) {
+        .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .two-col { grid-template-columns: 1fr; } /* Layout pecah jadi 1 kolom besar ke bawah */
+    }
+
+    @media (max-width: 768px) {
+        .page-header { flex-direction: column; align-items: flex-start; }
+        .stats-grid { grid-template-columns: 1fr; } /* Tiap kotak memakan layar penuh */
+    }
 </style>
 @endsection
 
@@ -410,17 +436,19 @@
             </div>
             <div class="list-wrapper">
                 @php
+                    // UPDATE: Array diganti menggunakan gambar Unsplash agar serasi dengan halaman lain
                     $produkTerlaris = [
-                        ['icon'=>'ti-armchair',  'nama'=>'Kursi Minimalis Kayu',   'terjual'=>45,'harga'=>750000],
-                        ['icon'=>'ti-tools-kitchen-2', 'nama'=>'Meja Makan Jati',  'terjual'=>38,'harga'=>2500000],
-                        ['icon'=>'ti-door',      'nama'=>'Lemari Pakaian 3 Pintu', 'terjual'=>30,'harga'=>3200000],
-                        ['icon'=>'ti-sofa',      'nama'=>'Sofa Minimalis Abu',     'terjual'=>28,'harga'=>4500000],
-                        ['icon'=>'ti-books',     'nama'=>'Rak Buku Minimalis',     'terjual'=>25,'harga'=>850000],
+                        ['img'=>'https://images.unsplash.com/photo-1505797149-43b0069ec26b?w=100&auto=format&fit=crop&q=60',  'nama'=>'Kursi Minimalis Kayu',   'terjual'=>45,'harga'=>750000],
+                        ['img'=>'https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?w=100&auto=format&fit=crop&q=60', 'nama'=>'Meja Makan Jati',  'terjual'=>38,'harga'=>2500000],
+                        ['img'=>'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=100&auto=format&fit=crop&q=60',  'nama'=>'Lemari Pakaian 3 Pintu', 'terjual'=>30,'harga'=>3200000],
+                        ['img'=>'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&auto=format&fit=crop&q=60',    'nama'=>'Sofa Minimalis Abu',     'terjual'=>28,'harga'=>4500000],
+                        ['img'=>'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=100&auto=format&fit=crop&q=60',    'nama'=>'Rak Buku Minimalis',     'terjual'=>25,'harga'=>850000],
                     ];
                 @endphp
                 @foreach($produkTerlaris as $p)
                 <div class="list-item">
-                    <div class="item-thumb"><i class="ti {{ $p['icon'] }}"></i></div>
+                    {{-- IMPLEMENTASI GAMBAR PRODUK --}}
+                    <div class="prod-thumb"><img src="{{ $p['img'] }}" alt="{{ $p['nama'] }}"></div>
                     <div class="item-info">
                         <div class="item-name">{{ $p['nama'] }}</div>
                         <div class="item-sub">Terjual {{ $p['terjual'] }}</div>

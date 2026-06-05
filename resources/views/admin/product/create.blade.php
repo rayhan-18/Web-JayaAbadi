@@ -264,7 +264,6 @@
         <h1>Tambah Produk</h1>
         <div class="breadcrumb">FurniHome / Produk / Tambah Baru</div>
     </div>
-    <a href="#" class="btn-cancel"><i class="ti ti-arrow-left"></i> Kembali</a>
 </div>
 
 <form action="{{ route('admin.product.store') }}" method="POST" enctype="multipart/form-data">

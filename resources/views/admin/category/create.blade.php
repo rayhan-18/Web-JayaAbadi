@@ -21,7 +21,7 @@
     body { color: var(--text-main); }
 
     .page-header {
-        display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
+        display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
     }
     .page-title h1 {
         font-size: 22px; font-weight: 700; color: var(--text-main); margin: 0; letter-spacing: -0.02em;
@@ -30,10 +30,13 @@
         font-size: 13px; color: var(--text-sec); margin-top: 4px;
     }
 
+    /* GRID FORM RESPONSIVE */
     .form-grid {
         display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start;
     }
-    @media (max-width: 992px) { .form-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 992px) { 
+        .form-grid { grid-template-columns: 1fr; } 
+    }
 
     .card {
         background: var(--bg-surface); border-radius: var(--radius-lg);
@@ -70,6 +73,15 @@
         cursor: pointer;
     }
 
+    /* Input Group for URL Gambar */
+    .input-group {
+        position: relative;
+    }
+    .input-group i.prefix {
+        position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-sec); font-size: 16px; pointer-events: none;
+    }
+    .input-group .form-control { padding-left: 38px; }
+
     /* Action Buttons (Fixed Hex) */
     .form-actions { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 10px; }
     
@@ -85,9 +97,14 @@
     .btn-cancel {
         background-color: transparent; color: var(--text-sec); padding: 10px 20px;
         border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none;
-        border: 1px solid var(--border); cursor: pointer; transition: all 0.15s;
+        border: 1px solid var(--border); cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px;
     }
     .btn-cancel:hover { background-color: var(--bg-hover); color: var(--text-main); border-color: #d1d6cf; }
+
+    @media (max-width: 576px) {
+        .form-actions { flex-direction: column-reverse; }
+        .btn-submit, .btn-cancel { width: 100%; justify-content: center; }
+    }
 </style>
 @endsection
 
@@ -97,7 +114,6 @@
         <h1>Tambah Kategori</h1>
         <div class="breadcrumb">FurniHome / Kategori / Tambah Baru</div>
     </div>
-    <a href="{{ route('admin.category.index') }}" class="btn-cancel"><i class="ti ti-arrow-left"></i> Kembali</a>
 </div>
 
 <form action="{{ route('admin.category.store') }}" method="POST">
@@ -114,33 +130,35 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="deskripsi">Deskripsi</label>
-                    <textarea id="deskripsi" name="deskripsi" class="form-control" placeholder="..."></textarea>
+                    <label class="form-label" for="deskripsi">Deskripsi Singkat</label>
+                    <textarea id="deskripsi" name="deskripsi" class="form-control" placeholder="Tuliskan penjelasan mengenai kategori ini..."></textarea>
                 </div>
             </div>
         </div>
 
-        {{-- KOLOM KANAN: Pengaturan --}}
+        {{-- KOLOM KANAN: Pengaturan & Visual --}}
         <div class="form-right">
             <div class="card">
-                <div class="card-title"><i class="ti ti-settings"></i> Pengaturan</div>
+                <div class="card-title"><i class="ti ti-settings"></i> Pengaturan Kategori</div>
                 
                 <div class="form-group">
-                    <label class="form-label" for="ikon">Ikon Kategori (Tabler Class)</label>
-                    <div class="select-wrapper">
-                        <i class="ti ti-icons prefix-icon"></i>
-                        <input type="text" id="ikon" name="image" class="form-control" placeholder="ti ti-armchair">
+                    <label class="form-label" for="img_url">Link Gambar Visual</label>
+                    <div class="input-group">
+                        <i class="ti ti-photo prefix"></i>
+                        <input type="url" id="img_url" name="image" class="form-control" placeholder="https://unsplash.com/..." required>
                     </div>
-                    <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 6px;">Cari referensi ikon di <a href="https://tabler.io/icons" target="_blank" style="color: var(--accent);">tabler.io/icons</a></span>
+                    <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 6px; line-height: 1.4;">
+                        Masukkan link URL gambar HD. Rasio disarankan 1:1 (Persegi).
+                    </span>
                 </div>
 
                 <div class="form-group" style="margin-top: 18px;">
-                    <label class="form-label" for="status">Status</label>
+                    <label class="form-label" for="status">Visibilitas Sistem</label>
                     <div class="select-wrapper">
-                        <i class="ti ti-circle-check prefix-icon"></i>
+                        <i class="ti ti-eye prefix-icon"></i>
                         <select id="status" name="status" class="form-control">
-                            <option value="Aktif">Aktif</option>
-                            <option value="Nonaktif">Nonaktif</option>
+                            <option value="Aktif">Aktif (Ditampilkan)</option>
+                            <option value="Nonaktif">Nonaktif (Disembunyikan)</option>
                         </select>
                     </div>
                 </div>
@@ -148,7 +166,7 @@
 
             <div class="form-actions">
                 <a href="{{ route('admin.category.index') }}" class="btn-cancel">Batal</a>
-                <button type="submit" class="btn-submit"><i class="ti ti-device-floppy"></i> Simpan Kategori</button>
+                <button type="submit" class="btn-submit"><i class="ti ti-device-floppy"></i> Simpan Data</button>
             </div>
         </div>
     </div>

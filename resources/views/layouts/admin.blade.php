@@ -31,15 +31,30 @@
             color: var(--text-primary);
         }
 
+        /* Desktop: .main geser kanan sejauh lebar sidebar */
         .main {
-            margin-left: 210px;
+             margin-left: 218px;
             flex: 1;
+            min-width: 0;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            transition: margin-left 0.3s ease;
         }
 
-        .content { padding: 24px; flex: 1; }
+        /* Mobile: .main full width, sidebar jadi overlay */
+        @media (max-width: 767px) {
+            .main {
+                margin-left: 0 !important;
+            }
+        }
+
+        .content {
+            padding: 24px;
+            flex: 1;
+            min-width: 0;
+            overflow-x: hidden;
+        }
 
         /* ── GLOBAL COMPONENTS ── */
         .card {
@@ -127,8 +142,12 @@
         .table-footer { padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #f3f4f6; }
         .table-footer span { font-size: 12px; color: var(--text-muted); }
 
-        @yield('styles')
     </style>
+
+    {{-- FIX: @yield('styles') dipindah ke LUAR <style> tag agar <style> dan <script>
+         dari child view tidak nyangkut di dalam blok CSS dan gagal dieksekusi --}}
+    @yield('styles')
+
 </head>
 <body>
 
