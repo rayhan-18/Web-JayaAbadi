@@ -226,20 +226,28 @@
     </a>
 </div>
 
+<form method="GET" action="{{ route('admin.category.index') }}" id="filter-form">
 <div class="filter-bar">
     <div class="search-box">
         <i class="ti ti-search"></i>
-        <input type="text" placeholder="Cari kategori...">
+        <input 
+            type="text" 
+            name="search"
+            placeholder="Cari kategori..."
+            value="{{ request('search') }}"
+            oninput="debounceSubmit()"
+        >
     </div>
     <div class="select-wrapper">
         <i class="ti ti-circle-check prefix-icon"></i>
-        <select class="filter-select">
-            <option>Semua Status</option>
-            <option>Aktif</option>
-            <option>Nonaktif</option>
+        <select class="filter-select" name="status" onchange="this.form.submit()">
+            <option value="">Semua Status</option>
+            <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Aktif</option>
+            <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Nonaktif</option>
         </select>
     </div>
 </div>
+</form>
 
 <div class="table-wrapper">
     <table>
@@ -257,10 +265,9 @@
         <tbody>
             @foreach($categories as $item)
             <tr>
-                <td style="color: var(--text-sec);">
-                    {{ $loop->iteration ?? $item->id }}
-                </td>
-
+            <td style="color: var(--text-sec);">
+                {{ $categories->firstItem() + $loop->index }}
+            </td>
                 <td>
                     <div class="category-img">
                         <img src="{{ $item->image ?? 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&auto=format&fit=crop&q=60' }}" alt="{{ $item->name }}">
@@ -302,12 +309,39 @@
     </table>
 </div>
 
-<div class="pagination">
-    <div>Menampilkan data kategori</div>
-    <div class="pagination-links">
-        <a href="#" title="Sebelumnya"><i class="ti ti-chevron-left" style="font-size: 16px;"></i></a>
-        <span class="active">1</span>
-        <a href="#" title="Selanjutnya"><i class="ti ti-chevron-right" style="font-size: 16px;"></i></a>
-    </div>
-</div>
+            <div class="pagination">
+                <div>Menampilkan {{ $categories->firstItem() }} - {{ $categories->lastItem() }} dari {{ $categories->total() }} kategori</div>
+                <div class="pagination-links">
+                    @if($categories->onFirstPage())
+                        <span style="opacity:0.4;"><i class="ti ti-chevron-left" style="font-size: 16px;"></i></span>
+                    @else
+                        <a href="{{ $categories->previousPageUrl() }}"><i class="ti ti-chevron-left" style="font-size: 16px;"></i></a>
+                    @endif
+
+                    @foreach($categories->getUrlRange(1, $categories->lastPage()) as $page => $url)
+                        @if($page == $categories->currentPage())
+                            <span class="active">{{ $page }}</span>
+                        @else
+                            <a href="{{ $url }}">{{ $page }}</a>
+                        @endif
+                    @endforeach
+
+                    @if($categories->hasMorePages())
+                        <a href="{{ $categories->nextPageUrl() }}"><i class="ti ti-chevron-right" style="font-size: 16px;"></i></a>
+                    @else
+                        <span style="opacity:0.4;"><i class="ti ti-chevron-right" style="font-size: 16px;"></i></span>
+                    @endif
+                </div>
+            </div>
+
+
+<script>
+    let debounceTimer;
+    function debounceSubmit() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            document.getElementById('filter-form').submit();
+        }, 400);
+    }
+</script>
 @endsection

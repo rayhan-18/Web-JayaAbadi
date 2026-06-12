@@ -243,13 +243,45 @@
         <div class="breadcrumb">FurniHome / Pelanggan</div>
     </div>
     <div class="export-dropdown">
-        <button class="btn-export"><i class="ti ti-download"></i> Export Data <i class="ti ti-chevron-down" style="font-size: 14px;"></i></button>
+        <button type="button" class="btn-export">
+            <i class="ti ti-download"></i> Export Data
+            <i class="ti ti-chevron-down" style="font-size:14px;"></i>
+        </button>
         <div class="export-dropdown-content">
-            <a href="#"><i class="ti ti-file-spreadsheet"></i> Export Excel</a>
-            <a href="#"><i class="ti ti-file-type-csv"></i> Export CSV</a>
+            <a href="{{ route('admin.customer.export.pdf', request()->query()) }}" target="_blank">
+                <i class="ti ti-file-type-pdf"></i> Export PDF
+            </a>
+            <a href="{{ route('admin.customer.export.csv', request()->query()) }}">
+                <i class="ti ti-file-type-csv"></i> Export CSV
+            </a>
         </div>
     </div>
 </div>
+
+<form method="GET" action="{{ route('admin.customer.index') }}" id="filterForm">
+<div class="filter-bar">
+    <div class="search-box">
+        <i class="ti ti-search"></i>
+        <input type="text" name="search"
+            placeholder="Cari Nama, Email, atau No. HP..."
+            value="{{ request('search') }}"
+            oninput="debounceSubmit()">
+    </div>
+    <div class="select-wrapper">
+        <i class="ti ti-sort-descending prefix-icon"></i>
+        <select class="filter-select" name="sort" onchange="this.form.submit()">
+            <option value="latest"   {{ request('sort', 'latest') === 'latest'   ? 'selected' : '' }}>Urutkan: Terbaru</option>
+            <option value="spending" {{ request('sort') === 'spending' ? 'selected' : '' }}>Urutkan: Pembelanjaan Terbanyak</option>
+        </select>
+    </div>
+    @if(request('search') || request('sort'))
+        <a href="{{ route('admin.customer.index') }}"
+           style="height:40px; padding:0 16px; border:1px solid #e8caca; color:#c47a7a; border-radius:var(--radius-md); display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600; text-decoration:none; background:var(--bg-surface);">
+            <i class="ti ti-refresh"></i> Reset
+        </a>
+    @endif
+</div>
+</form>
 
 <div class="stats-row">
     <div class="stat-card total">
@@ -493,5 +525,13 @@
                 btn.disabled = false;
             });
     }
+
+    let debounceTimer;
+    function debounceSubmit() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+        document.getElementById('filterForm').submit();
+    }, 400);
+}
 </script>
 @endsection

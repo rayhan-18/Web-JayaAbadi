@@ -254,42 +254,57 @@
         <h1>Produk</h1>
         <div class="breadcrumb">FurniHome / Produk</div>
     </div>
-
-    <a href="{{ route('admin.product.create') }}" class="btn-primary">
-        <i class="ti ti-plus"></i> Tambah Produk
-    </a>
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <a href="{{ route('admin.product.export.pdf', request()->query()) }}" 
+           target="_blank"
+           class="btn-primary" 
+           style="background-color: #c47a7a !important; box-shadow: 0 2px 6px rgba(196,122,122,0.2);">
+            <i class="ti ti-file-type-pdf"></i> Export PDF
+        </a>
+        <a href="{{ route('admin.product.create') }}" class="btn-primary">
+            <i class="ti ti-plus"></i> Tambah Produk
+        </a>
+    </div>
 </div>
 
+{{-- Ganti filter-bar section --}}
+<form method="GET" action="{{ route('admin.product.index') }}" id="filter-form">
 <div class="filter-bar">
     <div class="filter-left">
         <div class="search-box">
             <i class="ti ti-search"></i>
-            <input type="text" placeholder="Cari nama produk, SKU...">
+            <input 
+                type="text" 
+                name="search"
+                placeholder="Cari nama produk, SKU..."
+                value="{{ request('search') }}"
+                oninput="debounceSubmit()"
+            >
         </div>
     </div>
     <div class="filter-right">
         <div class="select-wrapper">
             <i class="ti ti-category prefix-icon"></i>
-            <select class="filter-select">
-                <option>Semua Kategori</option>
-                <option>Kursi</option>
-                <option>Meja</option>
-                <option>Lemari</option>
-                <option>Sofa</option>
-                <option>Rak</option>
-                <option>Tempat Tidur</option>
+            <select class="filter-select" name="category" onchange="this.form.submit()">
+                <option value="">Semua Kategori</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
             </select>
         </div>
         <div class="select-wrapper">
             <i class="ti ti-circle-check prefix-icon"></i>
-            <select class="filter-select">
-                <option>Semua Status</option>
-                <option>Aktif</option>
-                <option>Nonaktif</option>
+            <select class="filter-select" name="status" onchange="this.form.submit()">
+                <option value="">Semua Status</option>
+                <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>Aktif</option>
+                <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>Nonaktif</option>
             </select>
         </div>
     </div>
 </div>
+</form>
 
 <div class="table-wrapper">
     <table>
@@ -381,4 +396,14 @@
         @endif
     </div>
 </div>
+
+<script>
+    let debounceTimer;
+    function debounceSubmit() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            document.getElementById('filter-form').submit();
+        }, 400);
+    }
+</script>
 @endsection

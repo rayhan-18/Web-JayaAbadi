@@ -12,10 +12,21 @@ class CategoryController extends Controller
     // =========================
     // INDEX
     // =========================
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::withCount('products')
-            ->paginate(10);
+        $query = Category::withCount('products');
+
+        // Search nama kategori
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter status
+        if ($request->filled('status')) {
+            $query->where('is_active', (bool) $request->status);
+        }
+
+        $categories = $query->latest()->paginate(10)->withQueryString();
 
         return view('admin.category.index', compact('categories'));
     }

@@ -150,53 +150,67 @@ class OrderController extends Controller
     /**
      * Halaman Verifikasi Pembayaran Manual (Transfer & E-Wallet)
      */
-    public function payment()
-    {
-        $payments = Order::with(['user'])
-            ->whereIn('payment_method', ['transfer', 'ewallet'])
-            ->latest()
-            ->paginate(10);
+public function payment(Request $request)
+{
+    $query = Order::with(['user'])
+        ->whereIn('payment_method', ['transfer', 'ewallet']);
 
-        $stats = [
-            'total'   => Order::whereIn('payment_method', ['transfer', 'ewallet'])
-                            ->where('payment_status', 'paid')
-                            ->sum('total_amount'),
-            'pending' => Order::whereIn('payment_method', ['transfer', 'ewallet'])
-                            ->where('payment_status', 'unpaid')
-                            ->count(),
-            'success' => Order::whereIn('payment_method', ['transfer', 'ewallet'])
-                            ->where('payment_status', 'paid')
-                            ->count(),
-            'failed'  => Order::whereIn('payment_method', ['transfer', 'ewallet'])
-                            ->where('payment_status', 'failed')
-                            ->count(),
-        ];
-
-        $paymentsJson = $payments->map(function($p) {
-            return [
-                'invoice'     => $p->order_number,
-                'order_id'    => $p->order_number,
-                'order_db_id' => $p->id,
-                'bukti_foto'  => $p->payment_proof, // Path foto bukti transfer untuk JS
-                'nama'        => $p->user->name ?? 'Guest',
-                'email'       => $p->user->email ?? '-',
-                'tanggal'     => $p->created_at->format('d M Y H:i'),
-                'metode'      => ucfirst($p->payment_method),
-                'jumlah'      => (float) $p->total_amount,
-                'status'      => match($p->payment_status) {
-                    'unpaid' => 'Menunggu Konfirmasi',
-                    'paid'   => 'Berhasil',
-                    'failed' => 'Gagal',
-                    default  => ucfirst($p->payment_status)
-                },
-                'status_raw'  => $p->payment_status, // Status murni untuk memicu tombol aksi di JS Blade
-                'bank_sender' => '-',
-                'rek_num'     => '-',
-            ];
+    if ($request->filled('search')) {
+        $query->where(function($q) use ($request) {
+            $q->where('order_number', 'like', '%' . $request->search . '%')
+              ->orWhereHas('user', fn($u) => $u->where('name', 'like', '%' . $request->search . '%'));
         });
-
-        return view('admin.payment.index', compact('payments', 'stats', 'paymentsJson'));
     }
+
+    if ($request->filled('status')) {
+        $query->where('payment_status', $request->status);
+    }
+
+    if ($request->filled('month')) {
+        $start = \Carbon\Carbon::parse($request->month . '-01')->startOfMonth();
+        $end   = \Carbon\Carbon::parse($request->month . '-01')->endOfMonth();
+        $query->whereBetween('created_at', [$start, $end]);
+    }
+
+    $payments = $query->latest()->paginate(10)->withQueryString();
+
+    // stats tetap dari semua data (tidak difilter)
+    $stats = [
+        'total'   => Order::whereIn('payment_method', ['transfer', 'ewallet'])
+                        ->where('payment_status', 'paid')->sum('total_amount'),
+        'pending' => Order::whereIn('payment_method', ['transfer', 'ewallet'])
+                        ->where('payment_status', 'unpaid')->count(),
+        'success' => Order::whereIn('payment_method', ['transfer', 'ewallet'])
+                        ->where('payment_status', 'paid')->count(),
+        'failed'  => Order::whereIn('payment_method', ['transfer', 'ewallet'])
+                        ->where('payment_status', 'failed')->count(),
+    ];
+
+    $paymentsJson = $payments->map(function($p) {
+        return [
+            'invoice'     => $p->order_number,
+            'order_id'    => $p->order_number,
+            'order_db_id' => $p->id,
+            'bukti_foto'  => $p->payment_proof,
+            'nama'        => $p->user->name ?? 'Guest',
+            'email'       => $p->user->email ?? '-',
+            'tanggal'     => $p->created_at->format('d M Y H:i'),
+            'metode'      => ucfirst($p->payment_method),
+            'jumlah'      => (float) $p->total_amount,
+            'status'      => match($p->payment_status) {
+                'unpaid' => 'Menunggu Konfirmasi',
+                'paid'   => 'Berhasil',
+                'failed' => 'Gagal',
+                default  => ucfirst($p->payment_status),
+            },
+            'status_raw'  => $p->payment_status,
+            'bank_sender' => '-',
+            'rek_num'     => '-',
+        ];
+    });
+
+    return view('admin.payment.index', compact('payments', 'stats', 'paymentsJson'));
+}
 
     /**
      * Update Status Pembayaran (Disetujui / Ditolak)
@@ -354,4 +368,152 @@ class OrderController extends Controller
             'total'        => $total,
         ]);
     }
+
+    public function exportPdf(Request $request)
+{
+    $query = Order::with(['user', 'items.product']);
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function($q) use ($search) {
+            $q->where('order_number', 'like', '%' . $search . '%')
+              ->orWhereHas('user', function($userQuery) use ($search) {
+                  $userQuery->where('name', 'like', '%' . $search . '%');
+              });
+        });
+    }
+
+    if ($request->filled('channel')) {
+        if ($request->channel === 'pos') {
+            $query->where('payment_method', 'cash');
+        } elseif ($request->channel === 'website') {
+            $query->where('payment_method', '!=', 'cash');
+        }
+    }
+
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
+    $orders = $query->latest()->get();
+
+    $filterChannel = match($request->channel) {
+        'pos'     => 'Kasir POS',
+        'website' => 'Website Online',
+        default   => 'Semua Saluran',
+    };
+    $filterStatus = match($request->status) {
+        'pending'   => 'Pending',
+        'paid'      => 'Diproses',
+        'shipping'  => 'Dikirim',
+        'delivered' => 'Selesai',
+        'cancelled' => 'Dibatalkan',
+        default     => 'Semua Status',
+    };
+    $filterSearch = $request->search ?? null;
+
+    $html = view('admin.order.pdf', compact('orders', 'filterChannel', 'filterStatus', 'filterSearch'))->render();
+    $pdf  = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)->setPaper('a4', 'landscape');
+
+    return $pdf->stream('laporan-pesanan-' . now()->format('Y-m-d') . '.pdf');
+}
+
+public function exportPaymentPdf(Request $request)
+{
+    $query = Order::with(['user'])
+        ->whereIn('payment_method', ['transfer', 'ewallet']);
+
+    if ($request->filled('search')) {
+        $query->where(function($q) use ($request) {
+            $q->where('order_number', 'like', '%' . $request->search . '%')
+              ->orWhereHas('user', fn($u) => $u->where('name', 'like', '%' . $request->search . '%'));
+        });
+    }
+
+    if ($request->filled('status')) {
+        $query->where('payment_status', $request->status);
+    }
+
+    if ($request->filled('month')) {
+        $start = \Carbon\Carbon::parse($request->month . '-01')->startOfMonth();
+        $end   = \Carbon\Carbon::parse($request->month . '-01')->endOfMonth();
+        $query->whereBetween('created_at', [$start, $end]);
+    }
+
+    $payments = $query->latest()->get();
+
+    $filterStatus = match($request->status) {
+        'unpaid' => 'Menunggu Konfirmasi',
+        'paid'   => 'Berhasil',
+        'failed' => 'Gagal',
+        default  => 'Semua Status',
+    };
+    $filterMonth  = $request->filled('month')
+        ? \Carbon\Carbon::parse($request->month . '-01')->translatedFormat('F Y')
+        : 'Semua Bulan';
+    $filterSearch = $request->search ?? null;
+
+    $html = view('admin.payment.pdf', compact('payments', 'filterStatus', 'filterMonth', 'filterSearch'))->render();
+    $pdf  = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)->setPaper('a4', 'landscape');
+
+    return $pdf->stream('laporan-pembayaran-' . now()->format('Y-m-d') . '.pdf');
+}
+
+public function exportPaymentCsv(Request $request)
+{
+    $query = Order::with(['user'])
+        ->whereIn('payment_method', ['transfer', 'ewallet']);
+
+    if ($request->filled('search')) {
+        $query->where(function($q) use ($request) {
+            $q->where('order_number', 'like', '%' . $request->search . '%')
+              ->orWhereHas('user', fn($u) => $u->where('name', 'like', '%' . $request->search . '%'));
+        });
+    }
+
+    if ($request->filled('status')) {
+        $query->where('payment_status', $request->status);
+    }
+
+    if ($request->filled('month')) {
+        $start = \Carbon\Carbon::parse($request->month . '-01')->startOfMonth();
+        $end   = \Carbon\Carbon::parse($request->month . '-01')->endOfMonth();
+        $query->whereBetween('created_at', [$start, $end]);
+    }
+
+    $payments = $query->latest()->get();
+    $filename = 'laporan-pembayaran-' . now()->format('Y-m-d');
+
+    $headers = [
+        'Content-Type'        => 'text/csv',
+        'Content-Disposition' => "attachment; filename={$filename}.csv",
+    ];
+
+    $callback = function() use ($payments) {
+        $handle = fopen('php://output', 'w');
+        fputcsv($handle, ['No. Invoice', 'Pelanggan', 'Email', 'Tanggal', 'Metode', 'Jumlah', 'Status']);
+
+        foreach ($payments as $p) {
+            $statusLabel = match($p->payment_status) {
+                'unpaid' => 'Menunggu Konfirmasi',
+                'paid'   => 'Berhasil',
+                'failed' => 'Gagal',
+                default  => ucfirst($p->payment_status),
+            };
+            fputcsv($handle, [
+                $p->order_number,
+                $p->user->name ?? 'Guest',
+                $p->user->email ?? '-',
+                $p->created_at->format('d/m/Y H:i'),
+                ucfirst($p->payment_method),
+                $p->total_amount,
+                $statusLabel,
+            ]);
+        }
+
+        fclose($handle);
+    };
+
+    return response()->stream($callback, 200, $headers);
+}
 }

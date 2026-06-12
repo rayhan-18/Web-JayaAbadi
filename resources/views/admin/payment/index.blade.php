@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Pesanan')
+@section('title', 'Transaksi Pembayaran')
 
 @section('styles')
 <style>
@@ -34,7 +34,7 @@
 
     /* Stats Grid */
     .stats-row {
-        display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px;
+        display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;
     }
     .stat-card {
         background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border);
@@ -45,17 +45,16 @@
     .stat-icon {
         width: 42px; height: 42px; border-radius: var(--radius-md);
         display: flex; align-items: center; justify-content: center;
-        font-size: 22px; margin: 0 auto 12px;
+        font-size: 24px; margin: 0 auto 12px;
     }
     
-    .stat-card.all .stat-icon     { background: transparent; color: var(--text-sec); }
+    .stat-card.total .stat-icon   { background: transparent; color: var(--text-main); }
     .stat-card.pending .stat-icon { background: transparent; color: #b89247; }
-    .stat-card.proses .stat-icon  { background: transparent; color: #5c7b9e; }
-    .stat-card.kirim .stat-icon   { background: transparent; color: #865c9e; }
-    .stat-card.selesai .stat-icon { background: transparent; color: var(--accent); }
+    .stat-card.success .stat-icon { background: transparent; color: var(--accent); }
+    .stat-card.failed .stat-icon  { background: transparent; color: #c47a7a; }
 
     .stat-label { font-size: 12.5px; font-weight: 600; color: var(--text-sec); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.02em; }
-    .stat-value { font-size: 26px; font-weight: 700; color: var(--text-main); letter-spacing: -0.02em; }
+    .stat-value { font-size: 24px; font-weight: 700; color: var(--text-main); letter-spacing: -0.02em; }
     
     /* Filters */
     .filter-bar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
@@ -81,16 +80,109 @@
     .filter-select:hover { background-color: var(--bg-hover); border-color: #d1d6cf; }
     .filter-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(92, 158, 116, 0.15); }
 
-    /* Export Laporan Dropdown */
+    /* Layout & Table */
+    .layout-order { display: flex; gap: 20px; align-items: flex-start; }
+    .table-section { flex: 1; min-width: 0; }
+    
+    .table-wrapper { background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border); overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 920px; } 
+    th {
+        text-align: left; padding: 14px 20px; background: var(--bg-hover); font-weight: 600;
+        color: var(--text-sec); border-bottom: 1px solid var(--border); font-size: 12px;
+        text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;
+    }
+    td { padding: 14px 20px; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--text-main); }
+    tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--bg-hover); }
+
+    .invoice-link { font-weight: 700; color: var(--text-main); text-decoration: none; }
+    .invoice-link:hover { color: var(--accent); }
+
+    .customer-info { line-height: 1.4; }
+    .customer-name { font-weight: 600; color: var(--text-main); font-size: 13.5px; }
+    .customer-email { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+
+    /* Badges Status */
+    .status-badge {
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap;
+    }
+    .status-konfirmasi { background: #fdf5e6; color: #8a5a2e; }
+    .status-berhasil   { background: var(--accent-light); color: var(--accent-dark); }
+    .status-gagal      { background: #fdf5f5; color: #c47a7a; }
+    
+    .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; }
+    .status-konfirmasi::before { background: #d99e52; }
+    .status-berhasil::before   { background: var(--accent); }
+    .status-gagal::before      { background: #c47a7a; }
+
+    .action-btn {
+        width: 32px; height: 32px; border-radius: 8px; background: var(--bg-surface);
+        border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center;
+        cursor: pointer; color: var(--text-sec); font-size: 16px; transition: 0.15s;
+    }
+    .action-btn:hover { background: var(--bg-hover); color: var(--accent); border-color: #d1d6cf; }
+
+    /* Detail Panel Sidebar */
+    .detail-panel {
+        width: 360px; flex-shrink: 0; background: #ffffff !important; border-radius: var(--radius-lg);
+        border: 1px solid var(--border); display: none; flex-direction: column;
+        position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow-y: auto;
+        box-shadow: -4px 0 24px rgba(0, 0, 0, 0.04);
+    }
+    .detail-panel.open { display: flex; animation: slideIn 0.3s ease-out; }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+    .dp-header {
+        display: flex; justify-content: space-between; align-items: center; padding: 18px 20px;
+        border-bottom: 1px solid var(--border); background: #ffffff !important; position: sticky; top: 0; z-index: 20;
+    }
+    .dp-header h3 { font-size: 15px; font-weight: 700; margin: 0; color: var(--text-main); }
+    .dp-close {
+        width: 30px; height: 30px; border-radius: 8px; background: var(--bg-hover); border: 1px solid transparent;
+        display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--text-sec); transition: 0.2s;
+    }
+    .dp-close:hover { background: #fdf5f5; color: #c47a7a; border-color: #e8caca; }
+    
+    .dp-body { padding: 20px; }
+    .dp-invoice-id { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 16px; letter-spacing: -0.02em; }
+    .dp-row { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+    .dp-label { font-size: 12.5px; color: var(--text-sec); font-weight: 500; min-width: 100px; }
+    .dp-value { font-size: 13px; color: var(--text-main); font-weight: 500; flex: 1; line-height: 1.4; }
+    
+    .dp-section-title { font-size: 13px; font-weight: 700; color: var(--text-main); margin: 20px 0 12px; text-transform: uppercase; letter-spacing: 0.02em; }
+    .dp-divider { border: none; border-top: 1px dashed var(--border); margin: 16px 0; }
+    
+    /* Frame Foto Bukti Pembayaran */
+    .receipt-frame {
+        width: 100%; border: 1px solid var(--border); border-radius: var(--radius-md);
+        overflow: hidden; background: var(--bg-hover); position: relative; margin-top: 8px;
+        box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
+    }
+    .receipt-img { width: 100%; height: auto; max-height: 380px; object-fit: contain; display: block; cursor: zoom-in; }
+    .receipt-overlay-tip { padding: 8px; background: var(--bg-hover); border-top: 1px solid var(--border); text-align: center; font-size: 11px; color: var(--text-sec); font-weight: 600; }
+
+    /* Button Action Panel */
+    .btn-payment-action {
+        width: 100%; padding: 12px; color: #ffffff !important;
+        border: none; border-radius: 10px; font-size: 13px; font-weight: 600;
+        cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+        outline: none; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-payment-action.approve { background-color: #5c9e74 !important; box-shadow: 0 2px 6px rgba(92, 158, 116, 0.2); margin-top: 20px; }
+    .btn-payment-action.approve:hover { background-color: #3a5c48 !important; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(58, 92, 72, 0.3); }
+    .btn-payment-action.approve:active { transform: scale(0.97); background-color: #2d4a3a !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
+    
+    .btn-payment-action.reject { background-color: transparent !important; color: var(--text-sec) !important; border: 1px solid var(--border); margin-top: 10px; }
+    .btn-payment-action.reject:hover { background-color: #fdf5f5 !important; color: #c47a7a !important; border-color: #e8caca; }
+
     .export-dropdown { position: relative; display: inline-block; }
     .btn-export {
         background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border);
         padding: 0 16px; height: 40px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
-        display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.2s;
+        display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s;
     }
-    .btn-export i { font-size: 16px; color: var(--text-sec); }
     .btn-export:hover { background: var(--bg-hover); border-color: #d1d6cf; }
-    
     .export-dropdown-content {
         display: none; position: absolute; right: 0; top: 46px; background: var(--bg-surface);
         min-width: 180px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-radius: 10px;
@@ -103,238 +195,91 @@
     .export-dropdown-content a:last-child { border-bottom: none; }
     .export-dropdown-content a:hover { background: var(--bg-hover); color: var(--accent); }
     .export-dropdown:hover .export-dropdown-content { display: block; }
-
-    /* Layout & Table */
-    .layout-order { display: flex; gap: 20px; align-items: flex-start; }
-    .table-section { flex: 1; min-width: 0; }
-    
-    .table-wrapper { background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border); overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 960px; }
-    th {
-        text-align: left; padding: 14px 20px; background: var(--bg-hover); font-weight: 600;
-        color: var(--text-sec); border-bottom: 1px solid var(--border); font-size: 12px;
-        text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;
-    }
-    td { padding: 14px 20px; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--text-main); }
-    tr:last-child td { border-bottom: none; }
-    tbody tr:hover { background: var(--bg-hover); }
-
-    .customer-info { line-height: 1.4; }
-    .customer-name { font-weight: 600; color: var(--text-main); font-size: 13.5px; }
-    .customer-email { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
-
-    .status-badge {
-        display: inline-flex; align-items: center; justify-content: center;
-        padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap;
-    }
-    .status-pending  { background: #fdf5e6; color: #8a5a2e; }
-    .status-diproses { background: #f0f4f8; color: #4a6b8c; }
-    .status-dikirim  { background: #f3f0f8; color: #6b4a8c; }
-    .status-selesai  { background: var(--accent-light); color: var(--accent-dark); }
-    
-    .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; }
-    .status-pending::before  { background: #d99e52; }
-    .status-diproses::before { background: #6993c4; }
-    .status-dikirim::before  { background: #9269c4; }
-    .status-selesai::before  { background: var(--accent); }
-
-    /* Premium Channel Badges */
-    .channel-badge {
-        display: inline-flex; align-items: center; justify-content: center; gap: 4px;
-        padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap;
-    }
-    .channel-online  { background: #eef7f2; color: #3b7a54; border: 1px solid #dbeee3; }
-    .channel-offline { background: #f1f3f5; color: #495057; border: 1px solid #e9ecef; }
-    
-    .action-btn {
-        width: 32px; height: 32px; border-radius: 8px; background: var(--bg-surface);
-        border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center;
-        cursor: pointer; color: var(--text-sec); font-size: 16px; transition: 0.15s; text-decoration: none;
-    }
-    .action-btn:hover { background: var(--bg-hover); color: var(--accent); border-color: #d1d6cf; }
-
-    /* Pagination */
-    .pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; font-size: 13px; color: var(--text-sec); flex-wrap: wrap; gap: 12px; }
-    .pagination-links { display: flex; gap: 6px; }
-    .pagination-links a, .pagination-links span {
-        display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 30px; padding: 0 10px;
-        border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text-main); font-weight: 500;
-        transition: 0.15s; background: var(--bg-surface);
-    }
-    .pagination-links a:hover { background: var(--bg-hover); border-color: var(--accent); color: var(--accent); }
-    .pagination-links .active { background: var(--accent); border-color: var(--accent); color: white; }
-
-    /* Detail Panel Sidebar */
-    .detail-panel {
-        width: 360px; flex-shrink: 0; background: #ffffff !important; border-radius: var(--radius-lg);
-        border: 1px solid var(--border); display: none; flex-direction: column;
-        position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow-y: auto;
-        box-shadow: -4px 0 24px rgba(0, 0, 0, 0.04);
-    }
-    .detail-panel.open { display: flex; animation: slideIn 0.3s ease-out; }
-    @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-    
-    .detail-panel::-webkit-scrollbar { width: 5px; }
-    .detail-panel::-webkit-scrollbar-track { background: transparent; }
-    .detail-panel::-webkit-scrollbar-thumb { background: #d1d6cf; border-radius: 10px; }
-
-    .dp-header {
-        display: flex; justify-content: space-between; align-items: center; padding: 18px 20px;
-        border-bottom: 1px solid var(--border); background: #ffffff !important; position: sticky; top: 0; z-index: 20; 
-    }
-    .dp-header h3 { font-size: 15px; font-weight: 700; margin: 0; color: var(--text-main); }
-    .dp-close {
-        width: 30px; height: 30px; border-radius: 8px; background: var(--bg-hover); border: 1px solid transparent;
-        display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--text-sec); transition: 0.2s;
-    }
-    .dp-close:hover { background: #fdf5f5; color: #c47a7a; border-color: #e8caca; }
-    
-    .dp-body { padding: 20px; }
-    .dp-order-id { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 16px; letter-spacing: -0.02em; }
-    .dp-row { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
-    .dp-label { font-size: 12.5px; color: var(--text-sec); font-weight: 500; min-width: 100px; }
-    .dp-value { font-size: 13px; color: var(--text-main); font-weight: 500; flex: 1; line-height: 1.4; }
-    
-    .dp-section-title { font-size: 13px; font-weight: 700; color: var(--text-main); margin: 20px 0 14px; text-transform: uppercase; letter-spacing: 0.02em; }
-    .dp-divider { border: none; border-top: 1px dashed var(--border); margin: 16px 0; }
-    
-    /* Gambar Produk di Detail Panel */
-    .dp-product { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
-    .dp-product-img {
-        width: 46px; height: 46px; border-radius: 8px; background: var(--bg-hover);
-        border: 1px solid var(--border); overflow: hidden; flex-shrink: 0;
-    }
-    .dp-product-img img { width: 100%; height: 100%; object-fit: cover; }
-    .dp-product-name { font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 2px; }
-    .dp-product-qty { font-size: 11.5px; color: var(--text-muted); }
-    .dp-product-price { margin-left: auto; font-size: 13.5px; font-weight: 600; color: var(--text-main); white-space: nowrap; }
-    
-    .dp-total-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; }
-    .dp-total-row .lbl { color: var(--text-sec); }
-    .dp-total-row .val { font-weight: 500; color: var(--text-main); }
-    .dp-total-row.grand { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
-    .dp-total-row.grand .lbl { font-weight: 700; color: var(--text-main); font-size: 14px; }
-    .dp-total-row.grand .val { font-weight: 700; color: var(--accent); font-size: 18px; }
-
-    .status-select {
-        width: 100%; height: 40px; padding: 0 14px; border: 1px solid var(--border);
-        border-radius: var(--radius-md); font-size: 13px; color: var(--text-main);
-        background: var(--bg-surface); margin-top: 16px; cursor: pointer;
-    }
-    .status-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(92, 158, 116, 0.15); }
-    
-    .btn-update {
-        width: 100%; padding: 12px; background-color: #5c9e74 !important; color: #ffffff !important;
-        border: none; border-radius: 10px; font-size: 13px; font-weight: 600;
-        cursor: pointer; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px;
-        box-shadow: 0 2px 6px rgba(92, 158, 116, 0.2); outline: none; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); -webkit-tap-highlight-color: transparent;
-    }
-    .btn-update:hover { background-color: #3a5c48 !important; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(58, 92, 72, 0.3); }
-    .btn-update:active { transform: scale(0.97); background-color: #2d4a3a !important; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); transition: all 0.1s; }
-
-    /* =========================================
-       SISTEM RESPONSIVE & MEDIA PRINT
-       ========================================= */
-    @media (max-width: 1200px) {
-        .stats-row { grid-template-columns: repeat(3, 1fr); }
-    }
-
-    @media (max-width: 1024px) {
-        .layout-order { flex-direction: column; }
-        
-        /* Modal Panel Mobile */
-        .detail-panel.open {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            width: 100%; max-height: 100vh; z-index: 1000;
-            border-radius: 0; border: none;
-            animation: slideUp 0.3s ease-out;
-        }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
-    }
-
-    @media (max-width: 768px) {
-        .stats-row { grid-template-columns: repeat(2, 1fr); }
-        .filter-bar { flex-direction: column; align-items: stretch; }
-        .search-box, .select-wrapper, .filter-select { max-width: 100%; width: 100%; min-width: 100%; }
-        .page-header { flex-direction: column; align-items: flex-start; }
-        .export-dropdown, .btn-export { width: 100%; }
-    }
-
-    @media (max-width: 480px) {
-        .stats-row { grid-template-columns: 1fr; }
-    }
-
-    /* MEDIA PRINT LOGIC: Untuk layout preview PDF resmi bersih dari komponen admin */
-    @media print {
-        aside, nav, header, .sidebar, .main-header, .breadcrumb, #filterForm, .action-btn, th:last-child, td:last-child { display: none !important; }
-        body, .content-wrapper, main, .container { background: #fff !important; color: #000 !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; }
-        .table-wrapper { border: none !important; box-shadow: none !important; overflow: visible !important; }
-        table { min-width: 100% !important; width: 100% !important; }
-        th { background: #f5f5f5 !important; color: #000 !important; border-bottom: 2px solid #000 !important; }
-        td { border-bottom: 1px solid #ccc !important; }
-    }
 </style>
 @endsection
 
 @section('content')
 <div class="page-header">
     <div class="page-title">
-        <h1>Pesanan</h1>
-        <div class="breadcrumb">FurniHome / Pesanan</div>
+        <h1>Transaksi Pembayaran</h1>
+        <div class="breadcrumb">FurniHome / Pembayaran</div>
     </div>
-</div>
-
-<div class="stats-row">
-    <div class="stat-card all"><div class="stat-icon"><i class="ti ti-package"></i></div><div class="stat-label">Semua Pesanan</div><div class="stat-value">{{ $stats['all'] ?? 0 }}</div></div>
-    <div class="stat-card pending"><div class="stat-icon"><i class="ti ti-clock-hour-4"></i></div><div class="stat-label">Pending</div><div class="stat-value">{{ $stats['pending'] ?? 0 }}</div></div>
-    <div class="stat-card proses"><div class="stat-icon"><i class="ti ti-settings"></i></div><div class="stat-label">Diproses</div><div class="stat-value">{{ $stats['paid'] ?? 0 }}</div></div>
-    <div class="stat-card kirim"><div class="stat-icon"><i class="ti ti-truck"></i></div><div class="stat-label">Dikirim</div><div class="stat-value">{{ $stats['shipping'] ?? 0 }}</div></div>
-    <div class="stat-card selesai"><div class="stat-icon"><i class="ti ti-circle-check"></i></div><div class="stat-label">Selesai</div><div class="stat-value">{{ $stats['delivered'] ?? 0 }}</div></div>
-</div>
-
-<form action="{{ route('admin.order.index') }}" method="GET" class="filter-bar" id="filterForm">
-    <div class="search-box">
-        <i class="ti ti-search"></i>
-        <input type="text" name="search" id="searchInput" placeholder="Cari Order ID, Pelanggan..." value="{{ request('search') }}" onchange="document.getElementById('filterForm').submit()">
-    </div>
-    
-    <div class="select-wrapper">
-        <i class="ti ti-filter prefix-icon"></i>
-        <select class="filter-select" name="channel" onchange="document.getElementById('filterForm').submit()">
-            <option value="">Semua Saluran</option>
-            <option value="website" {{ request('channel') === 'website' ? 'selected' : '' }}>Website Online</option>
-            <option value="pos" {{ request('channel') === 'pos' ? 'selected' : '' }}>Kasir POS Offline</option>
-        </select>
-    </div>
-    
-    <div class="select-wrapper">
-        <i class="ti ti-circle-check prefix-icon"></i>
-        <select class="filter-select" name="status" onchange="document.getElementById('filterForm').submit()">
-            <option value="">Semua Status</option>
-            <option value="pending"   {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
-            <option value="paid"      {{ request('status') === 'paid' ? 'selected' : '' }}>Diproses</option>
-            <option value="shipping"  {{ request('status') === 'shipping' ? 'selected' : '' }}>Dikirim</option>
-            <option value="delivered" {{ request('status') === 'delivered' ? 'selected' : '' }}>Selesai</option>
-            <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>Dibatalkan</option>
-        </select>
-    </div>
-
-    <div class="export-dropdown">
-        <button type="button" class="btn-export"><i class="ti ti-download"></i> Export Laporan <i class="ti ti-chevron-down" style="font-size: 14px;"></i></button>
-        <div class="export-dropdown-content">
-            <a href="#" onclick="previewAndPdf()"><i class="ti ti-file-type-pdf"></i> Export PDF</a>
-            <a href="#" onclick="doExport('excel')"><i class="ti ti-file-spreadsheet"></i> Export Excel</a>
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <div class="export-dropdown">
+            <button type="button" class="btn-export">
+                <i class="ti ti-download"></i> Export
+                <i class="ti ti-chevron-down" style="font-size:14px;"></i>
+            </button>
+            <div class="export-dropdown-content">
+                <a href="{{ route('admin.payment.export.pdf', request()->query()) }}" target="_blank">
+                    <i class="ti ti-file-type-pdf"></i> Export PDF
+                </a>
+                <a href="{{ route('admin.payment.export.csv', request()->query()) }}">
+                    <i class="ti ti-file-type-csv"></i> Export CSV
+                </a>
+            </div>
         </div>
     </div>
+</div>
 
-    <input type="hidden" name="export" id="exportFormat" value="">
+<form method="GET" action="{{ route('admin.payment.index') }}" id="filterForm">
+<div class="filter-bar">
+    <div class="search-box">
+        <i class="ti ti-search"></i>
+        <input type="text" name="search" placeholder="Cari invoice, pelanggan..."
+            value="{{ request('search') }}"
+            oninput="debounceSubmit()">
+    </div>
 
-    @if(request('search') || request('channel') || request('status'))
-        <a href="{{ route('admin.order.index') }}" class="action-btn" style="height: 40px; padding: 0 16px; border-color: #c47a7a; color: #c47a7a;">
-            <i class="ti ti-refresh"></i> Reset Filter
+    <div class="select-wrapper">
+        <i class="ti ti-circle-check prefix-icon"></i>
+        <select class="filter-select" name="status" onchange="this.form.submit()">
+            <option value="">Semua Status</option>
+            <option value="unpaid"  {{ request('status') === 'unpaid'  ? 'selected' : '' }}>Menunggu Konfirmasi</option>
+            <option value="paid"    {{ request('status') === 'paid'    ? 'selected' : '' }}>Berhasil</option>
+            <option value="failed"  {{ request('status') === 'failed'  ? 'selected' : '' }}>Gagal</option>
+        </select>
+    </div>
+
+    <label class="date-filter" style="cursor:pointer; display:flex; align-items:center; gap:8px; border:1px solid var(--border); background:var(--bg-surface); border-radius:var(--radius-md); padding:0 14px; height:40px; font-size:13px; font-weight:600; color:var(--text-main);">
+        <i class="ti ti-calendar-event" style="color:var(--accent);"></i>
+        <input type="month" name="month"
+            value="{{ request('month') }}"
+            onchange="this.form.submit()"
+            style="border:none; outline:none; background:transparent; font-size:13px; font-weight:600; color:var(--text-main); cursor:pointer; width:130px;">
+    </label>
+
+    @if(request('search') || request('status') || request('month'))
+        <a href="{{ route('admin.payment.index') }}"
+           style="height:40px; padding:0 16px; border:1px solid #e8caca; color:#c47a7a; border-radius:var(--radius-md); display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600; text-decoration:none; background:var(--bg-surface);">
+            <i class="ti ti-refresh"></i> Reset
         </a>
     @endif
+</div>
 </form>
+
+<div class="stats-row">
+    <div class="stat-card total">
+        <div class="stat-icon"><i class="ti ti-report-money"></i></div>
+        <div class="stat-label">Total Masuk</div>
+        <div class="stat-value">Rp {{ number_format($stats['total'] ?? 0, 0, ',', '.') }}</div>
+    </div>
+    <div class="stat-card pending">
+        <div class="stat-icon"><i class="ti ti-clock-bolt"></i></div>
+        <div class="stat-label">Perlu Konfirmasi</div>
+        <div class="stat-value">{{ $stats['pending'] ?? 0 }}</div>
+    </div>
+    <div class="stat-card success">
+        <div class="stat-icon"><i class="ti ti-circle-check"></i></div>
+        <div class="stat-label">Pembayaran Sukses</div>
+        <div class="stat-value">{{ $stats['success'] ?? 0 }}</div>
+    </div>
+    <div class="stat-card failed">
+        <div class="stat-icon"><i class="ti ti-circle-x"></i></div>
+        <div class="stat-label">Pembayaran Gagal</div>
+        <div class="stat-value">{{ $stats['failed'] ?? 0 }}</div>
+    </div>
+</div>
 
 <div class="layout-order">
     <div class="table-section">
@@ -342,287 +287,228 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Order ID</th>
-                        <th>Sumber</th>
+                        <th>No. Invoice</th>
                         <th>Pelanggan</th>
-                        <th>Tanggal</th>
-                        <th>Total</th>
-                        <th>Pembayaran</th>
+                        <th>Tanggal Bayar</th>
+                        <th>Metode</th>
+                        <th>Jumlah</th>
                         <th>Status</th>
                         <th style="text-align: center;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($orders as $index => $order)
+                    @foreach($payments as $index => $p)
                     <tr>
-                        <td style="font-weight:600; color: var(--text-main);">{{ $order->order_number ?? $order->id }}</td>
-                        <td>
-                            @if(strtolower($order->payment_method ?? '') === 'cash')
-                                <span class="channel-badge channel-offline"><i class="ti ti-store"></i> Kasir POS</span>
-                            @else
-                                <span class="channel-badge channel-online"><i class="ti ti-world"></i> Website</span>
-                            @endif
-                        </td>
+                        <td><a href="#" class="invoice-link" onclick="showPaymentDetail({{ $index }}); return false;">{{ $p->order_number }}</a></td>
                         <td>
                             <div class="customer-info">
-                                <div class="customer-name">{{ $order->user->name ?? $order->customer_name ?? 'Guest' }}</div>
-                                <div class="customer-email">{{ $order->user->email ?? $order->customer_email ?? '-' }}</div>
+                                <div class="customer-name">{{ $p->user->name ?? 'Guest' }}</div>
+                                <div class="customer-email">{{ $p->user->email ?? '-' }}</div>
                             </div>
                         </td>
-                        <td style="color: var(--text-sec); font-size: 12.5px;">{{ \Carbon\Carbon::parse($order->created_at)->format('d M Y H:i') }}</td>
-                        <td style="font-weight: 500;">Rp {{ number_format($order->total_amount ?? 0, 0, ',', '.') }}</td>
-                        <td style="color: var(--text-sec); font-size: 12.5px;">{{ ucfirst($order->payment_method ?? '-') }}</td>
+                        <td style="color: var(--text-sec); font-size: 12.5px;">{{ $p->created_at->format('d M Y H:i') }}</td>
+                        <td style="color: var(--text-sec); font-size: 12.5px;">{{ ucfirst($p->payment_method) }}</td>
+                        <td style="font-weight: 600;">Rp {{ number_format($p->total_amount, 0, ',', '.') }}</td>
                         <td>
                             @php
-                                $statusClass = match(strtolower($order->status ?? '')) {
-                                    'pending'   => 'status-pending',
-                                    'paid'      => 'status-diproses',
-                                    'shipping'  => 'status-dikirim',
-                                    'delivered' => 'status-selesai',
-                                    default     => ''
+                                $cls = match($p->payment_status) {
+                                    'unpaid' => 'status-konfirmasi',
+                                    'paid'   => 'status-berhasil',
+                                    'failed' => 'status-gagal',
+                                    default  => ''
                                 };
-                                $statusLabel = match(strtolower($order->status ?? '')) {
-                                    'pending'   => 'Pending',
-                                    'paid'      => 'Diproses',
-                                    'shipping'  => 'Dikirim',
-                                    'delivered' => 'Selesai',
-                                    'cancelled' => 'Dibatalkan',
-                                    default     => ucfirst($order->status ?? '-')
+                                $label = match($p->payment_status) {
+                                    'unpaid' => 'Menunggu Konfirmasi',
+                                    'paid'   => 'Berhasil',
+                                    'failed' => 'Gagal',
+                                    default  => ucfirst($p->payment_status)
                                 };
                             @endphp
-                            <span class="status-badge {{ $statusClass }}">{{ $statusLabel }}</span>
+                            <span class="status-badge {{ $cls }}">{{ $label }}</span>
                         </td>
                         <td style="text-align: center;">
-                            <div class="action-btn" onclick="showDetail({{ $index }})" title="Lihat Detail"><i class="ti ti-eye"></i></div>
+                            <div class="action-btn" onclick="showPaymentDetail({{ $index }})" title="Tinjau Pembayaran">
+                                <i class="ti ti-zoom-in"></i>
+                            </div>
                         </td>
                     </tr>
-                    @empty
-                    <tr>
-                        <td colspan="8" style="text-align: center; padding: 40px; color: var(--text-muted);">Belum ada pesanan.</td>
-                    </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
         </div>
-
+        
+        {{-- Pagination terikat ke variabel $payments --}}
         <div class="pagination">
-            <div>Menampilkan {{ $orders->firstItem() ?? 0 }} - {{ $orders->lastItem() ?? 0 }} dari {{ $orders->total() }} pesanan</div>
+            <div>Menampilkan {{ $payments->firstItem() ?? 0 }} - {{ $payments->lastItem() ?? 0 }} dari {{ $payments->total() }} transaksi</div>
             <div class="pagination-links">
-                @if($orders->onFirstPage())
-                    <span style="opacity:0.4; border:1px solid var(--border); border-radius:6px; padding:0 10px; height:30px; display:inline-flex; align-items:center;">
-                        <i class="ti ti-chevron-left" style="font-size:16px;"></i>
-                    </span>
-                @else
-                    <a href="{{ $orders->previousPageUrl() }}"><i class="ti ti-chevron-left" style="font-size:16px;"></i></a>
-                @endif
-
-                @foreach($orders->getUrlRange(1, $orders->lastPage()) as $page => $url)
-                    @if($page == $orders->currentPage())
-                        <span class="active">{{ $page }}</span>
-                    @else
-                        <a href="{{ $url }}">{{ $page }}</a>
-                    @endif
-                @endforeach
-
-                @if($orders->hasMorePages())
-                    <a href="{{ $orders->nextPageUrl() }}"><i class="ti ti-chevron-right" style="font-size:16px;"></i></a>
-                @else
-                    <span style="opacity:0.4; border:1px solid var(--border); border-radius:6px; padding:0 10px; height:30px; display:inline-flex; align-items:center;">
-                        <i class="ti ti-chevron-right" style="font-size:16px;"></i>
-                    </span>
-                @endif
+                {!! $payments->links() !!}
             </div>
         </div>
     </div>
 
-    <div class="detail-panel" id="detailPanel">
+    <div class="detail-panel" id="paymentPanel">
         <div class="dp-header">
             <h3>Rincian Pembayaran</h3>
             <div class="dp-close" onclick="closePaymentDetail()"><i class="ti ti-x"></i></div>
         </div>
-        <div class="dp-body" id="detailBody"></div>
+        <div class="dp-body" id="paymentBody"></div>
     </div>
 </div>
 
 <script>
-    const orders = @json($ordersJson);
+    // FIX UTAMA: Menangkap variabel JSON $paymentsJson dari Controller
+    const payments = @json($paymentsJson);
+    const storageUrl = "{{ asset('storage') }}";
 
     function formatRupiah(n) {
         return 'Rp ' + Number(n).toLocaleString('id-ID');
     }
 
-    function doExport(format) {
-        const form = document.getElementById('filterForm');
-        const exportInput = document.getElementById('exportFormat');
-        
-        exportInput.value = format;
-        form.submit();
-        
-        setTimeout(() => {
-            exportInput.value = '';
-        }, 500);
-    }
-
-    function previewAndPdf() {
-        window.print();
-    }
-
     function getStatusClass(status) {
         const map = {
-            'pending'   : 'status-pending',
-            'paid'      : 'status-diproses',
-            'shipping'  : 'status-dikirim',
-            'delivered' : 'status-selesai',
-            'cancelled' : ''
+            'Menunggu Konfirmasi': 'status-konfirmasi',
+            'Berhasil': 'status-berhasil',
+            'Gagal': 'status-gagal'
         };
-        return map[status.toLowerCase()] || '';
+        return map[status] || '';
     }
 
-    function showDetail(index) {
-        const o = orders[index];
-        const panel = document.getElementById('detailPanel');
-        const body = document.getElementById('detailBody');
+    function showPaymentDetail(index) {
+        const p = payments[index];
+        const panel = document.getElementById('paymentPanel');
+        const body = document.getElementById('paymentBody');
 
-        // Mapping Data Dinamis
-        const orderId = o.order_number || o.id;
-        const statusRaw = (o.status || 'pending').toLowerCase();
-        const tanggal = new Date(o.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-        const nama = (o.user && o.user.name) || o.customer_name || 'Guest';
-        const email = (o.user && o.user.email) || o.customer_email || '-';
-        const hp = (o.user && o.user.phone) || o.customer_phone || '-';
-        const alamat = o.shipping_address || o.alamat || 'Alamat tidak tersedia';
-        const metode = o.payment_method || '-';
-        const total = o.total_amount || 0;
-        const idAsli = o.id;
-
-        const itemList = o.items || o.order_items || [];
-        let itemsHtml = itemList.map(item => {
-            const img = (item.product && item.product.image) || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&auto=format&fit=crop&q=60';
-            const name = (item.product && item.product.name) || item.nama || 'Produk';
-            const qty = item.quantity || item.qty || 1;
-            const price = item.price || item.harga || 0;
-            return `
-                <div class="dp-product">
-                    <div class="dp-product-img">
-                        <img src="${img}" alt="${name}">
+        // Logika menata foto bukti transaksi dari storage lokal
+        let receiptHtml = '';
+        if (p.metode.toLowerCase() !== 'cash') {
+            const imgSrc = p.bukti_foto ? `${storageUrl}/${p.bukti_foto}` : 'https://placehold.co/400x500?text=Bukti+Belum+Diunggah';
+            
+            receiptHtml = `
+                <hr class="dp-divider">
+                <div class="dp-section-title">Dokumen Bukti Transaksi</div>
+                <div class="receipt-frame">
+                    <a href="${imgSrc}" target="_blank" title="Klik untuk memperbesar gambar">
+                        <img src="${imgSrc}" class="receipt-img" alt="Bukti Transfer ${p.invoice}">
+                    </a>
+                    <div class="receipt-overlay-tip">
+                        <i class="ti ti-maximize"></i> Klik gambar untuk memperbesar
                     </div>
-                    <div>
-                        <div class="dp-product-name">${name}</div>
-                        <div class="dp-product-qty">Qty: ${qty}</div>
-                    </div>
-                    <div class="dp-product-price">${formatRupiah(price)}</div>
                 </div>
             `;
-        }).join('');
+        }
 
-        if(itemsHtml === '') itemsHtml = '<div style="font-size:12px; color:var(--text-muted); text-align:center; margin:10px 0;">Item tidak ditemukan.</div>';
-
-        const isOffline = metode.toLowerCase() === 'cash';
-        const channelHtml = isOffline 
-            ? `<span class="channel-badge channel-offline"><i class="ti ti-store"></i> Kasir POS</span>`
-            : `<span class="channel-badge channel-online"><i class="ti ti-world"></i> Website</span>`;
-
-        const statusLabelMap = {
-            'pending': 'Pending', 'paid': 'Diproses', 'shipping': 'Dikirim', 'delivered': 'Selesai', 'cancelled': 'Dibatalkan'
-        };
-        const statusLabel = statusLabelMap[statusRaw] || statusRaw;
+        // Memunculkan tombol Verifikasi Terima / Tolak jika status_raw bernilai 'unpaid'
+        let actionButtonsHtml = '';
+        if (p.status_raw === 'unpaid') {
+            actionButtonsHtml = `
+                <button class="btn-payment-action approve" onclick="confirmPayment(${p.order_db_id})">
+                    <i class="ti ti-circle-check"></i> Terima Pembayaran
+                </button>
+                <button class="btn-payment-action reject" onclick="rejectPayment(${p.order_db_id})">
+                    Tolak Bukti Transfer
+                </button>
+            `;
+        }
 
         body.innerHTML = `
-            <div class="dp-order-id">${orderId}</div>
-            <div class="dp-row">
-                <div class="dp-label">Saluran</div>
-                <div class="dp-value">${channelHtml}</div>
-            </div>
+            <div class="dp-invoice-id">${p.invoice}</div>
             <div class="dp-row">
                 <div class="dp-label">Status</div>
-                <div class="dp-value"><span class="status-badge ${getStatusClass(statusRaw)}">${statusLabel}</span></div>
+                <div class="dp-value"><span class="status-badge ${getStatusClass(p.status)}">${p.status}</span></div>
             </div>
             <div class="dp-row">
-                <div class="dp-label">Tanggal</div>
-                <div class="dp-value">${tanggal}</div>
+                <div class="dp-label">Order Reference</div>
+                <div class="dp-value" style="font-weight:700; color:var(--accent-dark);">${p.order_id}</div>
+            </div>
+            <div class="dp-row">
+                <div class="dp-label">Waktu Bayar</div>
+                <div class="dp-value">${p.tanggal}</div>
+            </div>
+            <div class="dp-row">
+                <div class="dp-label">Metode</div>
+                <div class="dp-value">${p.metode}</div>
             </div>
             <div class="dp-row">
                 <div class="dp-label">Pelanggan</div>
                 <div class="dp-value">
-                    <div style="font-weight: 600; margin-bottom: 2px;">${nama}</div>
-                    <div style="color: var(--text-sec); font-size: 11.5px;">${email}</div>
-                    <div style="color: var(--text-sec); font-size: 11.5px;">${hp}</div>
+                    <div style="font-weight:600;">${p.nama}</div>
+                    <div style="color: var(--text-sec); font-size:11.5px;">${p.email}</div>
                 </div>
             </div>
-            <div class="dp-row">
-                <div class="dp-label">Alamat</div>
-                <div class="dp-value" style="font-size:12.5px; line-height: 1.5;">${alamat}</div>
-            </div>
-            <div class="dp-row">
-                <div class="dp-label">Pembayaran</div>
-                <div class="dp-value">${metode.toUpperCase()}</div>
-            </div>
+            ${receiptHtml}
             <hr class="dp-divider">
-            <div class="dp-section-title">Produk (${itemList.length})</div>
-            ${itemsHtml}
             <div class="dp-total-row grand">
-                <span class="lbl">Total Pembayaran</span>
-                <span class="val">${formatRupiah(total)}</span>
+                <span class="lbl">Total Nominal</span>
+                <span class="val">${formatRupiah(p.jumlah)}</span>
             </div>
-            <hr class="dp-divider">
-            <div class="dp-section-title">Update Status</div>
-            <select id="statusSelect-${idAsli}" class="status-select">
-                <option value="pending"   ${statusRaw === 'pending'   ? 'selected' : ''}>Pending</option>
-                <option value="paid"      ${statusRaw === 'paid'      ? 'selected' : ''}>Diproses</option>
-                <option value="shipping"  ${statusRaw === 'shipping'  ? 'selected' : ''}>Dikirim</option>
-                <option value="delivered" ${statusRaw === 'delivered' ? 'selected' : ''}>Selesai</option>
-                <option value="cancelled" ${statusRaw === 'cancelled' ? 'selected' : ''}>Dibatalkan</option>
-            </select>
-            <button class="btn-update" onclick="updateStatus(${idAsli})">
-                <i class="ti ti-refresh"></i> Update Status Pesanan
-            </button>
+            ${actionButtonsHtml}
         `;
 
         panel.classList.add('open');
     }
 
-    function closeDetail() {
-        document.getElementById('detailPanel').classList.remove('open');
+    function closePaymentDetail() {
+        document.getElementById('paymentPanel').classList.remove('open');
     }
 
-    function updateStatus(orderId) {
-        const status = document.getElementById('statusSelect-' + orderId).value;
-        fetch(`/admin/pesanan/${orderId}/status`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify({ status })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                if (typeof Swal !== 'undefined') {
-                    Swal.fire({
-                        title: 'Berhasil!',
-                        text: 'Status pesanan berhasil diupdate.',
-                        icon: 'success',
-                        confirmButtonColor: '#5c9e74',
-                    }).then(() => location.reload());
-                } else {
-                    alert('Status pesanan berhasil diupdate.');
-                    location.reload();
-                }
+    function confirmPayment(orderId) {
+        Swal.fire({
+            title: 'Konfirmasi Pembayaran?',
+            text: 'Pembayaran akan ditandai sebagai berhasil.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Terima',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#5c9e74',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/admin/pembayaran/${orderId}/status`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ payment_status: 'paid' })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire('Berhasil!', 'Pembayaran telah dikonfirmasi.', 'success')
+                            .then(() => location.reload());
+                    }
+                });
             }
-        })
-        .catch(() => {
-            if (typeof Swal !== 'undefined') Swal.fire('Error', 'Gagal update status.', 'error');
-            else alert('Gagal update status.');
         });
     }
 
-    document.getElementById('searchInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            document.getElementById('exportFormat').value = ''; 
-            document.getElementById('filterForm').submit();
-        }
-    });
+    function rejectPayment(orderId) {
+        Swal.fire({
+            title: 'Tolak Pembayaran?',
+            text: 'Pembayaran akan ditandai sebagai gagal.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Tolak',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#c47a7a',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/admin/pembayaran/${orderId}/status`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ payment_status: 'failed' })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire('Ditolak!', 'Pembayaran telah ditolak.', 'success')
+                            .then(() => location.reload());
+                    }
+                });
+            }
+        });
+    }
 </script>
 @endsection

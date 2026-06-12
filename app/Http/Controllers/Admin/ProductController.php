@@ -11,11 +11,31 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
-    {
-        $products = Product::with('category')->latest()->paginate(10);
-        return view('admin.product.index', compact('products'));
+public function index(Request $request)
+{
+    $query = Product::with('category');
+
+    // Search: nama produk saja (sku dihapus karena kolom tidak ada)
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where('name', 'like', "%{$search}%");
     }
+
+    // Filter kategori
+    if ($request->filled('category')) {
+        $query->where('category_id', $request->category);
+    }
+
+    // Filter status — filled() sudah handle string kosong & null
+    if ($request->filled('status')) {
+        $query->where('is_active', (bool) $request->status);
+    }
+
+    $products = $query->latest()->paginate(10)->withQueryString();
+    $categories = Category::orderBy('name')->get();
+
+    return view('admin.product.index', compact('products', 'categories'));
+}
 
     public function create()
     {
@@ -226,5 +246,39 @@ public function stockReport(Request $request)
         });
 
     return response()->json($products);
+}
+
+public function exportPdf(Request $request)
+{
+    $query = Product::with('category');
+
+    if ($request->filled('search')) {
+        $query->where('name', 'like', "%{$request->search}%");
+    }
+    if ($request->filled('category')) {
+        $query->where('category_id', $request->category);
+    }
+    if ($request->filled('status')) {
+        $query->where('is_active', (bool) $request->status);
+    }
+
+    $products   = $query->latest()->get();
+    $categories = Category::orderBy('name')->get();
+
+    // Cari label kategori & status yang aktif untuk ditampilkan di PDF
+    $filterCategory = $request->filled('category')
+        ? $categories->find($request->category)?->name
+        : 'Semua Kategori';
+    $filterStatus = match($request->status) {
+        '1'     => 'Aktif',
+        '0'     => 'Nonaktif',
+        default => 'Semua Status',
+    };
+    $filterSearch = $request->search ?? null;
+
+    $html = view('admin.product.pdf', compact('products', 'filterCategory', 'filterStatus', 'filterSearch'))->render();
+    $pdf  = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)->setPaper('a4', 'landscape');
+
+    return $pdf->stream('laporan-produk-' . now()->format('Y-m-d') . '.pdf');
 }
 }

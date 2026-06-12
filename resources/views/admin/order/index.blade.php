@@ -311,10 +311,17 @@
     </div>
 
     <div class="export-dropdown">
-        <button type="button" class="btn-export"><i class="ti ti-download"></i> Export Laporan <i class="ti ti-chevron-down" style="font-size: 14px;"></i></button>
+        <button type="button" class="btn-export">
+            <i class="ti ti-download"></i> Export Laporan 
+            <i class="ti ti-chevron-down" style="font-size: 14px;"></i>
+        </button>
         <div class="export-dropdown-content">
-            <a href="#" onclick="previewAndPdf()"><i class="ti ti-file-type-pdf"></i> Export PDF</a>
-            <a href="#" onclick="doExport('excel')"><i class="ti ti-file-spreadsheet"></i> Export Excel</a>
+            <a href="{{ route('admin.order.export.pdf', request()->query()) }}" target="_blank">
+                <i class="ti ti-file-type-pdf"></i> Export PDF
+            </a>
+            <a href="#" onclick="doExport('excel')">
+                <i class="ti ti-file-spreadsheet"></i> Export Excel
+            </a>
         </div>
     </div>
 

@@ -140,20 +140,34 @@
         <h1>Laporan Penjualan</h1>
         <div class="breadcrumb">FurniHome / Laporan / Penjualan</div>
     </div>
-    <div style="display: flex; gap: 12px;">
-        <div class="export-dropdown">
-            <button class="btn-export" style="height: 40px; font-size: 13px; border-radius: var(--radius-md);"><i class="ti ti-download"></i> Export <i class="ti ti-chevron-down" style="font-size: 14px;"></i></button>
-            <div class="export-dropdown-content">
-                <a href="#"><i class="ti ti-file-spreadsheet"></i> Export Excel</a>
-                <a href="#"><i class="ti ti-file-type-csv"></i> Export CSV</a>
-            </div>
-        </div>
-        <div class="date-filter">
-            <i class="ti ti-calendar-event"></i>
-            <span>Bulan Ini ({{ now()->translatedFormat('F Y') }})</span>
-            <i class="ti ti-chevron-down" style="font-size: 14px; color: var(--text-muted);"></i>
+        <form method="GET" action="{{ route('admin.report.sales') }}" id="filter-form">
+<div style="display: flex; gap: 12px;">
+    <div class="export-dropdown">
+        <button type="button" class="btn-export" style="height: 40px; font-size: 13px; border-radius: var(--radius-md);">
+            <i class="ti ti-download"></i> Export <i class="ti ti-chevron-down" style="font-size: 14px;"></i>
+        </button>
+        <div class="export-dropdown-content">
+            <a href="{{ route('admin.report.sales.export', ['format' => 'csv', 'month' => request('month', now()->format('Y-m'))]) }}">
+                <i class="ti ti-file-type-csv"></i> Export CSV
+            </a>
+            <a href="{{ route('admin.report.sales.export', ['format' => 'pdf', 'month' => request('month', now()->format('Y-m'))]) }}">
+                <i class="ti ti-file-type-pdf"></i> Export PDF
+            </a>
         </div>
     </div>
+    <label class="date-filter" style="cursor:pointer;">
+        <i class="ti ti-calendar-event"></i>
+        <input 
+            type="month" 
+            name="month" 
+            value="{{ request('month', now()->format('Y-m')) }}"
+            onchange="this.form.submit()"
+            style="border:none; outline:none; background:transparent; font-size:13px; font-weight:600; color:var(--text-main); cursor:pointer; width:130px;"
+        >
+        <i class="ti ti-chevron-down" style="font-size: 14px; color: var(--text-muted);"></i>
+    </label>
+</div>
+</form>
 </div>
 
 <div class="stats-row">
