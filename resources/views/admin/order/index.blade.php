@@ -6,7 +6,7 @@
 <style>
     /* ── Reset & Premium Variables (Tema: Royal Blue & Minimalist Slate) ── */
     :root {
-        --accent: #2563eb; /* Royal Blue */
+        --accent: #2563eb; 
         --accent-dark: #1e40af;
         --accent-light: #eff6ff;
         --border: rgba(15, 23, 42, 0.06);
@@ -66,20 +66,20 @@
     .search-box {
         display: flex; align-items: center; background: var(--bg-surface);
         border: 1px solid var(--border); border-radius: var(--radius-md);
-        padding: 0 14px; gap: 10px; flex: 1; max-width: 320px; height: 42px; transition: all 0.2s;
+        padding: 0 16px; gap: 10px; flex: 1; max-width: 320px; height: 44px; transition: all 0.2s;
         box-shadow: 0 2px 10px rgba(0,0,0,0.02);
     }
     .search-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
-    .search-box i { color: var(--text-sec); font-size: 16px; }
-    .search-box input { border: none; outline: none; font-size: 13.5px; width: 100%; color: var(--text-main); background: transparent; }
+    .search-box i { color: var(--text-sec); font-size: 18px; flex-shrink: 0; }
+    .search-box input { border: none; outline: none; font-size: 13.5px; width: 100%; color: var(--text-main); background: transparent; padding: 0; }
     .search-box input::placeholder { color: var(--text-muted); }
     
     .select-wrapper { position: relative; display: inline-block; }
     .select-wrapper i.prefix-icon {
-        position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-sec); font-size: 15px; pointer-events: none;
+        position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-sec); font-size: 16px; pointer-events: none;
     }
     .filter-select {
-        height: 42px; padding: 0 36px 0 38px; border: 1px solid var(--border); border-radius: var(--radius-md);
+        height: 44px; padding: 0 36px 0 38px; border: 1px solid var(--border); border-radius: var(--radius-md);
         background: var(--bg-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
         appearance: none; font-size: 13.5px; font-weight: 500; color: var(--text-main); cursor: pointer; transition: all 0.2s; min-width: 170px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.02);
@@ -91,7 +91,7 @@
     .export-dropdown { position: relative; display: inline-block; }
     .btn-export {
         background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-        padding: 0 16px; height: 42px; border-radius: var(--radius-md); font-size: 13.5px; font-weight: 600;
+        padding: 0 16px; height: 44px; border-radius: var(--radius-md); font-size: 13.5px; font-weight: 600;
         display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.2s;
     }
     .btn-export i { font-size: 16px; color: var(--text-sec); }
@@ -99,7 +99,7 @@
     .btn-export:hover i { color: var(--accent); }
     
     .export-dropdown-content {
-        display: none; position: absolute; right: 0; top: 48px; background: var(--bg-surface);
+        display: none; position: absolute; right: 0; top: 50px; background: var(--bg-surface);
         min-width: 180px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 12px;
         z-index: 10; border: 1px solid var(--border); overflow: hidden;
     }
@@ -121,9 +121,7 @@
         width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px;
     }
     .table-wrapper::-webkit-scrollbar { height: 6px; }
-    .table-wrapper::-webkit-scrollbar-track { background: transparent; }
     .table-wrapper::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-    .table-wrapper::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
     table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 960px; }
     th {
@@ -356,7 +354,7 @@
     <input type="hidden" name="export" id="exportFormat" value="">
 
     @if(request('search') || request('channel') || request('status'))
-        <a href="{{ route('admin.order.index') }}" class="action-btn" style="height: 42px; width: auto; padding: 0 16px; border-color: #fecaca; color: #ef4444; background: #fff5f5;">
+        <a href="{{ route('admin.order.index') }}" class="action-btn" style="height: 44px; width: auto; padding: 0 16px; border-color: #fecaca; color: #ef4444; background: #fef2f2;">
             <i class="ti ti-refresh"></i> Reset Filter
         </a>
     @endif
@@ -481,7 +479,6 @@
         return 'Rp ' + Number(n).toLocaleString('id-ID');
     }
 
-    // Melakukan submit form filter dibarengi instruksi cetak dokumen data ter-filter
     function doExport(format) {
         const form = document.getElementById('filterForm');
         const exportInput = document.getElementById('exportFormat');
@@ -517,7 +514,7 @@
         const itemsHtml = o.items.map(item => `
             <div class="dp-product">
                 <div class="dp-product-img">
-                    <img src="${item.img}" alt="${item.nama}">
+                    <img src="${item.img}" alt="${item.nama}" onerror="this.src='https://placehold.co/100x100?text=Error'">
                 </div>
                 <div style="min-width: 0; flex: 1;">
                     <div class="dp-product-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.nama}</div>
@@ -621,7 +618,6 @@
         });
     }
 
-    // Submit otomatis saat menekan enter pada input text search
     document.getElementById('searchInput').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             e.preventDefault();

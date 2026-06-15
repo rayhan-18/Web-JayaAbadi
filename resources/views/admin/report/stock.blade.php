@@ -4,120 +4,134 @@
 
 @section('styles')
 <style>
-    /* Premium Variables */
+    /* ── Premium Variables (Tema: Royal Blue & Minimalist Slate) ── */
     :root {
-        --accent: #5c9e74;
-        --accent-dark: #3a5c48;
-        --accent-light: #e8f0eb;
-        --border: #e6e9e4;
+        --accent: #2563eb; 
+        --accent-dark: #1e40af;
+        --accent-light: #eff6ff;
+        --border: rgba(15, 23, 42, 0.06);
+        --bg-body: #f8fafc;
         --bg-surface: #ffffff;
-        --bg-hover: #f5f7f4;
-        --text-main: #2d3b32;
-        --text-sec: #7a9080;
-        --text-muted: #9aada2;
-        --radius-md: 10px;
-        --radius-lg: 14px;
+        --bg-hover: #f1f5f9;
+        --text-main: #0f172a;
+        --text-sec: #475569;
+        --text-muted: #94a3b8;
+        --radius-md: 14px;
+        --radius-lg: 20px;
+        /* Shadow lebih tipis, tajam, dan elegan */
+        --shadow-card: 0 2px 4px -1px rgba(15, 23, 42, 0.03), 0 1px 2px -1px rgba(15, 23, 42, 0.02);
+        --shadow-hover: 0 10px 20px -5px rgba(15, 23, 42, 0.05);
     }
 
-    body { color: var(--text-main); }
+    body { color: var(--text-main); background: var(--bg-body); }
 
-    /* Page Header */
+    /* ── Page Header ── */
     .page-header {
-        display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
+        display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; flex-wrap: wrap; gap: 16px;
     }
     .page-title h1 {
-        font-size: 22px; font-weight: 700; color: var(--text-main); margin: 0; letter-spacing: -0.02em;
+        font-size: 24px; font-weight: 700; color: var(--text-main); margin: 0; letter-spacing: -0.02em;
     }
     .page-title .breadcrumb {
-        font-size: 13px; color: var(--text-sec); margin-top: 4px;
+        font-size: 13.5px; color: var(--text-sec); margin-top: 4px;
     }
 
-    /* Stats Grid */
+    /* ── Stats Grid ── */
     .stats-row {
         display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;
     }
     .stat-card {
         background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border);
-        padding: 20px 16px; text-align: center; transition: all 0.2s ease;
+        padding: 20px 16px; text-align: center; box-shadow: var(--shadow-card); transition: all 0.3s ease;
     }
-    .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(45, 59, 50, 0.04); }
+    .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
     
     .stat-icon {
-        width: 42px; height: 42px; border-radius: var(--radius-md);
+        width: 46px; height: 46px; border-radius: 12px;
         display: flex; align-items: center; justify-content: center;
         font-size: 24px; margin: 0 auto 12px;
     }
     
     /* Icon Colors */
-    .stat-card.total .stat-icon   { background: transparent; color: #5c7b9e; }
-    .stat-card.low .stat-icon     { background: transparent; color: #b89247; }
-    .stat-card.empty .stat-icon   { background: transparent; color: #c47a7a; }
-    .stat-card.value .stat-icon   { background: transparent; color: var(--accent); }
+    .stat-card.total .stat-icon   { background: #eff6ff; color: var(--accent); }
+    .stat-card.low .stat-icon     { background: #fffbeb; color: #f59e0b; }
+    .stat-card.empty .stat-icon   { background: #fef2f2; color: #ef4444; }
+    .stat-card.value .stat-icon   { background: #f3e8ff; color: #8b5cf6; }
 
-    .stat-label { font-size: 12.5px; font-weight: 600; color: var(--text-sec); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.02em; }
-    .stat-value { font-size: 24px; font-weight: 700; color: var(--text-main); letter-spacing: -0.02em; }
+    .stat-label { font-size: 12px; font-weight: 600; color: var(--text-sec); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .stat-value { font-size: 26px; font-weight: 700; color: var(--text-main); letter-spacing: -0.02em; line-height: 1.1; }
     
-    /* Filters */
+    /* ── Filters ── */
     .filter-bar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
     .search-box {
         display: flex; align-items: center; background: var(--bg-surface);
         border: 1px solid var(--border); border-radius: var(--radius-md);
-        padding: 0 14px; gap: 10px; flex: 1; max-width: 320px; height: 40px; transition: all 0.2s;
+        padding: 0 16px; gap: 10px; flex: 1; max-width: 320px; height: 44px; transition: all 0.2s;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
     }
-    .search-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(92, 158, 116, 0.15); }
-    .search-box i { color: var(--text-sec); font-size: 16px; }
-    .search-box input { border: none; outline: none; font-size: 13px; width: 100%; color: var(--text-main); background: transparent; }
+    .search-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
+    .search-box i { color: var(--text-sec); font-size: 18px; flex-shrink: 0; }
+    .search-box input { border: none; outline: none; font-size: 13.5px; width: 100%; color: var(--text-main); background: transparent; padding: 0; }
     .search-box input::placeholder { color: var(--text-muted); }
     
     .select-wrapper { position: relative; display: inline-block; }
     .select-wrapper i.prefix-icon {
-        position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-sec); font-size: 15px; pointer-events: none;
+        position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-sec); font-size: 16px; pointer-events: none;
     }
     .filter-select {
-        height: 40px; padding: 0 36px 0 34px; border: 1px solid var(--border); border-radius: var(--radius-md);
-        background: var(--bg-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a9080' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
-        appearance: none; font-size: 13px; font-weight: 500; color: var(--text-main); cursor: pointer; transition: all 0.2s; min-width: 160px;
+        height: 44px; padding: 0 36px 0 38px; border: 1px solid var(--border); border-radius: var(--radius-md);
+        background: var(--bg-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
+        appearance: none; font-size: 13.5px; font-weight: 500; color: var(--text-main); cursor: pointer; transition: all 0.2s; min-width: 170px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
     }
-    .filter-select:hover { background-color: var(--bg-hover); border-color: #d1d6cf; }
-    .filter-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(92, 158, 116, 0.15); }
+    .filter-select:hover { border-color: #cbd5e1; }
+    .filter-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
 
     /* Export Dropdown */
     .export-dropdown { position: relative; display: inline-block; }
     .btn-export {
-        background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border);
-        padding: 0 16px; height: 40px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
-        display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s;
+        background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        padding: 0 16px; height: 44px; border-radius: var(--radius-md); font-size: 13.5px; font-weight: 600;
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.2s;
     }
     .btn-export i { font-size: 16px; color: var(--text-sec); }
-    .btn-export:hover { background: var(--bg-hover); border-color: #d1d6cf; }
+    .btn-export:hover { border-color: #cbd5e1; color: var(--accent); }
+    .btn-export:hover i { color: var(--accent); }
     
     .export-dropdown-content {
-        display: none; position: absolute; right: 0; top: 46px; background: var(--bg-surface);
-        min-width: 180px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-radius: 10px;
+        display: none; position: absolute; right: 0; top: 50px; background: var(--bg-surface);
+        min-width: 180px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 12px;
         z-index: 10; border: 1px solid var(--border); overflow: hidden;
     }
     .export-dropdown-content a {
-        padding: 10px 16px; display: flex; align-items: center; gap: 10px; text-decoration: none;
-        color: var(--text-main); font-size: 13px; font-weight: 500; border-bottom: 1px solid #f0f2ef;
+        padding: 12px 16px; display: flex; align-items: center; gap: 10px; text-decoration: none;
+        color: var(--text-main); font-size: 13.5px; font-weight: 500; border-bottom: 1px solid #f1f5f9; transition: background 0.2s;
     }
+    .export-dropdown-content a:last-child { border-bottom: none; }
     .export-dropdown-content a:hover { background: var(--bg-hover); color: var(--accent); }
     .export-dropdown:hover .export-dropdown-content { display: block; }
 
-    /* Table Design */
-    .table-wrapper { background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border); overflow-x: auto; margin-bottom: 24px; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 800px; }
+    /* ── Table Design ── */
+    .table-wrapper { 
+        background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border); 
+        box-shadow: var(--shadow-card); overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 24px; padding-bottom: 4px;
+    }
+    .table-wrapper::-webkit-scrollbar { height: 6px; }
+    .table-wrapper::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 850px; }
     th {
-        text-align: left; padding: 14px 20px; background: var(--bg-hover); font-weight: 600;
+        text-align: left; padding: 16px 24px; background: rgba(0,0,0,0.015); font-weight: 600;
         color: var(--text-sec); border-bottom: 1px solid var(--border); font-size: 12px;
         text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;
     }
-    td { padding: 14px 20px; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--text-main); }
+    td { padding: 16px 24px; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--text-main); white-space: nowrap; transition: background 0.2s; }
     tr:last-child td { border-bottom: none; }
     tbody tr:hover { background: var(--bg-hover); }
 
-    .product-info { display: flex; align-items: center; gap: 12px; }
+    .product-info { display: flex; align-items: center; gap: 14px; }
     .product-img {
-        width: 44px; height: 44px; border-radius: 8px; background: var(--bg-hover);
+        width: 48px; height: 48px; border-radius: 10px; background: var(--bg-hover);
         border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
         font-size: 20px; color: var(--text-sec); flex-shrink: 0;
     }
@@ -127,56 +141,89 @@
 
     /* Stock Visual Indicator */
     .stock-container { width: 100%; max-width: 120px; }
-    .stock-text { font-weight: 700; font-size: 14px; margin-bottom: 4px; display: inline-block; }
-    .stock-progress { width: 100%; height: 6px; background: #f0f2ef; border-radius: 4px; overflow: hidden; }
-    .stock-bar { height: 100%; border-radius: 4px; }
+    .stock-text { font-weight: 700; font-size: 14px; margin-bottom: 6px; display: inline-block; }
+    .stock-progress { width: 100%; height: 6px; background: #f1f5f9; border-radius: 4px; overflow: hidden; }
+    .stock-bar { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
     
-    .status-aman .stock-text { color: var(--accent); }
-    .status-aman .stock-bar { background: var(--accent); }
+    .status-aman .stock-text { color: #059669; }
+    .status-aman .stock-bar { background: #10b981; }
     
-    .status-menipis .stock-text { color: #b89247; }
-    .status-menipis .stock-bar { background: #d99e52; }
+    .status-menipis .stock-text { color: #d97706; }
+    .status-menipis .stock-bar { background: #f59e0b; }
     
-    .status-habis .stock-text { color: #c47a7a; }
+    .status-habis .stock-text { color: #dc2626; }
     .status-habis .stock-bar { background: transparent; width: 0% !important; }
 
     /* Badges Status */
     .status-badge {
         display: inline-flex; align-items: center; justify-content: center;
-        padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap;
+        padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; white-space: nowrap;
     }
-    .badge-aman { background: var(--accent-light); color: var(--accent-dark); }
-    .badge-menipis { background: #fcf6e8; color: #b89247; }
-    .badge-habis { background: #fdf5f5; color: #c47a7a; }
+    .badge-aman { background: #ecfdf5; color: #059669; }
+    .badge-menipis { background: #fffbeb; color: #d97706; }
+    .badge-habis { background: #fef2f2; color: #dc2626; }
     
+    /* ── Tombol Aksi Premium (Solid Light Blue Default) ── */
     .action-btn {
-        padding: 6px 12px; border-radius: 6px; background: var(--bg-surface);
-        border: 1px solid var(--border); display: inline-flex; align-items: center; justify-content: center;
-        cursor: pointer; color: var(--text-main); font-size: 12px; font-weight: 600; transition: 0.15s; gap: 6px;
+        padding: 8px 16px; 
+        border-radius: 10px; 
+        background: var(--accent-light);
+        border: 1px solid transparent; 
+        display: inline-flex; 
+        align-items: center; 
+        justify-content: center;
+        cursor: pointer; 
+        color: var(--accent); 
+        font-size: 12.5px; 
+        font-weight: 600; 
+        transition: all 0.2s ease; 
+        gap: 6px; 
         text-decoration: none;
+        box-shadow: none;
+        width: max-content !important; 
+        height: auto !important;
+        white-space: nowrap;
     }
-    .action-btn:hover { background: var(--bg-hover); border-color: #d1d6cf; color: var(--accent); }
+    .action-btn i { font-size: 16px; transition: transform 0.3s ease; }
+    
+    .action-btn:hover { 
+        background: var(--accent); 
+        color: #ffffff; 
+        transform: translateY(-1px); 
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.15); 
+    }
+    .action-btn:hover i { transform: rotate(15deg); }
+    .action-btn:active { transform: scale(0.96); box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1); }
+
+    /* ── RESPONSIVE MOBILE & TABLET ── */
+    @media (max-width: 1024px) {
+        .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+        .page-header { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+        .filter-bar { flex-direction: column; align-items: stretch; gap: 12px; }
+        .search-box, .select-wrapper, .filter-select { max-width: 100%; width: 100%; min-width: 100%; }
+        .export-dropdown, .btn-export { width: 100%; justify-content: center; }
+        
+        .stat-card { padding: 16px; border-radius: 16px; }
+        .stat-label { font-size: 10.5px; }
+        .stat-value { font-size: 20px; }
+    }
+    @media (max-width: 480px) {
+        .stats-row { grid-template-columns: 1fr; }
+    }
 
     /* ==========================================================================
-       CSS PRINT / PREVIEW PDF LOGIC (Menyembunyikan elemen admin saat cetak PDF)
+       CSS PRINT / PREVIEW PDF LOGIC
        ========================================================================== */
     @media print {
-        /* Sembunyikan Sidebar & Navbar bawaan layout admin */
-        aside, nav, header, .sidebar, .main-header, .breadcrumb { display: none !important; }
-        
-        /* Sembunyikan Form Filter, Tombol Reset, dan Kolom Aksi Tabel */
-        #filterForm, .action-btn, th:last-child, td:last-child { display: none !important; }
-        
-        /* Sesuaikan layout utama agar melebar penuh di kertas PDF */
-        body, .content-wrapper, main, .container {
-            background: #fff !important; color: #000 !important;
-            padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important;
-        }
+        aside, nav, header, .sidebar, .main-header, .breadcrumb, #filterForm, .action-btn, th:last-child, td:last-child { display: none !important; }
+        body, .content-wrapper, main, .container { background: #fff !important; color: #000 !important; padding: 0 !important; margin: 0 !important; width: 100% !important; max-width: 100% !important; }
         .table-wrapper { border: none !important; box-shadow: none !important; overflow: visible !important; }
         table { min-width: 100% !important; width: 100% !important; }
         th { background: #f5f5f5 !important; color: #000 !important; border-bottom: 2px solid #000 !important; }
         td { border-bottom: 1px solid #ccc !important; }
-        .stock-progress { display: none !important; } /* Sembunyikan Progress bar di kertas */
+        .stock-progress { display: none !important; }
     }
 </style>
 @endsection
@@ -198,12 +245,12 @@
     <div class="stat-card low">
         <div class="stat-icon"><i class="ti ti-alert-triangle"></i></div>
         <div class="stat-label">Stok Menipis ( < 10 )</div>
-        <div class="stat-value" style="color: #b89247;">{{ number_format($stats['low_stock'] ?? 0, 0, ',', '.') }}</div>
+        <div class="stat-value" style="color: #d97706;">{{ number_format($stats['low_stock'] ?? 0, 0, ',', '.') }}</div>
     </div>
     <div class="stat-card empty">
         <div class="stat-icon"><i class="ti ti-xbox-x"></i></div>
         <div class="stat-label">Stok Habis</div>
-        <div class="stat-value" style="color: #c47a7a;">{{ number_format($stats['empty_stock'] ?? 0, 0, ',', '.') }}</div>
+        <div class="stat-value" style="color: #dc2626;">{{ number_format($stats['empty_stock'] ?? 0, 0, ',', '.') }}</div>
     </div>
     <div class="stat-card value">
         <div class="stat-icon"><i class="ti ti-report-money"></i></div>
@@ -252,7 +299,7 @@
     <input type="hidden" name="export" id="exportFormat" value="">
 
     @if(request('search') || request('category_id') || request('stock_status'))
-        <a href="{{ route('admin.report.stock') }}" class="action-btn" style="height: 40px; padding: 0 16px; border-color: #c47a7a; color: #c47a7a;">
+        <a href="{{ route('admin.report.stock') }}" class="action-btn" style="height: 44px; padding: 0 16px; border-color: #fecaca; color: #ef4444; background: #fef2f2; border-radius: var(--radius-md);">
             <i class="ti ti-refresh"></i> Reset Filter
         </a>
     @endif
@@ -312,7 +359,7 @@
                         </div>
                     </td>
                     <td style="color: var(--text-sec);">{{ $product->category->name ?? '-' }}</td>
-                    <td style="font-weight: 500;">Rp {{ number_format($product->price, 0, ',', '.') }}</td>
+                    <td style="font-weight: 600;">Rp {{ number_format($product->price, 0, ',', '.') }}</td>
                     <td>
                         <div class="stock-container {{ $statusClass }}">
                             <span class="stock-text">{{ $product->stock }} Unit</span>
@@ -324,13 +371,16 @@
                     <td><span class="status-badge {{ $badgeClass }}">{{ $statusText }}</span></td>
                     <td style="text-align: center;">
                         <a href="{{ route('admin.product.edit', $product->id) }}" class="action-btn">
-                            <i class="ti ti-adjustments"></i> Update
+                            <i class="ti ti-edit"></i> Update
                         </a>
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">Tidak ada data produk yang cocok dengan filter.</td>
+                    <td colspan="6" style="text-align: center; padding: 48px; color: var(--text-muted);">
+                        <i class="ti ti-inbox" style="font-size: 32px; display: block; margin-bottom: 8px; opacity: 0.5;"></i>
+                        Tidak ada data produk yang cocok dengan filter.
+                    </td>
                 </tr>
             @endforelse
         </tbody>
@@ -338,7 +388,6 @@
 </div>
 
 <script>
-    // Submit otomatis saat menekan enter pada input text search
     document.getElementById('searchInput').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -347,7 +396,6 @@
         }
     });
 
-    // Menjalankan fungsi export direct file Excel
     function doExport(format) {
         const form = document.getElementById('filterForm');
         const exportInput = document.getElementById('exportFormat');
@@ -360,9 +408,7 @@
         }, 500);
     }
 
-    // FUNGSI BARU: Membuka Print Preview Browser untuk disimpan ke PDF
     function previewAndPdf() {
-        // Otomatis memicu fungsi print preview bawaan windows/browser
         window.print();
     }
 </script>

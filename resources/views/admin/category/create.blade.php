@@ -4,21 +4,78 @@
 
 @section('styles')
 <style>
-    :root { --accent: #2563eb; --accent-dark: #1e40af; --border: #e6e9e4; --bg-surface: #ffffff; --text-main: #2d3b32; --text-sec: #7a9080; }
-    .form-grid { display: grid; grid-template-columns: 1fr 340px; gap: 20px; }
-    .card { background: var(--bg-surface); border-radius: 14px; border: 1px solid var(--border); padding: 24px; margin-bottom: 20px; }
-    .card-title { font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    /* ── Premium Variables (Royal Blue & Slate) ── */
+    :root {
+        --accent: #2563eb; 
+        --accent-dark: #1e40af;
+        --border: rgba(15, 23, 42, 0.06);
+        --bg-body: #f8fafc;
+        --bg-surface: #ffffff;
+        --text-main: #0f172a;
+        --text-sec: #475569;
+        --text-muted: #94a3b8;
+        --radius-md: 14px;
+        --radius-lg: 20px;
+        --shadow-card: 0 10px 30px -10px rgba(15, 23, 42, 0.05);
+    }
+
+    body { color: var(--text-main); background: var(--bg-body); }
+
+    .page-header { margin-bottom: 28px; }
+    .page-title h1 { font-size: 24px; font-weight: 700; margin: 0; letter-spacing: -0.02em; }
+    .breadcrumb { font-size: 13.5px; color: var(--text-sec); margin-top: 4px; }
+
+    /* ── Grid Form ── */
+    .form-grid { display: grid; grid-template-columns: 1fr 360px; gap: 24px; align-items: start; }
+    
+    .card { background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border); padding: 24px; box-shadow: var(--shadow-card); margin-bottom: 24px; }
+    .card-title { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 24px; color: var(--text-main); }
+    .card-title i { color: var(--accent); font-size: 18px; }
+
     .form-group { margin-bottom: 20px; }
-    .form-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
-    .form-control { width: 100%; height: 45px; padding: 0 14px; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; }
-    .btn-submit { background: #2563eb; color: #fff; padding: 12px 24px; border-radius: 10px; font-weight: 600; border: none; width: 100%; cursor: pointer; }
+    .form-label { display: block; font-size: 13.5px; font-weight: 600; margin-bottom: 8px; }
+    
+    .form-control { 
+        width: 100%; height: 44px; padding: 0 16px; border: 1px solid var(--border); 
+        border-radius: var(--radius-md); font-size: 13.5px; color: var(--text-main); 
+        transition: all 0.2s; background: var(--bg-surface); 
+    }
+    .form-control:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
+    .form-control::placeholder { color: var(--text-muted); }
+    
+    textarea.form-control { height: auto; min-height: 120px; padding: 12px 16px; resize: vertical; }
+
+    /* ── Buttons ── */
+    .btn-submit { 
+        background: var(--accent); color: #fff; padding: 12px 24px; border-radius: 12px; 
+        font-size: 14px; font-weight: 600; border: none; width: 100%; cursor: pointer; 
+        transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; 
+    }
+    .btn-submit:hover { background: var(--accent-dark); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(37, 99, 235, 0.2); }
+    
+    .btn-cancel { 
+        background: transparent; color: var(--text-sec); border: 1px solid var(--border); 
+        padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 600; 
+        text-decoration: none; width: 100%; text-align: center; display: inline-block; 
+        transition: 0.2s; margin-bottom: 12px; 
+    }
+    .btn-cancel:hover { background: var(--bg-body); color: var(--text-main); border-color: #cbd5e1; }
+
+    /* ── Responsive ── */
     @media (max-width: 992px) { .form-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { 
+        .card { padding: 20px; }
+        .page-header { margin-bottom: 20px; }
+    }
 </style>
 @endsection
 
 @section('content')
 <div class="page-header">
-    <div class="page-title"><h1>Tambah Kategori</h1></div>
+    <div class="page-title">
+        <h1>Tambah Kategori</h1>
+        <div class="breadcrumb">FurniHome / Kategori / Tambah Baru</div>
+    </div>
 </div>
 
 <form action="{{ route('admin.category.store') }}" method="POST">
@@ -29,30 +86,35 @@
                 <div class="card-title"><i class="ti ti-info-circle"></i> Informasi Kategori</div>
                 <div class="form-group">
                     <label class="form-label">Nama Kategori</label>
-                    <input type="text" name="nama" class="form-control" required>
+                    <input type="text" name="nama" class="form-control" placeholder="Contoh: Sofa Ruang Tamu" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Deskripsi</label>
-                    <textarea name="deskripsi" class="form-control" style="height: 120px;"></textarea>
+                    <label class="form-label">Deskripsi Singkat</label>
+                    <textarea name="deskripsi" class="form-control" placeholder="Tuliskan penjelasan mengenai kategori ini..."></textarea>
                 </div>
             </div>
         </div>
         <div class="form-right">
             <div class="card">
-                <div class="card-title"><i class="ti ti-settings"></i> Pengaturan</div>
+                <div class="card-title"><i class="ti ti-settings"></i> Pengaturan Kategori</div>
                 <div class="form-group">
-                    <label class="form-label">Link Gambar</label>
-                    <input type="url" name="image" class="form-control" placeholder="https://..." required>
+                    <label class="form-label">Link Gambar Visual</label>
+                    <input type="url" name="image" class="form-control" placeholder="https://images.unsplash.com/..." required>
+                    <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 6px;">
+                        Masukkan link URL gambar resolusi tinggi (Rasio 1:1 direkomendasikan).
+                    </span>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Status</label>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">Status Visibilitas</label>
                     <select name="status" class="form-control">
-                        <option value="Aktif">Aktif</option>
-                        <option value="Nonaktif">Nonaktif</option>
+                        <option value="Aktif">Aktif (Ditampilkan)</option>
+                        <option value="Nonaktif">Nonaktif (Disembunyikan)</option>
                     </select>
                 </div>
-                <button type="submit" class="btn-submit">Simpan Kategori</button>
             </div>
+            
+            <a href="{{ route('admin.category.index') }}" class="btn-cancel">Batal</a>
+            <button type="submit" class="btn-submit"><i class="ti ti-device-floppy"></i> Simpan Kategori</button>
         </div>
     </div>
 </form>

@@ -175,9 +175,9 @@
     .item-value { font-weight: 700; color: var(--text-main); font-size: 14px; white-space: nowrap; }
     
     .revenue-item { background: var(--bg-surface); border-radius: 12px; padding: 12px 0; border: none; align-items: center; }
-    .revenue-item .item-thumb { background: var(--accent-light); color: var(--accent); border: 1px solid rgba(37, 99, 235, 0.15); }
-    .revenue-item .item-value { color: var(--accent-dark); font-size: 16px; margin-left: auto; letter-spacing: -0.02em; }
-
+    .revenue-item .item-thumb { background: #f1f5f9; color: var(--text-sec); border: 1px solid var(--border); }
+    .revenue-item .item-value { color: #0f172a !important; font-size: 16px; margin-left: auto; letter-spacing: -0.02em; font-weight: 700; }
+    
     /* ── RESPONSIVE MOBILE & APPS ── */
     @media (max-width: 1024px) { 
         .stats-grid { grid-template-columns: repeat(2, 1fr); } 
