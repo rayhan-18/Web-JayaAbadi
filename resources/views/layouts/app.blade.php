@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Sanctuari')</title>
+    <title>@yield('title', 'Jaya Abadi')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
@@ -25,7 +25,7 @@
                     </button>
 
                     <div class="text-2xl font-serif font-semibold tracking-wide">
-                        <a href="{{ route('home') }}" class="text-gray-900">Sanctuari</a>
+                        <a href="{{ route('home') }}" class="text-gray-900">Jaya Abadi</a>
                     </div>
                 </div>
 
@@ -107,37 +107,61 @@
         @yield('content')
     </main>
 
-    <footer class="bg-gray-50 border-t border-gray-100 mt-20">
-        <div class="max-w-7xl mx-auto px-4 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <h3 class="font-serif text-xl font-semibold mb-4">Sanctuari</h3>
-                    <p class="text-gray-500 text-sm">Menciptakan ruang tenang melalui desain furnitur yang dipraktik secara berkelanjutan.</p>
+    <footer class="bg-gray-50 border-t border-gray-200 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+                
+                <div class="lg:col-span-2 pr-4">
+                    <h3 class="font-serif text-2xl font-bold mb-4 text-gray-900 tracking-wide">Jaya Abadi</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed max-w-sm">
+                        Menciptakan ruang tenang dan nyaman melalui desain furnitur berkualitas tinggi yang dibuat dengan dedikasi dan material terbaik untuk rumah Anda.
+                    </p>
+                    <div class="mt-6 flex space-x-5">
+                        <a href="#" class="text-gray-400 hover:text-amber-700 transition transform hover:scale-110">
+                            <i class="fa-brands fa-instagram text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-amber-700 transition transform hover:scale-110">
+                            <i class="fa-brands fa-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-amber-700 transition transform hover:scale-110">
+                            <i class="fa-brands fa-whatsapp text-xl"></i>
+                        </a>
+                    </div>
                 </div>
+                
                 <div>
-                    <h4 class="font-semibold text-gray-900 mb-3">Belanja</h4>
-                    <ul class="space-y-2 text-sm text-gray-600">
-                        <li><a href="{{ route('products.category', 'ruang-tamu') }}" class="hover:text-amber-700">Ruang Tamu</a></li>
-                        <li><a href="{{ route('products.category', 'kamar-tidur') }}" class="hover:text-amber-700">Kamar Tidur</a></li>
-                        <li><a href="{{ route('products.category', 'koleksi-baru') }}" class="hover:text-amber-700">Koleksi Baru</a></li>
+                    <h4 class="font-semibold text-gray-900 mb-5 uppercase text-xs tracking-widest">Belanja</h4>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="{{ route('products.category', 'ruang-tamu') }}" class="hover:text-amber-700 transition">Ruang Tamu</a></li>
+                        <li><a href="{{ route('products.category', 'kamar-tidur') }}" class="hover:text-amber-700 transition">Kamar Tidur</a></li>
+                        <li><a href="{{ route('products.category', 'ruang-makan') }}" class="hover:text-amber-700 transition">Ruang Makan</a></li>
+                        <li><a href="{{ route('products.category', 'koleksi-baru') }}" class="hover:text-amber-700 transition">Koleksi Baru</a></li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h4 class="font-semibold text-gray-900 mb-3">Perusahaan</h4>
-                    <ul class="space-y-2 text-sm text-gray-600">
-                        <li><a href="#" class="hover:text-amber-700">Tentang Kami</a></li>
-                        <li><a href="#" class="hover:text-amber-700">Kontak</a></li>
-                        <li><a href="#" class="hover:text-amber-700">Karir</a></li>
+                    <h4 class="font-semibold text-gray-900 mb-5 uppercase text-xs tracking-widest">Perusahaan</h4>
+                    <ul class="space-y-3 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-amber-700 transition">Tentang Kami</a></li>
+                        <li><a href="#" class="hover:text-amber-700 transition">Hubungi Kami</a></li>
+                        <li><a href="#" class="hover:text-amber-700 transition">Syarat & Ketentuan</a></li>
+                        <li><a href="#" class="hover:text-amber-700 transition">Kebijakan Privasi</a></li>
                     </ul>
                 </div>
+                
             </div>
-            <div class="border-t border-gray-200 mt-8 pt-6 text-center text-xs text-gray-400">
-                © 2025 Sanctuari. All rights reserved.
+
+            <div class="border-t border-gray-200 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-xs text-gray-500">
+                    © {{ date('Y') }} Jaya Abadi. Hak cipta dilindungi.
+                </div>
+                <div class="text-xs text-gray-400">
+                    Dibuat dengan <i class="fa-solid fa-heart text-amber-600 mx-1"></i> di Indonesia
+                </div>
             </div>
         </div>
     </footer>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         // Script untuk toggle Mobile Menu
