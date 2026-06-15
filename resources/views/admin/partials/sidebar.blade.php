@@ -1,21 +1,22 @@
 <style>
-    /* ── Sidebar Utama ── */
+    /* ── Sidebar Utama (Tema: Obsidian Black & Champagne Gold) ── */
     .sidebar {
-        width: 218px; background: #0f1610;
+        width: 218px; background: #0b0d10; /* Hitam Obsidian */
         display: flex; flex-direction: column;
         position: fixed; top: 0; left: 0; bottom: 0;
-        z-index: 1000; /* Paling depan */
+        z-index: 1000;
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border-right: 1px solid #1a2b1e;
+        border-right: 1px solid #1c1f26; /* Garis batas abu-abu sangat gelap */
     }
 
     /* ── Layar Gelap (Backdrop) ── */
     .sb-backdrop {
         position: fixed; inset: 0;
-        background: rgba(0,0,0,0.55);
-        z-index: 990; /* Tepat di bawah sidebar */
+        background: rgba(0,0,0,0.65);
+        z-index: 990; 
         opacity: 0; visibility: hidden; 
         transition: opacity 0.3s ease, visibility 0.3s ease;
+        backdrop-filter: blur(2px); /* Efek blur premium di layar belakang */
     }
     .sb-backdrop.visible {
         opacity: 1; visibility: visible; 
@@ -32,47 +33,48 @@
     }
 
     /* ── Styling Konten (Menu & Logo) ── */
-    .sb-logo { display: flex; align-items: center; gap: 11px; padding: 16px; border-bottom: 1px solid #1c2e20; }
-    .sb-icon-wrap { width: 34px; height: 34px; border-radius: 9px; background: #1e2e23; border: 1px solid #2a4030; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .sb-icon-wrap i { font-size: 18px; color: #5c9e74; }
-    .sb-name { color: #e8f0eb; font-size: 13px; font-weight: 600; letter-spacing: -.01em; }
-    .sb-tag { display: inline-flex; align-items: center; margin-top: 2px; background: #1c2e20; border: 1px solid #2a4030; border-radius: 4px; padding: 1px 6px; font-size: 9px; color: #4d7a5c; letter-spacing: .04em; font-weight: 600; }
+    .sb-logo { display: flex; align-items: center; gap: 11px; padding: 16px; border-bottom: 1px solid #1c1f26; }
+    .sb-icon-wrap { width: 34px; height: 34px; border-radius: 9px; background: #14171c; border: 1px solid #232730; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sb-icon-wrap i { font-size: 18px; color: #d4af37; } /* Champagne Gold */
+    .sb-name { color: #ffffff; font-size: 13.5px; font-weight: 600; letter-spacing: .02em; }
+    .sb-tag { display: inline-flex; align-items: center; margin-top: 2px; background: #14171c; border: 1px solid #232730; border-radius: 4px; padding: 1px 6px; font-size: 9px; color: #8a919e; letter-spacing: .06em; font-weight: 600; }
+    
     .sb-nav { flex: 1; padding: 10px 8px; overflow-y: auto; }
     .sb-nav::-webkit-scrollbar { display: none; }
-    .sb-sec { padding: 10px 8px 3px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .14em; color: #2a4030; }
+    .sb-sec { padding: 12px 8px 4px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .18em; color: #5d6573; }
     
-    .nav-row { display: flex; align-items: center; gap: 9px; padding: 8px 10px; color: #4d7060; font-size: 12.5px; cursor: pointer; text-decoration: none; border: none; background: none; width: 100%; border-radius: 7px; transition: background .12s, color .12s; white-space: nowrap; }
-    .nav-row:hover { background: #162018; color: #a0c4ae; }
-    .nav-row.active { background: #1a2e22; color: #e8f0eb; }
-    .nav-row.active .nr-icon-wrap { background: #243d2c; border-color: #2e5038; }
-    .nav-row.active .nr-icon-wrap i { color: #5c9e74; }
+    .nav-row { display: flex; align-items: center; gap: 9px; padding: 8px 10px; color: #8a919e; font-size: 12.5px; cursor: pointer; text-decoration: none; border: none; background: none; width: 100%; border-radius: 7px; transition: all .15s ease; white-space: nowrap; }
+    .nav-row:hover { background: #14171c; color: #d1d5db; }
+    .nav-row.active { background: #18150c; color: #f3e8d3; } /* BG emas sangat gelap untuk menu aktif */
+    .nav-row.active .nr-icon-wrap { background: #262011; border-color: #403417; }
+    .nav-row.active .nr-icon-wrap i { color: #d4af37; }
     
-    .nr-icon-wrap { width: 26px; height: 26px; border-radius: 6px; background: #141f16; border: 1px solid #1e3022; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .12s; }
-    .nr-icon-wrap i { font-size: 14px; color: #3a5c48; transition: color .12s; }
-    .nav-row:hover .nr-icon-wrap { background: #1c2e22; border-color: #274030; }
-    .nav-row:hover .nr-icon-wrap i { color: #5c9e74; }
+    .nr-icon-wrap { width: 26px; height: 26px; border-radius: 6px; background: #121419; border: 1px solid #1c1f26; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .15s ease; }
+    .nr-icon-wrap i { font-size: 14px; color: #5d6573; transition: color .15s ease; }
+    .nav-row:hover .nr-icon-wrap { background: #1c1f26; border-color: #2b303b; }
+    .nav-row:hover .nr-icon-wrap i { color: #c09b5a; }
     
-    .nav-row .badge { margin-left: auto; background: #7a2222; color: #ffb0b0; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 5px; }
-    .nav-row .chev { margin-left: auto; font-size: 12px; color: #2a4030; transition: transform .2s; }
-    .nav-row:hover .chev, .nav-row.active .chev { color: #4d7060; }
+    .nav-row .badge { margin-left: auto; background: #4a1c1c; color: #fca5a5; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 5px; letter-spacing: .05em; }
+    .nav-row .chev { margin-left: auto; font-size: 12px; color: #5d6573; transition: transform .2s ease, color .15s ease; }
+    .nav-row:hover .chev, .nav-row.active .chev { color: #a3aab5; }
     .parent.open > .nav-row .chev { transform: rotate(90deg); }
     
-    .sub { max-height: 0; overflow: hidden; transition: max-height .22s ease; }
+    .sub { max-height: 0; overflow: hidden; transition: max-height .25s ease; }
     .parent.open .sub { max-height: 300px; }
     
-    .sub-row { display: flex; align-items: center; gap: 8px; padding: 6px 10px 6px 44px; color: #2e4d3a; font-size: 12px; text-decoration: none; border-radius: 6px; transition: background .12s, color .12s; margin: 1px 0; }
-    .sub-row:hover { background: #162018; color: #7ab894; }
-    .sub-row.active { color: #7ab894; background: #162018; }
-    .sub-dot { width: 3px; height: 3px; border-radius: 50%; background: #243d2c; flex-shrink: 0; }
-    .sub-row:hover .sub-dot, .sub-row.active .sub-dot { background: #5c9e74; }
+    .sub-row { display: flex; align-items: center; gap: 8px; padding: 7px 10px 7px 44px; color: #6e7685; font-size: 12px; text-decoration: none; border-radius: 6px; transition: all .15s ease; margin: 1px 0; }
+    .sub-row:hover { background: #14171c; color: #d4af37; }
+    .sub-row.active { color: #d4af37; background: #14171c; font-weight: 500; }
+    .sub-dot { width: 4px; height: 4px; border-radius: 50%; background: #2b303b; flex-shrink: 0; transition: background .15s ease; }
+    .sub-row:hover .sub-dot, .sub-row.active .sub-dot { background: #d4af37; box-shadow: 0 0 4px rgba(212, 175, 55, 0.4); } /* Efek glow kecil di dot */
     
-    .sb-foot { padding: 8px; border-top: 1px solid #1c2e20; }
-    .sb-logout { display: flex; align-items: center; gap: 9px; padding: 8px 10px; color: #3a5248; font-size: 12.5px; cursor: pointer; border-radius: 7px; border: none; background: none; width: 100%; transition: background .12s, color .12s; }
-    .sb-logout:hover { background: #1c1212; color: #c47a7a; }
-    .sb-logout .nr-icon-wrap { background: #1a1010; border-color: #2a1a1a; }
-    .sb-logout .nr-icon-wrap i { color: #4d3030; }
-    .sb-logout:hover .nr-icon-wrap { background: #2a1515; border-color: #3a2020; }
-    .sb-logout:hover .nr-icon-wrap i { color: #c47a7a; }
+    .sb-foot { padding: 8px; border-top: 1px solid #1c1f26; }
+    .sb-logout { display: flex; align-items: center; gap: 9px; padding: 8px 10px; color: #6e7685; font-size: 12.5px; cursor: pointer; border-radius: 7px; border: none; background: none; width: 100%; transition: all .15s ease; }
+    .sb-logout:hover { background: #1a0f11; color: #e05a5a; }
+    .sb-logout .nr-icon-wrap { background: #141011; border-color: #211618; }
+    .sb-logout .nr-icon-wrap i { color: #8a3a3a; }
+    .sb-logout:hover .nr-icon-wrap { background: #2b1417; border-color: #4a1c22; }
+    .sb-logout:hover .nr-icon-wrap i { color: #e05a5a; }
 </style>
 
 <div class="sb-backdrop" id="sbBackdrop" onclick="window.closeAdminSidebar()"></div>
@@ -81,8 +83,7 @@
     <div class="sb-logo">
         <div class="sb-icon-wrap"><i class="ti ti-armchair"></i></div>
         <div>
-            <div class="sb-name">FurniHome</div>
-            <div class="sb-tag">ADMIN</div>
+            <div class="sb-name">Jaya Abadi</div> <div class="sb-tag">ADMIN</div>
         </div>
     </div>
 
@@ -116,10 +117,21 @@
         </div>
 
         <div class="sb-sec">Transaksi</div>
+        
+        @php
+            // Ambil jumlah pesanan dengan status 'pending' (Sesuaikan jika nama statusnya berbeda di DB)
+            // Jika ingin menghitung semua pesanan, gunakan: \App\Models\Order::count();
+            $pendingOrders = \App\Models\Order::where('status', 'pending')->count();
+        @endphp
+
         <div class="parent {{ request()->routeIs('admin.order.*') ? 'open' : '' }}" id="p-order">
             <div class="nav-row" onclick="tog('p-order')">
                 <div class="nr-icon-wrap"><i class="ti ti-clipboard-list"></i></div> Pesanan
-                <span class="badge">8</span>
+                
+                @if($pendingOrders > 0)
+                    <span class="badge">{{ $pendingOrders }}</span>
+                @endif
+                
                 <i class="ti ti-chevron-right chev" style="margin-left:4px"></i>
             </div>
             <div class="sub">
