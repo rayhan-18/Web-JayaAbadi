@@ -1,3 +1,4 @@
+{{-- resources/views/cart/index.blade.php --}}
 @extends('layouts.app')
 
 @section('title', 'Keranjang Belanja - Sanctuari')
@@ -27,13 +28,15 @@
                 <h3 class="text-xl font-medium mb-2" style="color: #2d3a2e;">
                     Keranjang Anda masih kosong
                 </h3>
-                <p class="text-sm mb-8 max-w-sm text-center" style="color: #8a9a82;">
+                <p class="text-sm mb-10 max-w-sm text-center" style="color: #8a9a82;">
                     Jelajahi koleksi kami dan temukan furniture yang akan membuat ruang Anda lebih nyaman.
                 </p>
+                
+                {{-- TOMBOL MULAI BELANJA YANG DIJAMIN LEBAR (Menggunakan inline style padding) --}}
                 <a href="{{ route('products.index') }}" 
-                   class="inline-flex items-center px-7 py-3 rounded-full text-base font-medium transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
-                   style="background-color: #7a9471; color: #ffffff;">
-                    <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                   class="inline-flex items-center justify-center rounded-full text-sm font-semibold transition-all duration-300 bg-gray-900 text-white shadow-lg hover:bg-gray-800 hover:shadow-xl hover:-translate-y-1"
+                   style="padding: 14px 40px; gap: 10px;">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
                     </svg>
                     Mulai Belanja
@@ -50,8 +53,7 @@
                 <form action="{{ route('cart.clear') }}" method="POST" class="m-0"
                       onsubmit="return confirm('Yakin ingin mengosongkan semua item di keranjang?');">
                     @csrf @method('DELETE')
-                    <button type="submit" class="group flex items-center gap-1.5 text-sm font-medium transition-colors duration-200 hover:text-red-600" 
-                            style="color: #a0524e;">
+                    <button type="submit" class="group flex items-center gap-1.5 text-sm font-medium transition-colors duration-200 text-gray-500 hover:text-rose-600 hover:underline">
                         <svg class="w-4 h-4 transition-transform group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
@@ -90,7 +92,6 @@
                         <div class="flex-1 flex flex-col justify-between">
                             <div class="flex justify-between items-start gap-4">
                                 <div class="flex-1">
-                                    {{-- BOX KATEGORI DIPERLEBAR DISINI (px-4) --}}
                                     <span class="inline-block text-[10px] font-bold tracking-wider uppercase px-4 py-1.5 rounded-full mb-2"
                                           style="background-color: #eef1ec; color: #7a9471;">
                                         {{ $item->product->category->name ?? 'Produk' }}
@@ -118,7 +119,7 @@
                                         @csrf @method('PATCH')
                                         <input type="hidden" name="quantity" value="{{ max(1, $item->quantity - 1) }}">
                                         <button type="submit" 
-                                                class="w-9 h-full flex items-center justify-center rounded-l-full transition-colors duration-150 hover:bg-gray-50 focus:outline-none"
+                                                class="w-9 h-full flex items-center justify-center rounded-l-full transition-colors duration-150 hover:bg-gray-100 hover:text-amber-600 focus:outline-none"
                                                 style="color: #2d3a2e;">
                                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15"/>
@@ -134,7 +135,7 @@
                                         @csrf @method('PATCH')
                                         <input type="hidden" name="quantity" value="{{ $item->quantity + 1 }}">
                                         <button type="submit" 
-                                                class="w-9 h-full flex items-center justify-center rounded-r-full transition-colors duration-150 hover:bg-gray-50 focus:outline-none"
+                                                class="w-9 h-full flex items-center justify-center rounded-r-full transition-colors duration-150 hover:bg-gray-100 hover:text-amber-600 focus:outline-none"
                                                 style="color: #2d3a2e;">
                                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
@@ -147,8 +148,7 @@
                                       onsubmit="return confirm('Hapus item ini?');">
                                     @csrf @method('DELETE')
                                     <button type="submit" 
-                                            class="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-full transition-all duration-150 hover:bg-red-50 focus:outline-none"
-                                            style="color: #a0524e;">
+                                            class="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-full transition-all duration-150 text-gray-400 hover:text-rose-600 hover:bg-rose-50 focus:outline-none">
                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
                                         </svg>
@@ -161,7 +161,7 @@
                     @endforeach
                 </div>
 
-                {{-- Ringkasan Pesanan --}}
+                {{-- Order Summary --}}
                 <div class="lg:col-span-1">
                     <div class="sticky top-8 rounded-2xl p-6 sm:p-7 border"
                          style="background-color: #ffffff; border-color: #e2e8df;">
@@ -190,19 +190,19 @@
                             </div>
                         </div>
 
-                        {{-- Action Buttons -- BUTTONS DIPERBESAR DISINI --}}
                         <div class="mt-8 flex flex-col gap-4">
                             <a href="{{ route('checkout') }}"
-                               class="flex items-center justify-center gap-2 w-full px-6 py-4 rounded-xl text-base font-semibold transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
-                               style="background-color: #7a9471; color: #ffffff;">
+                               class="flex items-center justify-center gap-2 w-full rounded-xl text-base font-semibold transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5 bg-gray-900 hover:bg-gray-800 text-white"
+                               style="padding: 16px 24px;">
                                 Lanjut ke Pembayaran
                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
                                 </svg>
                             </a>
+                            
                             <a href="{{ route('products.index') }}"
-                               class="flex items-center justify-center gap-2 w-full px-6 py-4 rounded-xl text-base font-medium transition-all duration-200 hover:bg-gray-50 border"
-                               style="border-color: #d4ddd0; color: #5a6a52; background-color: transparent;">
+                               class="flex items-center justify-center gap-2 w-full rounded-xl text-base font-medium transition-all duration-300 border border-gray-300 hover:border-amber-500 text-gray-700 hover:text-amber-600 bg-white"
+                               style="padding: 16px 24px;">
                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
                                 </svg>
@@ -211,7 +211,7 @@
                         </div>
 
                         {{-- Trust Badges --}}
-                        <div class="mt-8 pt-5 border-t grid grid-cols-2 gap-4 text-center"
+                        <div class="mt-8 pt-7 border-t grid grid-cols-2 gap-4 text-center"
                              style="border-color: #e2e8df;">
                             <div>
                                 <svg class="w-5 h-5 mx-auto mb-1.5" style="color: #8a9a82;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">

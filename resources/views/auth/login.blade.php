@@ -1,60 +1,83 @@
 @extends('layouts.guest')
 
-@section('title', 'Login — Sanctuari')
+@section('title', 'Login — Jaya Abadi')
 
 @section('content')
-<div class="auth-card" style="padding-top: 1rem;">
-    <div style="margin-bottom: 2rem;">
-        <h2 style="font-size: 1.75rem; font-weight: 600; color: #0F172A;">Welcome back</h2>
-        <p style="color: #64748B; margin-top: 0.25rem;">Log in to your account</p>
+<div class="auth-card">
+    <div class="auth-header">
+        <h2>Selamat Datang Kembali</h2>
+        <p>Masuk untuk melanjutkan ke Jaya Abadi</p>
     </div>
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <div class="input-group" style="margin-bottom: 1.5rem;">
-            <label for="email">Email address</label>
-            <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus>
-            @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        <div class="input-group">
+            <label for="email">Email <span class="required">*</span></label>
+            <div class="input-wrapper">
+                <span class="input-icon"><i class="fa-regular fa-envelope"></i></span>
+                <input type="email" id="email" name="email" value="{{ old('email') }}" 
+                       required autofocus placeholder="nama@email.com"
+                       class="@error('email') input-error @enderror">
+            </div>
+            @error('email') 
+                <div class="input-error-text"><i class="fa-solid fa-circle-exclamation"></i> {{ $message }}</div> 
+            @enderror
         </div>
 
-        <div class="input-group" style="margin-bottom: 1.5rem;">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
-            <span class="toggle-password" onclick="togglePassword('password')">
-                <i class="fa-regular fa-eye"></i>
-            </span>
-            @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        <div class="input-group">
+            <label for="password">Password <span class="required">*</span></label>
+            <div class="input-wrapper">
+                <span class="input-icon"><i class="fa-regular fa-lock"></i></span>
+                <input type="password" id="password" name="password" required placeholder="••••••••"
+                       class="@error('password') input-error @enderror">
+                <button type="button" onclick="togglePassword()" class="toggle-password" aria-label="Toggle password visibility">
+                    <i id="toggleIcon" class="fa-regular fa-eye"></i>
+                </button>
+            </div>
+            @error('password') 
+                <div class="input-error-text"><i class="fa-solid fa-circle-exclamation"></i> {{ $message }}</div> 
+            @enderror
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #475569;">
-                <input type="checkbox" name="remember" style="accent-color: #F59E0B;"> Remember me
+        <div class="form-options">
+            <label class="remember-me">
+                <input type="checkbox" name="remember">
+                <span>Ingat saya</span>
             </label>
             @if (Route::has('password.request'))
-                <a href="{{ route('password.request') }}" style="font-size: 0.8rem; color: #F59E0B; text-decoration: none;">Forgot password?</a>
+                <a href="{{ route('password.request') }}" class="forgot-link">Lupa password?</a>
             @endif
         </div>
 
-        <button type="submit" class="auth-btn">Log in</button>
+        <button type="submit" class="auth-btn">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Masuk ke Akun
+        </button>
     </form>
 
-    <p class="auth-footer" style="margin-top: 2rem;">
-        Don't have an account?
-        <a href="{{ route('register') }}">Sign up</a>
-    </p>
-
-    @if (session('status'))
-    <div style="margin-bottom: 1rem; padding: 0.75rem 1rem; background: #D1FAE5; color: #065F46; border-radius: 8px; font-size: 0.875rem;">
-        {{ session('status') }}
+    <div class="divider">
+        <span>atau</span>
     </div>
-@endif
+
+    <div class="social-btns">
+        <button type="button" class="social-btn">
+            <i class="fa-brands fa-google" style="color: #DB4437;"></i> Google
+        </button>
+        <button type="button" class="social-btn">
+            <i class="fa-brands fa-facebook" style="color: #1877F2;"></i> Facebook
+        </button>
+    </div>
+
+    <p class="auth-footer">
+        Belum punya akun? 
+        <a href="{{ route('register') }}">Daftar sekarang</a>
+    </p>
 </div>
 
 <script>
-    function togglePassword(id) {
-        const input = document.getElementById(id);
-        const icon = input.nextElementSibling.querySelector('i');
+    function togglePassword() {
+        const input = document.getElementById('password');
+        const icon = document.getElementById('toggleIcon');
         if (input.type === 'password') {
             input.type = 'text';
             icon.classList.remove('fa-eye');
