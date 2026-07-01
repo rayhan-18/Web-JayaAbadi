@@ -106,4 +106,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin']
     Route::get('/kasir/transaksi', function () { return view('admin.cashier.pos'); })->name('kasir.pos');
     Route::get('/kasir/produk', [ProductController::class, 'posProducts'])->name('kasir.products');
     Route::post('/kasir/checkout', [AdminOrderController::class, 'posCheckout'])->name('kasir.checkout');
+    Route::get('/orders/{id}/invoice', [AdminOrderController::class, 'invoice'])->name('orders.invoice');
+    Route::get('/orders/{id}/invoice/pdf', [AdminOrderController::class, 'invoicePdf'])->name('orders.invoice.pdf');
 });

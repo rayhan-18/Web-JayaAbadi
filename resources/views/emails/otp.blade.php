@@ -14,9 +14,9 @@
 </head>
 <body>
     <div class="container">
-        <div class="brand">Sanctuari</div>
+        <div class="brand">JayaAbadi</div>
         <p>Halo <strong>{{ $name }}</strong>,</p>
-        <p>Gunakan kode OTP berikut untuk verifikasi email akun Sanctuari kamu:</p>
+        <p>Gunakan kode OTP berikut untuk verifikasi email akun JayaAbadi kamu:</p>
         <div class="otp-box">
             <div class="otp-code">{{ $otp }}</div>
             <div class="expired">Berlaku selama 5 menit</div>

@@ -364,6 +364,7 @@ public function payment(Request $request)
 
         return response()->json([
             'success'      => true,
+            'order_id'     => $order->id,        // <-- tambahkan ini
             'order_number' => $order->order_number,
             'total'        => $total,
         ]);
@@ -515,5 +516,42 @@ public function exportPaymentCsv(Request $request)
     };
 
     return response()->stream($callback, 200, $headers);
+}
+
+/**
+ * Halaman Invoice (Print-Friendly di Browser)
+ */
+public function invoice($id)
+{
+    $order = Order::with(['user', 'items.product'])->findOrFail($id);
+
+    $subtotal = $order->items->sum(fn($i) => $i->price * $i->quantity);
+    $extra    = max(0, $order->total_amount - $subtotal); // Ongkir / biaya tambahan (kalau ada)
+
+    $channel = str_starts_with($order->order_number, 'POS-')
+        ? 'Kasir POS (Toko)'
+        : 'Website Online';
+
+    return view('admin.order.invoice', compact('order', 'subtotal', 'extra', 'channel'));
+}
+
+/**
+ * Download Invoice sebagai PDF
+ */
+public function invoicePdf($id)
+{
+    $order = Order::with(['user', 'items.product'])->findOrFail($id);
+
+    $subtotal = $order->items->sum(fn($i) => $i->price * $i->quantity);
+    $extra    = max(0, $order->total_amount - $subtotal);
+
+    $channel = str_starts_with($order->order_number, 'POS-')
+        ? 'Kasir POS (Toko)'
+        : 'Website Online';
+
+    $html = view('admin.order.invoice', compact('order', 'subtotal', 'extra', 'channel'))->render();
+    $pdf  = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)->setPaper('a4', 'portrait');
+
+    return $pdf->stream('invoice-' . $order->order_number . '.pdf');
 }
 }

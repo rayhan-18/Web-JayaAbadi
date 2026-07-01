@@ -449,66 +449,59 @@
         renderCart();
     }
 
-    async function checkoutProcess() {
-        if (cart.length === 0) {
-            if (typeof Swal !== 'undefined') Swal.fire('Gagal', 'Keranjang belanja kosong!', 'warning');
-            else alert('Keranjang belanja kosong!');
-            return;
-        }
-
-        const notes = document.getElementById('customerNotes').value;
-        const grandTotalText = document.getElementById('grand-total').innerText;
-
-        if (typeof Swal !== 'undefined') {
-            const { isConfirmed } = await Swal.fire({
-                title: 'Proses Pembayaran?',
-                text: `Total tagihan: ${grandTotalText}`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Ya, Bayar Sekarang',
-                cancelButtonText: 'Batal',
-                confirmButtonColor: '#2563eb', // Royal Blue alert
-            });
-            if (!isConfirmed) return;
-        } else {
-            if (!confirm(`Proses pembayaran dengan Total ${grandTotalText}?`)) return;
-        }
-
-        try {
-            const res = await fetch('/admin/kasir/checkout', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify({
-                    items: cart.map(i => ({ id: i.id, qty: i.qty, harga: i.harga })),
-                    channel: currentChannel,
-                    notes: notes,
-                })
-            });
-            const data = await res.json();
-            
-            if (data.success) {
-                if (typeof Swal !== 'undefined') {
-                    await Swal.fire('Berhasil!', `Transaksi ${data.order_number} sukses diproses.\nTotal: Rp ${Number(data.total).toLocaleString('id-ID')}`, 'success');
-                } else {
-                    alert(`Berhasil! Transaksi ${data.order_number} sukses.`);
-                }
-                cart = [];
-                document.getElementById('customerNotes').value = '';
-                renderCart();
-                loadProducts();
-            } else {
-                if (typeof Swal !== 'undefined') Swal.fire('Error', 'Transaksi gagal.', 'error');
-                else alert('Transaksi gagal.');
-            }
-        } catch (err) {
-            console.error(err);
-            if (typeof Swal !== 'undefined') Swal.fire('Error', 'Terjadi kesalahan sistem saat proses transaksi.', 'error');
-            else alert('Terjadi kesalahan sistem saat proses transaksi.');
-        }
+async function checkoutProcess() {
+    if (cart.length === 0) {
+        if (typeof Swal !== 'undefined') Swal.fire('Gagal', 'Keranjang belanja kosong!', 'warning');
+        else alert('Keranjang belanja kosong!');
+        return;
     }
+
+    const notes = document.getElementById('customerNotes').value;
+    const grandTotalText = document.getElementById('grand-total').innerText;
+
+    if (typeof Swal !== 'undefined') {
+        const { isConfirmed } = await Swal.fire({
+            title: 'Proses Pembayaran?',
+            text: `Total tagihan: ${grandTotalText}`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Bayar Sekarang',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#2563eb',
+        });
+        if (!isConfirmed) return;
+    } else {
+        if (!confirm(`Proses pembayaran dengan Total ${grandTotalText}?`)) return;
+    }
+
+    try {
+        const res = await fetch('/admin/kasir/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({
+                items: cart.map(i => ({ id: i.id, qty: i.qty, harga: i.harga })),
+                channel: currentChannel,
+                notes: notes,
+            })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            window.location.href = `/admin/orders/${data.order_id}/invoice`;
+            return;
+        } else {
+            if (typeof Swal !== 'undefined') Swal.fire('Error', 'Transaksi gagal.', 'error');
+            else alert('Transaksi gagal.');
+        }
+    } catch (err) {
+        console.error(err);
+        if (typeof Swal !== 'undefined') Swal.fire('Error', 'Terjadi kesalahan sistem saat proses transaksi.', 'error');
+        else alert('Terjadi kesalahan sistem saat proses transaksi.');
+    }
+}
 
     // Hotkey F8 untuk Bayar Cepat
     document.addEventListener('keydown', function(e) {
