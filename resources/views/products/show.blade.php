@@ -300,10 +300,17 @@
                     <div><span class="font-medium text-gray-700">Stok:</span> <span class="text-amber-700">{{ $product['stock'] }} unit</span></div>
                 </div>
                 <div class="mt-8">
-                    <button onclick="alert('Produk ditambahkan ke keranjang (demo)')" 
-                            class="w-full bg-gray-900 hover:bg-amber-600 text-white px-6 py-3 rounded-full font-medium transition flex items-center justify-center gap-2">
-                        <i class="fas fa-bag-shopping"></i> Tambah ke Keranjang
-                    </button>
+                    @if($product['stock'] > 0)
+                        <button onclick="alert('Produk ditambahkan ke keranjang')" 
+                                class="w-full bg-gray-900 hover:bg-amber-600 text-white px-6 py-3 rounded-full font-medium transition flex items-center justify-center gap-2">
+                            <i class="fas fa-bag-shopping"></i> Tambah ke Keranjang
+                        </button>
+                    @else
+                        <button disabled 
+                                class="w-full bg-gray-300 text-gray-500 cursor-not-allowed px-6 py-3 rounded-full font-medium transition flex items-center justify-center gap-2">
+                            <i class="fas fa-times-circle"></i> Stok Habis
+                        </button>
+                    @endif
                 </div>
             </div>
         </div>

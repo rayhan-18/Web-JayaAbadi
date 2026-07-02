@@ -97,34 +97,25 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" id="produk">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             @foreach($productsOnPage as $product)
-            <div class="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition overflow-hidden animate-item flex flex-col h-full">
-                <a href="{{ route('products.show', $product['slug']) }}" class="flex-1">
-                    <div class="relative aspect-square overflow-hidden bg-gray-100">
-                        <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                        <div class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full text-xs">
-                            <i class="fas fa-star text-yellow-500 text-[10px] mr-1"></i> {{ $product['rating'] }}
+                {{-- FILTER: Hanya tampilkan jika stok > 0 --}}
+                @if(($product['stock'] ?? 1) > 0)
+                <div class="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col h-full">
+                    <a href="{{ route('products.show', $product['slug']) }}" class="flex-1">
+                        <div class="relative aspect-square overflow-hidden bg-gray-100">
+                            <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="w-full h-full object-cover group-hover:scale-105 transition">
                         </div>
-                        <button class="absolute top-2 right-2 bg-white/90 w-7 h-7 rounded-full flex items-center justify-center text-gray-500 hover:text-rose-500 transition">
-                            <i class="far fa-heart text-sm"></i>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-800">{{ $product['name'] }}</h3>
+                            <p class="text-amber-700 font-bold text-lg mt-2">Rp {{ number_format($product['price'], 0, ',', '.') }}</p>
+                        </div>
+                    </a>
+                    <div class="px-4 mb-6"> 
+                        <button class="w-full bg-gray-900 hover:bg-amber-600 text-white py-3 rounded-full text-sm font-bold transition">
+                            Keranjang
                         </button>
                     </div>
-                    <div class="p-4 pb-2">
-                        <h3 class="font-medium text-gray-800">{{ $product['name'] }}</h3>
-                        <p class="text-gray-400 text-xs mt-1">{{ $categoryName }}</p>
-                        <p class="text-amber-700 font-bold text-lg mt-2">Rp {{ number_format($product['price'], 0, ',', '.') }}</p>
-                    </div>
-                </a>
-
-                <div class="px-4 mb-6 mt-2"> 
-                    <form action="#" method="POST" onsubmit="alert('Demo: Produk ditambahkan ke keranjang'); return false;">
-                        @csrf
-                        <button type="submit" class="w-full bg-gray-900 hover:bg-amber-600 text-white py-3 rounded-full text-sm font-bold tracking-tight transition-all duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-lg hover:-translate-y-1 active:scale-95">
-                            <i class="fas fa-bag-shopping text-xs"></i> 
-                            <span>Keranjang</span>
-                        </button>
-                    </form>
                 </div>
-            </div>
+                @endif
             @endforeach
         </div>
 

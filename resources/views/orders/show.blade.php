@@ -1,104 +1,109 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Pesanan #' . $order->order_number)
+@section('title', 'Invoice #' . $order->order_number)
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 py-10">
-    <div class="flex items-center justify-between mb-8">
-        <h1 class="text-3xl font-serif font-semibold">Detail Pesanan</h1>
-        
-        <div class="text-right">
-            <span class="text-xs text-gray-500">No. Invoice</span>
-            <p class="font-mono font-semibold text-xl text-gray-900">#{{ $order->order_number }}</p>
+<div class="bg-slate-50 min-h-screen py-12">
+    <div class="max-w-3xl mx-auto px-4">
+
+        {{-- Tombol Kembali --}}
+        <div class="mb-6">
+            <a href="{{ route('orders.index') }}" 
+               class="inline-flex items-center text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">
+                <i class="fa-solid fa-arrow-left mr-2"></i>
+                Kembali ke Daftar Pesanan
+            </a>
         </div>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Informasi Utama -->
-        <div class="lg:col-span-2 bg-white rounded-3xl shadow-sm p-8">
-            <div class="flex justify-between items-start mb-8">
+        
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 md:p-12">
+            {{-- Header Toko & Invoice --}}
+            <div class="flex justify-between items-start mb-10">
                 <div>
-                    <h2 class="font-semibold text-gray-900 mb-1">Informasi Pesanan</h2>
-                    <p class="text-sm text-gray-600">
-                        {{ $order->created_at->format('d M Y • H:i') }}
-                    </p>
+                    <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">JayaAbadi</h1>
+                    <p class="text-slate-600 text-[15px] mt-0.5">Toko Furnitur & Perabot Rumah</p>
+                    <p class="text-slate-400 text-xs mt-3 uppercase tracking-wider font-semibold">Invoice Resmi Transaksi</p>
                 </div>
-                <span class="px-5 py-2 rounded-2xl text-sm font-semibold
-                    @if($order->status == 'pending') bg-yellow-100 text-yellow-700
-                    @elseif($order->status == 'paid') bg-blue-100 text-blue-700
-                    @elseif($order->status == 'shipped') bg-purple-100 text-purple-700
-                    @elseif($order->status == 'delivered') bg-emerald-100 text-emerald-700
-                    @else bg-red-100 text-red-700 @endif">
-                    {{ ucfirst($order->status) }}
-                </span>
-            </div>
-
-            <!-- Alamat Pengiriman -->
-            <div class="mb-10">
-                <h3 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-location-dot"></i>
-                    Alamat Pengiriman
-                </h3>
-                <div class="bg-gray-50 rounded-2xl p-5 text-sm leading-relaxed">
-                    {{ $order->shipping_address }}
+                <div class="text-right">
+                    <p class="text-2xl font-black text-slate-900">INVOICE</p>
+                    <p class="text-slate-500 font-medium mt-0.5 uppercase">{{ $order->order_number }}</p>
+                    <span class="inline-block mt-3 px-4 py-1 rounded-md text-[11px] font-bold uppercase bg-emerald-50 text-emerald-700 border border-emerald-100">
+                        {{ ucfirst($order->status) }}
+                    </span>
                 </div>
             </div>
 
-            <!-- Daftar Produk -->
-            <h3 class="font-semibold text-gray-900 mb-4">Produk yang Dipesan</h3>
-            <div class="space-y-6">
-                @foreach($order->items as $item)
-                <div class="flex gap-5 bg-gray-50 rounded-2xl p-5">
-                    <div class="w-20 h-20 bg-white rounded-xl flex-shrink-0 border overflow-hidden">
-                        @if($item->product->image ?? false)
-                            <img src="{{ asset('storage/' . $item->product->image) }}" 
-                                 alt="{{ $item->product->name }}" 
-                                 class="w-full h-full object-cover">
-                        @else
-                            <div class="w-full h-full bg-gray-200 flex items-center justify-center">
-                                <i class="fa-solid fa-image text-gray-400"></i>
-                            </div>
-                        @endif
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <h4 class="font-medium text-gray-900 line-clamp-2">{{ $item->product->name }}</h4>
-                        <div class="mt-3 flex justify-between items-end">
-                            <div>
-                                <p class="text-sm text-gray-500">Rp {{ number_format($item->price, 0, ',', '.') }} × {{ $item->quantity }}</p>
-                            </div>
-                            <p class="font-semibold text-lg text-amber-700">
-                                Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}
-                            </p>
+            <div class="border-b-2 border-slate-900 mb-10"></div>
+
+            {{-- Info Kasir & Detail Transaksi --}}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div>
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">Kasir Yang Bertugas</p>
+                    <p class="font-bold text-slate-900 text-sm">Alfan Fadhillah Ramadhan</p>
+                    <p class="text-slate-600 text-sm">iniabadi26@gmail.com</p>
+                </div>
+                <div>
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">Detail Transaksi</p>
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-slate-500">Tanggal:</span>
+                            <span class="text-sm font-semibold text-slate-900">{{ $order->created_at->format('d M Y, H:i') }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-slate-500">Saluran:</span>
+                            <span class="text-sm font-semibold text-slate-900">Kasir POS (Toko)</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-slate-500">Metode Bayar:</span>
+                            <span class="text-sm font-semibold text-slate-900">Cash</span>
                         </div>
                     </div>
                 </div>
-                @endforeach
             </div>
-        </div>
 
-        <!-- Ringkasan Pembayaran -->
-        <div class="lg:col-span-1">
-            <div class="bg-white rounded-3xl shadow-sm p-8 sticky top-8">
-                <h3 class="font-semibold text-lg mb-6">Ringkasan Pembayaran</h3>
-                
-                <div class="space-y-4">
+            {{-- Tabel Produk --}}
+            <div class="mb-10">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-slate-200">
+                            <th class="pb-3 text-left text-[11px] font-bold text-slate-400 uppercase tracking-wider">Produk</th>
+                            <th class="pb-3 text-center text-[11px] font-bold text-slate-400 uppercase tracking-wider">Qty</th>
+                            <th class="pb-3 text-right text-[11px] font-bold text-slate-400 uppercase tracking-wider">Harga Satuan</th>
+                            <th class="pb-3 text-right text-[11px] font-bold text-slate-400 uppercase tracking-wider">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        @foreach($order->items as $item)
+                        <tr>
+                            <td class="py-5 text-sm text-slate-900 font-medium capitalize">{{ $item->product->name }}</td>
+                            <td class="py-5 text-sm text-slate-600 text-center">{{ $item->quantity }}</td>
+                            <td class="py-5 text-sm text-slate-600 text-right">Rp {{ number_format($item->price, 0, ',', '.') }}</td>
+                            <td class="py-5 text-sm font-bold text-slate-900 text-right">Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            {{-- Total Section --}}
+            <div class="flex justify-end mb-10">
+                <div class="w-full sm:w-64 space-y-3">
                     <div class="flex justify-between text-sm">
-                        <span class="text-gray-600">Total Belanja</span>
-                        <span class="font-medium">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                        <span class="text-slate-500">Subtotal Pesanan</span>
+                        <span class="font-semibold text-slate-900">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
                     </div>
-                    <div class="h-px bg-gray-100"></div>
-                    <div class="flex justify-between text-xl font-semibold">
-                        <span>Total</span>
-                        <span class="text-amber-700">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
+                    <div class="border-t-2 border-slate-900 pt-4 flex justify-between items-center">
+                        <span class="font-bold text-slate-900 uppercase text-xs">Total Akhir</span>
+                        <span class="font-black text-slate-900 text-xl">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
                     </div>
                 </div>
+            </div>
 
-                <div class="mt-10 pt-6 border-t">
-                    <a href="{{ route('orders.index') }}" 
-                       class="block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 rounded-2xl font-medium transition">
-                        Kembali ke Daftar Pesanan
-                    </a>
-                </div>
+            {{-- Footer --}}
+            <div class="border-t border-dashed border-slate-200 pt-8 text-center">
+                <p class="text-slate-500 text-sm font-medium">Terima kasih telah berbelanja di JayaAbadi.</p>
+                <p class="text-slate-400 text-[11px] mt-1.5 uppercase tracking-wider">
+                    Invoice ini dihasilkan otomatis oleh sistem — {{ $order->created_at->format('d M Y, H:i') }}
+                </p>
             </div>
         </div>
     </div>

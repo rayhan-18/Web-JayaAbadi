@@ -10,7 +10,9 @@ class ProductController extends Controller
 {
 public function index(Request $request)
     {
-        $query = Product::with('category')->where('is_active', true);
+        $query = Product::with('category')
+        ->where('is_active', true)
+        ->where('stock', '>', 0);
 
         // Filter kategori (jika ada parameter category_id)
         if ($request->filled('category')) {
@@ -34,6 +36,7 @@ public function index(Request $request)
         $product = Product::with('category')
             ->where('slug', $slug)
             ->where('is_active', true)
+            ->where('stock', '>', 0)
             ->firstOrFail();
         return view('products.show', compact('product'));
     }
@@ -43,6 +46,7 @@ public function index(Request $request)
         $category = Category::where('slug', $slug)->firstOrFail();
         $products = Product::where('category_id', $category->id)
             ->where('is_active', true)
+            ->where('stock', '>', 0)
             ->paginate(12);
         return view('products.category', compact('category', 'products'));
     }
@@ -53,6 +57,7 @@ public function index(Request $request)
         $products = Product::where('name', 'like', "%{$query}%")
             ->orWhere('description', 'like', "%{$query}%")
             ->where('is_active', true)
+            ->where('stock', '>', 0)
             ->paginate(12);
         return view('products.index', compact('products', 'query'));
     }

@@ -40,6 +40,10 @@ Route::prefix('cart')->group(function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
+    
+    // RUTE BARU UNTUK INVOICE
+    Route::get('/checkout/success/{id}', [CheckoutController::class, 'success'])->name('checkout.success');
+    
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 });

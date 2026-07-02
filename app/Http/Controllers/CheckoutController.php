@@ -87,6 +87,23 @@ class CheckoutController extends Controller
         $cart->items()->delete();
         $cart->delete();
 
-        return redirect()->route('orders.index')->with('success', 'Pesanan Anda berhasil dibuat! Silakan tunggu admin memverifikasi bukti pembayaran Anda.');
+        // UBAHAN DI SINI: Redirect ke halaman invoice success, bukan langsung ke orders.index
+        return redirect()->route('checkout.success', $order->id)->with('success', 'Pesanan Anda berhasil dibuat!');
+    }
+
+    /**
+     * Halaman Invoice Setelah Checkout Berhasil
+     */
+    public function success($id)
+    {
+        // Ambil data order beserta relasi item dan produknya
+        $order = Order::with('items.product')->findOrFail($id);
+
+        // Keamanan ekstra: Pastikan order ini milik user yang sedang login
+        if ($order->user_id !== auth()->id()) {
+            abort(403, 'Anda tidak memiliki akses ke invoice ini.');
+        }
+
+        return view('checkout.success', compact('order'));
     }
 }
