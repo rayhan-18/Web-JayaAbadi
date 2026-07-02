@@ -66,13 +66,13 @@
     .search-box {
         display: flex; align-items: center; background: var(--bg-surface);
         border: 1px solid var(--border); border-radius: var(--radius-md);
-        padding: 0 16px; gap: 10px; flex: 1; max-width: 320px; height: 44px; transition: all 0.2s;
+        padding: 0 16px; gap: 10px; height: 44px; flex: 1; max-width: 320px; height: 44px; transition: all 0.2s;
         box-shadow: 0 2px 10px rgba(0,0,0,0.02);
     }
-    .search-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
-    .search-box i { color: var(--text-sec); font-size: 18px; flex-shrink: 0; }
-    .search-box input { border: none; outline: none; font-size: 13.5px; width: 100%; color: var(--text-main); background: transparent; padding: 0; }
-    .search-box input::placeholder { color: var(--text-muted); }
+    .search-box:focus-within { border-color: var(--accent); background: var(--bg-surface); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
+    .search-box i { color: var(--text-sec); font-size: 18px; }
+    .search-box input { border: none; outline: none; background: transparent; font-size: 13.5px; width: 100%; color: var(--text-main); font-weight: 500; }
+    .search-box input::placeholder { color: var(--text-muted); font-weight: 400; }
     
     .select-wrapper { position: relative; display: inline-block; }
     .select-wrapper i.prefix-icon {
@@ -91,8 +91,8 @@
     .export-dropdown { position: relative; display: inline-block; }
     .btn-export {
         background: var(--bg-surface); color: var(--text-main); border: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-        padding: 0 16px; height: 44px; border-radius: var(--radius-md); font-size: 13.5px; font-weight: 600;
-        display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: 0.2s;
+        padding: 0 16px; height: 44px; border-radius: var(--radius-md); font-size: 14px; font-weight: 700;
+        cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .btn-export i { font-size: 16px; color: var(--text-sec); }
     .btn-export:hover { border-color: #cbd5e1; color: var(--accent); }
@@ -274,12 +274,12 @@
     }
 
     @media (max-width: 768px) {
-        .stats-row { grid-template-columns: repeat(2, 1fr); }
         .filter-bar { flex-direction: column; align-items: stretch; }
         .search-box, .select-wrapper, .filter-select { max-width: 100%; width: 100%; min-width: 100%; }
         .page-header { flex-direction: column; align-items: flex-start; }
         .export-dropdown, .btn-export { width: 100%; }
         
+        .stats-row { grid-template-columns: repeat(2, 1fr); }
         .stat-card { padding: 16px; border-radius: 16px; }
         .stat-label { font-size: 10.5px; }
         .stat-value { font-size: 20px; }
@@ -506,25 +506,31 @@
         return map[status] || '';
     }
 
-    function showDetail(index) {
+function showDetail(index) {
         const o = orders[index];
         const panel = document.getElementById('detailPanel');
         const body = document.getElementById('detailBody');
 
-        const itemsHtml = o.items.map(item => `
-            <div class="dp-product">
-                <div class="dp-product-img">
-                    <img src="${item.img}" alt="${item.nama}" onerror="this.src='https://placehold.co/100x100?text=Error'">
+        const itemsHtml = o.items.map(item => {
+            const productImgSrc = (item.img && item.img.startsWith('http')) ? item.img : '/storage/' + item.img;
+            return `
+                <div class="dp-product">
+                    <div class="dp-product-img">
+                        <img src="${productImgSrc}" alt="${item.nama}" onerror="this.src='https://placehold.co/100x100?text=No+Img'">
+                    </div>
+                    <div style="min-width: 0; flex: 1;">
+                        <div class="dp-product-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.nama}</div>
+                        <div class="dp-product-qty">Qty: ${item.qty}</div>
+                    </div>
+                    <div class="dp-product-price">${formatRupiah(item.harga)}</div>
                 </div>
-                <div style="min-width: 0; flex: 1;">
-                    <div class="dp-product-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.nama}</div>
-                    <div class="dp-product-qty">Qty: ${item.qty}</div>
-                </div>
-                <div class="dp-product-price">${formatRupiah(item.harga)}</div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
 
-        const channelHtml = o.channel === 'Online' 
+        // ── FIX LOGIKA SALURAN: Deteksi berdasarkan awalan nomor invoice (ORD atau POS) ──
+        // Cara ini paling aman karena gak bergantung 100% sama map JSON dari controller
+        const isOnline = o.id.startsWith('ORD'); 
+        const channelHtml = isOnline 
             ? `<span class="channel-badge channel-online"><i class="ti ti-world"></i> Website</span>`
             : `<span class="channel-badge channel-offline"><i class="ti ti-building-store"></i> POS Kasir</span>`;
 
@@ -558,6 +564,7 @@
                 <div class="dp-label">Pembayaran</div>
                 <div class="dp-value" style="font-weight: 600;">${o.metode}</div>
             </div>
+            
             <hr class="dp-divider">
             <div class="dp-section-title">Produk (${o.items.length})</div>
             ${itemsHtml}
@@ -581,7 +588,6 @@
 
         panel.classList.add('open');
         
-        // Kunci background scroll saat modal di HP terbuka
         if (window.innerWidth <= 1024) {
             document.body.style.overflow = 'hidden';
         }
@@ -609,7 +615,7 @@
                     title: 'Berhasil!',
                     text: 'Status pesanan berhasil diupdate.',
                     icon: 'success',
-                    confirmButtonColor: '#2563eb', // Royal Blue SweetAlert
+                    confirmButtonColor: '#2563eb',
                 }).then(() => location.reload());
             }
         })

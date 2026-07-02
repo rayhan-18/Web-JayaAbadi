@@ -48,6 +48,16 @@ class CheckoutController extends Controller
             $proofPath = $request->file('payment_proof')->store('receipts', 'public');
         }
 
+        // ── STRATEGI AMANKAN GAMBAR UNTUK USER WEBSITE ──
+        // Ambil item pertama yang dibeli dari dalam keranjang belanja
+        $firstItem = $cart->items->first();
+        $productImage = null;
+
+        if ($firstItem && $firstItem->product) {
+            // Ambil string gambar dari produk pertama (sesuai kolom database 'img' atau 'image')
+            $productImage = $firstItem->product->img ?? $firstItem->product->image ?? null;
+        }
+
         // Hitung akumulasi nilai tagihan
         $subtotal = $cart->items->sum(fn($i) => $i->price * $i->quantity);
         $shipping = 150000;
@@ -61,11 +71,12 @@ class CheckoutController extends Controller
             'total_amount'     => $total,
             'status'           => 'pending', 
             'payment_method'   => $request->payment_method,
-            'payment_status'   => 'unpaid', // <-- SEKARANG DEFAULT 'unpaid' AGAR HARUS DIVERIFIKASI ADMIN
+            'payment_status'   => 'unpaid', 
             'shipping_address' => $request->shipping_address,
             'phone'            => $request->phone,
             'notes'            => $request->notes,
             'payment_proof'    => $proofPath, 
+            'image'            => $productImage, // <-- SEKARANG GAMBAR DIJAMIN MASUK KE DATABASE!
         ]);
 
         // Pindahkan data dari tabel keranjang ke tabel Detail Pesanan (OrderItem)
@@ -79,7 +90,12 @@ class CheckoutController extends Controller
 
             // Potong jumlah stok produk di database
             if ($item->product) {
-                $item->product->decrement('stock', $item->quantity);
+                // Mengantisipasi perbedaan nama kolom stock / stok di database lu
+                if (\Schema::hasColumn('products', 'stock')) {
+                    $item->product->decrement('stock', $item->quantity);
+                } else {
+                    $item->product->decrement('stok', $item->quantity);
+                }
             }
         }
 

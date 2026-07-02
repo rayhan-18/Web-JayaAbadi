@@ -20,9 +20,33 @@
                     <div class="p-6">
                         {{-- Header: Invoice & Status --}}
                         <div class="flex justify-between items-start gap-4">
-                            <div>
-                                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Nomor Invoice</p>
-                                <p class="text-base font-bold text-gray-900">#{{ $order->order_number }}</p>
+                            
+                            {{-- Blok Gambar & Nomor Invoice --}}
+                            <div class="flex items-center gap-4">
+                                {{-- Komponen Tampilan Gambar Masuk Di Sini --}}
+                                <div class="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 border border-gray-200 flex-shrink-0">
+                                    @if($order->image)
+                                        {{-- Jika dari Kasir POS berbentuk URL utuh (http), langsung tampilkan. Jika dari upload lokal/online, panggil lewat asset() --}}
+                                        <img src="{{ Str::startsWith($order->image, 'http') ? $order->image : asset('storage/' . $order->image) }}" 
+                                             alt="Gambar Pesanan" 
+                                             class="w-full h-full object-cover"
+                                             onerror="this.src='https://placehold.co/100x100?text=No+Image'">
+                                    @elseif($order->payment_proof)
+                                        {{-- Backup check kalau datanya masuk ke kolom payment_proof --}}
+                                        <img src="{{ asset('storage/' . $order->payment_proof) }}" 
+                                             alt="Bukti Pembayaran" 
+                                             class="w-full h-full object-cover"
+                                             onerror="this.src='https://placehold.co/100x100?text=No+Image'">
+                                    @else
+                                        {{-- Placeholder jika tidak ada gambar sama sekali --}}
+                                        <img src="https://placehold.co/100x100?text=No+Image" class="w-full h-full object-cover">
+                                    @endif
+                                </div>
+
+                                <div>
+                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Nomor Invoice</p>
+                                    <p class="text-base font-bold text-gray-900">#{{ $order->order_number }}</p>
+                                </div>
                             </div>
                             
                             @php
