@@ -13,8 +13,8 @@ class AdminMiddleware
             return redirect()->route('login');
         }
 
-        if (!auth()->user()->isAdmin()) {
-            abort(403, 'Unauthorized - Admin only');
+        if (auth()->check() && in_array(auth()->user()->role, ['admin', 'superadmin'])) {
+        return $next($request);
         }
 
         return $next($request);

@@ -3,345 +3,360 @@
 @section('title', 'Invoice Pembayaran | Jaya Abadi')
 
 @section('content')
-<div class="ja-invoice">
+<div class="ja-invoice-wrapper">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        .ja-invoice {
-            --ink: #2B2420;
-            --paper: #F3EEE2;
-            --paper-dim: #ECE5D3;
-            --brass: #A9752F;
-            --brass-dark: #8A5F24;
-            --stamp-green: #3F5D46;
-            --stamp-red: #8B3A3A;
-            --line: #D9CFB8;
-            --muted: #8C8171;
+        .ja-invoice-wrapper {
+            --text-main: #0F172A;      /* Dark navy/black for main text */
+            --text-muted: #64748B;     /* Gray for secondary text */
+            --text-label: #94A3B8;     /* Light blue-gray for uppercase labels */
+            --border-light: #F1F5F9;   /* Very light gray for table rows */
+            --border-dark: #0F172A;    /* Dark navy for main divider */
+            --bg-page: #F8FAFC;        /* Light background for the whole page */
+            --bg-card: #FFFFFF;        /* White background for the invoice card */
+            --badge-bg: #DCFCE7;       /* Light green for LUNAS badge */
+            --badge-text: #166534;     /* Dark green text for LUNAS badge */
+            --badge-unpaid-bg: #FEE2E2;
+            --badge-unpaid-text: #991B1B;
 
-            background: var(--ink);
-            background-image:
-                radial-gradient(ellipse at 20% 10%, rgba(169,117,47,0.10), transparent 55%),
-                radial-gradient(ellipse at 85% 90%, rgba(169,117,47,0.08), transparent 50%);
-            padding: 4.5rem 1.25rem;
+            background-color: var(--bg-page);
+            padding: 4rem 1.25rem;
             font-family: 'Inter', sans-serif;
-            color: var(--ink);
+            color: var(--text-main);
         }
-
-        .ja-invoice .mono { font-family: 'IBM Plex Mono', monospace; }
-        .ja-invoice .display { font-family: 'Fraunces', serif; }
 
         .ja-card {
-            max-width: 780px;
+            max-width: 800px;
             margin: 0 auto;
-            background: var(--paper);
-            background-image: radial-gradient(rgba(43,36,32,0.035) 1px, transparent 1px);
-            background-size: 3px 3px;
-            border-radius: 6px;
-            position: relative;
-            box-shadow: 0 30px 60px -20px rgba(0,0,0,0.55), 0 0 0 1px rgba(169,117,47,0.15);
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 3.5rem 4rem;
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+            border: 1px solid #E2E8F0;
         }
 
-        /* torn ticket edge at very top */
-        .ja-tag-strip {
-            display: flex;
-            align-items: center;
-            gap: 0.85rem;
-            padding: 1.1rem 2rem;
-            border-bottom: 1px dashed var(--line);
-            position: relative;
-        }
-        .ja-tag-hole {
-            width: 16px; height: 16px;
-            border-radius: 50%;
-            background: var(--ink);
-            box-shadow: inset 0 0 0 2px var(--paper), 0 0 0 1px var(--line);
-            flex-shrink: 0;
-        }
-        .ja-tag-strip span {
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.28em;
-            text-transform: uppercase;
-            color: var(--muted);
+        @media (max-width: 640px) {
+            .ja-card { padding: 2rem 1.5rem; }
         }
 
-        .ja-body { padding: 2.75rem 2rem 3rem; }
-        @media (min-width: 640px) { .ja-body { padding: 3rem 3.5rem 3.5rem; } }
-
+        /* HEADER SECTION */
         .ja-head {
             display: flex;
-            flex-wrap: wrap;
             justify-content: space-between;
             align-items: flex-start;
+            flex-wrap: wrap;
             gap: 1.5rem;
-            margin-bottom: 2.75rem;
-            position: relative;
         }
+
         .ja-brand-name {
-            font-family: 'Fraunces', serif;
-            font-weight: 700;
-            font-size: 1.9rem;
-            letter-spacing: -0.01em;
-            color: var(--ink);
-            line-height: 1;
-        }
-        .ja-brand-sub {
-            font-size: 0.68rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--brass-dark);
-            margin-top: 0.5rem;
-            font-weight: 600;
-        }
-        .ja-invoice-label {
-            font-family: 'Fraunces', serif;
-            font-size: 2.1rem;
-            font-weight: 600;
+            font-weight: 800;
+            font-size: 1.8rem;
             letter-spacing: -0.02em;
-            color: var(--ink);
-            text-align: right;
+            color: var(--text-main);
+            line-height: 1.2;
         }
-        .ja-order-no {
-            font-family: 'IBM Plex Mono', monospace;
+
+        .ja-brand-sub {
             font-size: 0.85rem;
-            color: var(--muted);
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .ja-head-right {
             text-align: right;
-            margin-top: 0.15rem;
-        }
-
-        /* ink stamp — signature element */
-        .ja-stamp {
-            position: absolute;
-            top: -8px;
-            right: -6px;
-            transform: rotate(-9deg);
-            width: 112px;
-            height: 112px;
-            border-radius: 50%;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
-            filter: url(#ja-rough);
-            mix-blend-mode: multiply;
+            flex-direction: column;
+            align-items: flex-end;
         }
-        .ja-stamp::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border: 3px solid currentColor;
-            border-radius: 50%;
+
+        .ja-invoice-title {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--text-main);
         }
-        .ja-stamp::after {
-            content: "";
-            position: absolute;
-            inset: 8px;
-            border: 1px solid currentColor;
-            border-radius: 50%;
+
+        .ja-order-no {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+            margin-bottom: 0.75rem;
         }
-        .ja-stamp span {
-            font-family: 'IBM Plex Mono', monospace;
+
+        .ja-badge {
+            display: inline-block;
+            padding: 0.35rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
             font-weight: 700;
-            font-size: 0.78rem;
-            letter-spacing: 0.08em;
-            text-align: center;
-            line-height: 1.25;
-            color: currentColor;
+            letter-spacing: 0.05em;
         }
-        .ja-stamp.is-paid  { color: var(--stamp-green); }
-        .ja-stamp.is-unpaid{ color: var(--stamp-red); }
 
-        .ja-rule { height: 1px; background: var(--line); margin-bottom: 2.5rem; }
+        .ja-badge.is-paid {
+            background-color: var(--badge-bg);
+            color: var(--badge-text);
+        }
 
+        .ja-badge.is-unpaid {
+            background-color: var(--badge-unpaid-bg);
+            color: var(--badge-unpaid-text);
+        }
+
+        /* DIVIDER */
+        .ja-divider-thick {
+            height: 2px;
+            background-color: var(--border-dark);
+            margin: 2.5rem 0;
+        }
+
+        /* META SECTION */
         .ja-meta-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 2rem;
-            margin-bottom: 2.75rem;
+            margin-bottom: 3rem;
         }
-        @media (min-width: 640px) { .ja-meta-grid { grid-template-columns: 1fr 1fr; } }
+        @media (min-width: 640px) {
+            .ja-meta-grid { grid-template-columns: 1fr 1fr; }
+        }
+
         .ja-meta-label {
-            font-size: 0.62rem;
+            font-size: 0.7rem;
             font-weight: 700;
-            letter-spacing: 0.24em;
+            letter-spacing: 0.05em;
             text-transform: uppercase;
-            color: var(--brass-dark);
-            margin-bottom: 0.6rem;
+            color: var(--text-label);
+            margin-bottom: 0.75rem;
         }
-        .ja-meta-primary { font-size: 1.05rem; font-weight: 600; color: var(--ink); }
-        .ja-meta-secondary { font-size: 0.85rem; color: var(--muted); margin-top: 0.2rem; }
-        .ja-meta-row { font-size: 0.88rem; color: var(--ink); }
-        .ja-meta-row + .ja-meta-row { margin-top: 0.3rem; }
-        .ja-meta-row b { font-weight: 600; }
 
-        table.ja-ledger { width: 100%; border-collapse: collapse; margin-bottom: 2.5rem; }
-        table.ja-ledger thead th {
+        .ja-meta-val {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            margin-bottom: 0.35rem;
+        }
+        .ja-meta-val b { font-weight: 600; }
+
+        /* TABLE SECTION */
+        table.ja-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+
+        table.ja-table th {
             text-align: left;
-            font-size: 0.62rem;
+            font-size: 0.7rem;
             font-weight: 700;
-            letter-spacing: 0.22em;
+            letter-spacing: 0.05em;
             text-transform: uppercase;
-            color: var(--brass-dark);
-            padding-bottom: 0.85rem;
-            border-bottom: 1.5px solid var(--ink);
-        }
-        table.ja-ledger thead th.num { text-align: right; }
-        table.ja-ledger thead th.qty { text-align: center; }
-        table.ja-ledger tbody td {
-            padding: 1.1rem 0;
-            border-bottom: 1px dashed var(--line);
-            vertical-align: top;
-        }
-        table.ja-ledger tbody tr:last-child td { border-bottom: none; }
-        .ja-item-name { font-size: 0.92rem; font-weight: 600; color: var(--ink); }
-        .ja-qty { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; color: var(--muted); }
-        .ja-price { text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; color: var(--muted); }
-        .ja-line-total { text-align: right; font-family: 'IBM Plex Mono', monospace; font-size: 0.92rem; font-weight: 600; color: var(--ink); }
-
-        .ja-totals { display: flex; justify-content: flex-end; margin-bottom: 3rem; }
-        .ja-totals-box { width: 100%; max-width: 280px; }
-        .ja-subtotal-row {
-            display: flex; justify-content: space-between;
-            font-size: 0.85rem; color: var(--muted); margin-bottom: 0.75rem;
-        }
-        .ja-subtotal-row span.mono { font-family: 'IBM Plex Mono', monospace; }
-        .ja-total-row {
-            display: flex; justify-content: space-between; align-items: baseline;
-            padding-top: 1rem; border-top: 2px solid var(--ink);
-        }
-        .ja-total-row .lbl {
-            font-size: 0.68rem; font-weight: 700; letter-spacing: 0.2em;
-            text-transform: uppercase; color: var(--ink);
-        }
-        .ja-total-row .val {
-            font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.6rem; color: var(--ink);
+            color: var(--text-label);
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-light);
         }
 
+        table.ja-table th.center { text-align: center; }
+        table.ja-table th.right { text-align: right; }
+
+        table.ja-table td {
+            padding: 1.25rem 0;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border-light);
+            vertical-align: middle;
+        }
+
+        table.ja-table td.center { text-align: center; }
+        table.ja-table td.right { text-align: right; }
+
+        /* TOTALS SECTION */
+        .ja-totals-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 4rem;
+        }
+
+        .ja-totals-box {
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .ja-totals-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+        }
+
+        .ja-totals-row-final {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.25rem;
+            margin-top: 0.5rem;
+            border-top: 2px solid var(--border-dark);
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        /* FOOTER */
         .ja-footer {
             text-align: center;
-            border-top: 1px dashed var(--line);
-            padding-top: 1.75rem;
-        }
-        .ja-footer p {
-            font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase;
-            color: var(--muted);
+            border-top: 1px dotted #CBD5E1;
+            padding-top: 2rem;
         }
 
-        .ja-actions {
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 0.85rem;
-            margin-top: 2.25rem; max-width: 780px; margin-left: auto; margin-right: auto;
+        .ja-footer p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
         }
+
+        /* BUTTONS (Outside Card) */
+        .ja-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         .ja-btn {
-            display: inline-flex; align-items: center; justify-content: center;
-            padding: 0.95rem 2.1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.85rem 2rem;
             border-radius: 8px;
             font-family: 'Inter', sans-serif;
-            font-weight: 700;
-            font-size: 0.78rem;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
+            font-weight: 600;
+            font-size: 0.85rem;
             text-decoration: none;
-            transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+            transition: all 0.2s ease;
         }
-        .ja-btn:hover { transform: translateY(-1px); }
-        .ja-btn-primary { background: var(--brass); color: #FFF8EC; }
-        .ja-btn-primary:hover { background: var(--brass-dark); }
+
+        .ja-btn-primary {
+            background: var(--text-main);
+            color: #FFFFFF;
+        }
+        .ja-btn-primary:hover {
+            background: #000000;
+            transform: translateY(-2px);
+        }
+
         .ja-btn-secondary {
-            background: transparent; color: var(--paper);
-            border: 1px solid rgba(243,238,226,0.35);
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid #CBD5E1;
         }
-        .ja-btn-secondary:hover { border-color: var(--paper); }
+        .ja-btn-secondary:hover {
+            background: #F1F5F9;
+        }
     </style>
 
-    <!-- rough ink-edge filter for the stamp -->
-    <svg width="0" height="0" style="position:absolute">
-        <filter id="ja-rough">
-            <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" result="noise" seed="4"/>
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.6"/>
-        </filter>
-    </svg>
-
     <div class="ja-card">
-
-        <div class="ja-tag-strip">
-            <div class="ja-tag-hole"></div>
-            <span>Nota Pengiriman &middot; Jaya Abadi Furnitur</span>
+        
+        <div class="ja-head">
+            <div>
+                <div class="ja-brand-name">JayaAbadi</div>
+                <div class="ja-brand-sub">Toko Furnitur & Perabot Rumah<br>Invoice resmi transaksi</div>
+            </div>
+            
+            @php
+                // Logika status pembayaran berdasarkan metode pembayaran
+                $isPaid = in_array(strtolower($order->payment_method), ['ewallet', 'transfer']);
+            @endphp
+            
+            <div class="ja-head-right">
+                <div class="ja-invoice-title">INVOICE</div>
+                <div class="ja-order-no">{{ $order->order_number }}</div>
+                
+                <div class="ja-badge {{ $isPaid ? 'is-paid' : 'is-unpaid' }}">
+                    {{ $isPaid ? 'LUNAS' : 'BELUM LUNAS' }}
+                </div>
+            </div>
         </div>
 
-        <div class="ja-body">
+        <div class="ja-divider-thick"></div>
 
-            <div class="ja-head">
-                <div>
-                    <div class="ja-brand-name">Jaya&nbsp;Abadi</div>
-                    <div class="ja-brand-sub">Toko Furnitur &amp; Perabot Rumah</div>
-                </div>
-                <div>
-                    <div class="ja-invoice-label">Invoice</div>
-                    <div class="ja-order-no">{{ $order->order_number }}</div>
-                </div>
-
-                <div class="ja-stamp {{ $order->status == 'paid' ? 'is-paid' : 'is-unpaid' }}">
-                    <span>{{ $order->status == 'paid' ? 'LUNAS' : 'BELUM LUNAS' }}</span>
-                </div>
+        <div class="ja-meta-grid">
+            <div>
+                <div class="ja-meta-label">PELANGGAN</div>
+                <div class="ja-meta-val">{{ auth()->user()->name }}</div>
+                <div class="ja-meta-val">{{ auth()->user()->email }}</div>
             </div>
-
-            <div class="ja-rule"></div>
-
-            <div class="ja-meta-grid">
-                <div>
-                    <div class="ja-meta-label">Ditagihkan Kepada</div>
-                    <div class="ja-meta-primary">{{ auth()->user()->name }}</div>
-                    <div class="ja-meta-secondary">{{ auth()->user()->email }}</div>
-                </div>
-                <div class="sm:text-right">
-                    <div class="ja-meta-label">Detail Transaksi</div>
-                    <div class="ja-meta-row">Tanggal &nbsp;<b>{{ $order->created_at->format('d M Y, H:i') }}</b></div>
-                    <div class="ja-meta-row">Metode &nbsp;<b class="mono" style="text-transform:uppercase;">{{ $order->payment_method ?? 'Cash' }}</b></div>
-                </div>
+            <div>
+                <div class="ja-meta-label">DETAIL TRANSAKSI</div>
+                <div class="ja-meta-val">Tanggal: {{ $order->created_at->format('d M Y, H:i') }}</div>
+                <div class="ja-meta-val">Saluran: Website (Online)</div>
+                <div class="ja-meta-val">Metode Bayar: <span style="text-transform:capitalize;">{{ $order->payment_method ?? 'Cash' }}</span></div>
             </div>
-
-            <table class="ja-ledger">
-                <thead>
-                    <tr>
-                        <th>Produk</th>
-                        <th class="qty">Qty</th>
-                        <th class="num">Harga</th>
-                        <th class="num">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($order->items as $item)
-                    <tr>
-                        <td class="ja-item-name">{{ $item->product->name }}</td>
-                        <td class="ja-qty">{{ $item->quantity }}</td>
-                        <td class="ja-price">Rp {{ number_format($item->price, 0, ',', '.') }}</td>
-                        <td class="ja-line-total">Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-
-            <div class="ja-totals">
-                <div class="ja-totals-box">
-                    <div class="ja-subtotal-row">
-                        <span>Subtotal</span>
-                        <span class="mono">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
-                    </div>
-                    <div class="ja-total-row">
-                        <span class="lbl">Total</span>
-                        <span class="val">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="ja-footer">
-                <p>Terima kasih atas kepercayaan Anda</p>
-            </div>
-
         </div>
+
+        <table class="ja-table">
+            <thead>
+                <tr>
+                    <th>PRODUK</th>
+                    <th class="center">QTY</th>
+                    <th class="right">HARGA SATUAN</th>
+                    <th class="right">SUBTOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($order->items as $item)
+                <tr>
+                    <td>{{ $item->product->name }}</td>
+                    <td class="center">{{ $item->quantity }}</td>
+                    <td class="right">Rp {{ number_format($item->price, 0, ',', '.') }}</td>
+                    <td class="right">Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+        @php
+            $subtotal = $order->items->sum(fn($i) => $i->price * $i->quantity);
+            $shipping = 150000;
+            $tax = round($subtotal * 0.11);
+            $total = $subtotal + $shipping + $tax;
+        @endphp
+
+        <div class="ja-totals-wrapper">
+            <div class="ja-totals-box">
+                <div class="ja-totals-row">
+                    <span>Subtotal Produk</span>
+                    <span>Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                </div>
+                <div class="ja-totals-row">
+                    <span>Ongkos Kirim</span>
+                    <span>Rp {{ number_format($shipping, 0, ',', '.') }}</span>
+                </div>
+                <div class="ja-totals-row">
+                    <span>Pajak (PPN 11%)</span>
+                    <span>Rp {{ number_format($tax, 0, ',', '.') }}</span>
+                </div>
+                
+                <div class="ja-totals-row-final">
+                    <span>Total</span>
+                    <span>Rp {{ number_format($total, 0, ',', '.') }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ja-footer">
+            <p>Terima kasih telah berbelanja di JayaAbadi.</p>
+            <p>Invoice ini dihasilkan otomatis oleh sistem &mdash; {{ now()->format('d M Y H:i') }}</p>
+        </div>
+
     </div>
 
     <div class="ja-actions">

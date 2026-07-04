@@ -113,3 +113,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin']
     Route::get('/orders/{id}/invoice', [AdminOrderController::class, 'invoice'])->name('orders.invoice');
     Route::get('/orders/{id}/invoice/pdf', [AdminOrderController::class, 'invoicePdf'])->name('orders.invoice.pdf');
 });
+
+// =========================================================================
+// SUPER ADMIN ROUTES (UPDATE DENGAN MIDDLEWARE)
+// =========================================================================
+Route::prefix('superadmin')->name('superadmin.')->middleware(['auth', 'verified'])->group(function () {
+    
+    // Tambahkan middleware kustom atau cek role di sini jika mau lebih aman
+    Route::middleware('can:isSuperAdmin')->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'superDashboard'])->name('dashboard');
+        Route::patch('/admin/{id}/toggle', [AdminController::class, 'toggleAdminStatus'])->name('admin.toggle');
+    });
+});

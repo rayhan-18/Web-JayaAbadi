@@ -112,9 +112,7 @@
         padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; white-space: nowrap;
     }
     .status-berhasil { background: #ecfdf5; color: #059669; }
-    .status-refund   { background: #fef2f2; color: #dc2626; }
     .status-berhasil::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #10b981; margin-right: 6px; }
-    .status-refund::before   { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #ef4444; margin-right: 6px; }
 
     /* ── Export Dropdown ── */
     .export-dropdown { position: relative; display: inline-block; }
@@ -275,7 +273,7 @@
 
 <div class="card-box">
     <div class="card-header">
-        <div class="card-title">Rincian Transaksi</div>
+        <div class="card-title">Rincian Transaksi Sukses</div>
     </div>
     <div class="table-wrapper">
         <table>
@@ -305,25 +303,20 @@
                     
                     <td>
                         @php 
-                            $isSuccess = in_array($order->status, ['paid', 'shipping', 'delivered', 'Selesai']);
-                            $cls = $isSuccess ? 'status-berhasil' : 'status-refund';
+                            // Terjemahkan 'delivered' menjadi 'Selesai' untuk tampilan
                             $statusLabel = match($order->status) {
-                                'pending'   => 'Pending',
-                                'paid'      => 'Diproses',
-                                'shipping'  => 'Dikirim',
-                                'delivered' => 'Berhasil',
-                                'cancelled' => 'Batal',
+                                'delivered' => 'Selesai',
                                 default     => ucfirst($order->status)
                             };
                         @endphp
-                        <span class="status-badge {{ $cls }}">{{ $statusLabel }}</span>
+                        <span class="status-badge status-berhasil">{{ $statusLabel }}</span>
                     </td>
                 </tr>
                 @empty
                 <tr>
                     <td colspan="8" style="text-align: center; padding: 48px; color: var(--text-muted);">
                         <i class="ti ti-inbox" style="font-size: 32px; display: block; margin-bottom: 8px; opacity: 0.5;"></i>
-                        Tidak ada data transaksi di bulan ini.
+                        Tidak ada data transaksi sukses di bulan ini.
                     </td>
                 </tr>
                 @endforelse

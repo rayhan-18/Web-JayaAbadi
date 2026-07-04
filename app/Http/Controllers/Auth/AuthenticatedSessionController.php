@@ -25,12 +25,30 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
+
+        // Cek apakah akun dinonaktifkan
+        if (! auth()->user()->is_active) {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return back()->withErrors([
+                'email' => 'Akses ditolak! Akun Anda telah dinonaktifkan oleh Super Admin.',
+            ])->onlyInput('email');
+        }
+
         $request->session()->regenerate();
 
-        if (auth()->user()->isAdmin()) {
+        // Redirect spesifik berdasarkan Role
+        $role = auth()->user()->role;
+        
+        if ($role === 'superadmin') {
+            return redirect()->route('superadmin.dashboard');
+        } elseif ($role === 'admin') {
             return redirect()->route('admin.dashboard');
         }
 
+        // Jika user biasa
         return redirect()->intended(route('home', absolute: false));
     }
 

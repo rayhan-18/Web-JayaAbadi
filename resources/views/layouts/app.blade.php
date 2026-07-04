@@ -46,13 +46,28 @@
                         </div>
                     </form>
 
-                    <a href="{{ route('cart.index') }}" class="relative text-gray-700 hover:text-amber-700 transition transform hover:scale-105">
-                        <i class="fa-solid fa-bag-shopping text-xl"></i>
-                        @php $cartCount = count(session()->get('cart', [])); @endphp
-                        @if($cartCount > 0)
-                            <span class="absolute -top-2 -right-2 bg-amber-600 text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">{{ $cartCount }}</span>
-                        @endif
-                    </a>
+                <a href="{{ route('cart.index') }}" class="relative text-gray-700 hover:text-amber-700 transition transform hover:scale-105">
+                    <i class="fa-solid fa-bag-shopping text-xl"></i>
+                    
+                    {{-- Cek apakah user sudah login, karena tabel cart biasanya butuh user_id --}}
+                    @auth
+                    @php
+                        // 1. Cari keranjang 'induk' milik user yang statusnya masih aktif
+                        $activeCart = \App\Models\Cart::where('user_id', auth()->id())
+                                                    ->where('is_active', true)
+                                                    ->first();
+                        
+                        // 2. Jika keranjang aktif ada, hitung total quantity dari tabel detailnya (relasi 'items')
+                        $cartCount = $activeCart ? $activeCart->items()->sum('quantity') : 0;
+                    @endphp
+
+                    @if($cartCount > 0)
+                        <span class="absolute -top-2 -right-2 bg-amber-600 text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                            {{ $cartCount > 99 ? '99+' : $cartCount }}
+                        </span>
+                    @endif
+                @endauth
+                </a>
 
                     @auth
                         <div class="relative group hidden lg:flex items-center h-full">

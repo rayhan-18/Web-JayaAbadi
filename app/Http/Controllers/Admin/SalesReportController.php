@@ -15,9 +15,10 @@ class SalesReportController extends Controller
         $start = Carbon::parse($month . '-01')->startOfMonth();
         $end   = Carbon::parse($month . '-01')->endOfMonth();
 
+        // Tetap mengambil transaksi dengan status 'delivered' dari database
         $orders = Order::with(['user', 'items'])
             ->whereBetween('created_at', [$start, $end])
-            ->whereNotIn('status', ['cancelled'])
+            ->where('status', 'delivered')
             ->latest()
             ->get();
 
@@ -29,9 +30,12 @@ class SalesReportController extends Controller
         // Trend vs bulan lalu
         $prevStart   = $start->copy()->subMonth()->startOfMonth();
         $prevEnd     = $start->copy()->subMonth()->endOfMonth();
+        
+        // Perbandingan bulan lalu juga pakai 'delivered'
         $prevRevenue = Order::whereBetween('created_at', [$prevStart, $prevEnd])
-            ->whereNotIn('status', ['cancelled'])
+            ->where('status', 'delivered')
             ->sum('total_amount');
+            
         $trendRevenue = $prevRevenue > 0
             ? (($revenue - $prevRevenue) / $prevRevenue) * 100
             : 0;
