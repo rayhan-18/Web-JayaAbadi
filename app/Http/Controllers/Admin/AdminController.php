@@ -10,6 +10,7 @@ use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -83,58 +84,25 @@ class AdminController extends Controller
     /**
      * Memproses aksi on/off status akun Admin
      */
-    public function toggleAdminStatus($id)
-    {
-        // Proteksi ekstra: Pastikan hanya superadmin yang bisa memanggil fungsi ini
-        if (auth()->user()->role !== 'superadmin') {
-            abort(403, 'Akses ditolak. Anda bukan Super Admin.');
-        }
-
-        $admin = User::findOrFail($id);
-
-        // Cegah Super Admin menonaktifkan akunnya sendiri secara tidak sengaja
-        if ($admin->id === auth()->id()) {
-            return back()->with('error', 'Anda tidak dapat menonaktifkan akun sendiri.');
-        }
-
-        // Balikkan nilai boolean (true jadi false, false jadi true)
-        $admin->is_active = !$admin->is_active;
-        $admin->save();
-
-        return back()->with('success', 'Status akun admin berhasil diperbarui.');
-    }
-
-    /**
-     * Dashboard Khusus Super Admin
-     */
     public function superDashboard()
     {
-        // Proteksi ekstra di Controller
-        if (auth()->user()->role !== 'superadmin') {
-            abort(403, 'Akses ditolak. Anda bukan Super Admin.');
-        }
+        if (auth()->user()->role !== 'superadmin') abort(403);
 
-        // 1. HITUNG 4 BLOK KARTU UTAMA
         $stats = [
             'products' => Product::count(),
             'orders'   => Order::count(),
-            'revenue'  => (float) Order::where('payment_status', 'paid')
-                                     ->where('status', '!=', 'cancelled')
-                                     ->sum('total_amount'),
+            'revenue'  => (float) Order::where('payment_status', 'paid')->where('status', '!=', 'cancelled')->sum('total_amount'),
             'users'    => User::where('role', 'user')->count(),
         ];
 
-        // 2. RANGKUMAN PENDAPATAN
         $revenueSummary = [
             'today' => (float) Order::where('payment_status', 'paid')->whereDate('created_at', Carbon::today())->sum('total_amount'),
             'week'  => (float) Order::where('payment_status', 'paid')->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('total_amount'),
             'month' => (float) Order::where('payment_status', 'paid')->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])->sum('total_amount'),
         ];
 
-        // 3. TABEL PESANAN TERBARU
         $recentOrders = Order::with('user')->latest()->take(5)->get();
 
-        // 4. TABEL PRODUK TERLARIS
         $bestSellersRaw = OrderItem::select('product_id', DB::raw('SUM(quantity) as total_terjual'))
             ->groupBy('product_id')
             ->orderBy('total_terjual', 'desc')
@@ -154,11 +122,60 @@ class AdminController extends Controller
             }
         }
 
-        // 5. FITUR SUPER ADMIN: Ambil daftar semua Admin untuk ditampilkan di tabel
-        $admins = User::where('role', 'admin')->get();
+        // Fitur manajemen admin dihapus dari sini
 
-        // Return ke view khusus super admin (pastikan lu buat file blade ini: resources/views/superadmin/dashboard/index.blade.php)
-        // yang isinya full code HTML super admin yang gw kirim di chat sebelumnya
-        return view('superadmin.dashboard.index', compact('stats', 'revenueSummary', 'recentOrders', 'topProducts', 'admins'));
+        return view('superadmin.dashboard.index', compact('stats', 'revenueSummary', 'recentOrders', 'topProducts'));
+    }
+
+    // ==========================================
+    // FITUR EKSKLUSIF SUPER ADMIN
+    // ==========================================
+    
+    public function manageAdmins()
+    {
+        if (auth()->user()->role !== 'superadmin') abort(403);
+
+        $admins = User::where('role', 'admin')->latest()->get();
+        return view('superadmin.admins.index', compact('admins'));
+    }
+
+    public function storeAdmin(Request $request)
+    {
+        if (auth()->user()->role !== 'superadmin') abort(403);
+
+        $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'phone'    => 'nullable|string|max:20',
+        ]);
+
+        User::create([
+            'name'              => $request->name,
+            'email'             => $request->email,
+            'password'          => Hash::make($request->password),
+            'phone'             => $request->phone,
+            'role'              => 'admin',
+            'is_active'         => true,
+            'email_verified_at' => now(), // Bypass proses OTP
+        ]);
+
+        return back()->with('success', 'Admin baru berhasil didaftarkan dan langsung aktif.');
+    }
+
+    public function toggleAdminStatus($id)
+    {
+        if (auth()->user()->role !== 'superadmin') abort(403);
+
+        $admin = User::findOrFail($id);
+
+        if ($admin->id === auth()->id()) {
+            return back()->with('error', 'Anda tidak dapat menonaktifkan akun sendiri.');
+        }
+
+        $admin->is_active = !$admin->is_active;
+        $admin->save();
+
+        return back()->with('success', 'Status akun admin berhasil diperbarui.');
     }
 }

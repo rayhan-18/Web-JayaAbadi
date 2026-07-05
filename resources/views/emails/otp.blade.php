@@ -22,7 +22,7 @@
             <div class="expired">Berlaku selama 5 menit</div>
         </div>
         <p>Jika kamu tidak merasa mendaftar, abaikan email ini.</p>
-        <p style="color: #94A3B8; font-size: 12px; margin-top: 32px;">© 2025 Sanctuari. All rights reserved.</p>
+        <p style="color: #94A3B8; font-size: 12px; margin-top: 32px;">© 2025 JayaAbadi. All rights reserved.</p>
     </div>
 </body>
 </html>

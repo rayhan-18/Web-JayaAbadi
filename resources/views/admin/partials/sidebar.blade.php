@@ -37,7 +37,7 @@
     .sb-icon-wrap { width: 34px; height: 34px; border-radius: 9px; background: #14171c; border: 1px solid #232730; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .sb-icon-wrap i { font-size: 18px; color: #3b82f6; } /* Royal Blue Highlight */
     .sb-name { color: #ffffff; font-size: 13.5px; font-weight: 600; letter-spacing: .02em; }
-    .sb-tag { display: inline-flex; align-items: center; margin-top: 2px; background: #14171c; border: 1px solid #232730; border-radius: 4px; padding: 1px 6px; font-size: 9px; color: #8a919e; letter-spacing: .06em; font-weight: 600; }
+    .sb-tag { display: inline-flex; align-items: center; margin-top: 2px; background: #14171c; border: 1px solid #232730; border-radius: 4px; padding: 1px 6px; font-size: 9px; color: #8a919e; letter-spacing: .06em; font-weight: 600; text-transform: uppercase; }
     
     .sb-nav { flex: 1; padding: 10px 8px; overflow-y: auto; }
     .sb-nav::-webkit-scrollbar { display: none; }
@@ -85,15 +85,27 @@
     <div class="sb-logo">
         <div class="sb-icon-wrap"><i class="ti ti-armchair"></i></div>
         <div>
-            <div class="sb-name">Jaya Abadi</div> <div class="sb-tag">ADMIN</div>
+            <div class="sb-name">Jaya Abadi</div> 
+            <div class="sb-tag">{{ auth()->user()->role }}</div>
         </div>
     </div>
 
     <nav class="sb-nav">
         <div class="sb-sec">Main</div>
-        <a href="{{ route('admin.dashboard') }}" class="nav-row {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+        
+        @php
+            $dashboardRoute = auth()->user()->role === 'superadmin' ? 'superadmin.dashboard' : 'admin.dashboard';
+        @endphp
+        <a href="{{ route($dashboardRoute) }}" class="nav-row {{ request()->routeIs('admin.dashboard') || request()->routeIs('superadmin.dashboard') ? 'active' : '' }}">
             <div class="nr-icon-wrap"><i class="ti ti-layout-dashboard"></i></div> Dashboard
         </a>
+
+        @if(auth()->check() && auth()->user()->role === 'superadmin')
+            <div class="sb-sec" style="color: #3b82f6;">Super Admin</div>
+            <a href="{{ route('superadmin.admins.index') }}" class="nav-row {{ request()->routeIs('superadmin.admins.index') ? 'active' : '' }}">
+                <div class="nr-icon-wrap"><i class="ti ti-user-cog"></i></div> Kelola Admin
+            </a>
+        @endif
 
         <div class="sb-sec">Katalog</div>
         <div class="parent {{ request()->routeIs('admin.product.*') ? 'open' : '' }}" id="p-produk">
@@ -121,18 +133,15 @@
         <div class="sb-sec">Transaksi</div>
         
         @php
-            // Ambil jumlah pesanan dengan status 'pending'
             $pendingOrders = \App\Models\Order::where('status', 'pending')->count();
         @endphp
 
         <div class="parent {{ request()->routeIs('admin.order.*') ? 'open' : '' }}" id="p-order">
             <div class="nav-row" onclick="tog('p-order')">
                 <div class="nr-icon-wrap"><i class="ti ti-clipboard-list"></i></div> Pesanan
-                
                 @if($pendingOrders > 0)
                     <span class="badge">{{ $pendingOrders }}</span>
                 @endif
-                
                 <i class="ti ti-chevron-right chev" style="margin-left:4px"></i>
             </div>
             <div class="sub">
@@ -195,10 +204,8 @@
 </aside>
 
 <script>
-    // Logika buka-tutup list dropdown menu internal sidebar
     function tog(id) { document.getElementById(id).classList.toggle('open'); }
 
-    // ── KELOLA BODY SCROLL LOCK SECARA TERPUSAT ──
     window._bodyLockCount = window._bodyLockCount || 0;
 
     window._lockBodyScroll = function() {
@@ -213,7 +220,6 @@
         }
     };
 
-    // Fungsi Global Penutup Sidebar (Dipakai saat backdrop diklik)
     window.closeAdminSidebar = function() {
         const sidebar = document.getElementById('sidebar');
         const backdrop = document.getElementById('sbBackdrop');
