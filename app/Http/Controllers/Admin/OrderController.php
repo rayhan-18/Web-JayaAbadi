@@ -51,7 +51,7 @@ class OrderController extends Controller
 
         // LOGIKA DOWNLOAD DIRECT EXCEL
         if ($request->export === 'excel') {
-            $filename = "Laporan_Pesanan_FurniHome_" . date('Y-m-d_H-i') . ".xls";
+            $filename = "Laporan_Pesanan_JayaAbadi_" . date('Y-m-d_H-i') . ".xls";
             header("Content-Type: application/vnd.ms-excel");
             header("Content-Disposition: attachment; filename=\"$filename\"");
             header("Pragma: no-cache");

@@ -35,7 +35,7 @@
         ],
         'koleksi-baru' => [
             'name' => 'Koleksi Baru',
-            'description' => 'Temukan produk-produk terbaru dari Sanctuari yang siap mempercantik rumah Anda.',
+            'description' => 'Temukan produk-produk terbaru dari JayaAbadi yang siap mempercantik rumah Anda.',
             'products' => [
                 ['slug' => 'kursi-santai-modern', 'name' => 'Kursi Santai Modern', 'price' => 4750000, 'image' => 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=500&h=500&fit=crop', 'rating' => 5.0],
                 ['slug' => 'lampu-meja-minimalis', 'name' => 'Lampu Meja Minimalis', 'price' => 890000, 'image' => 'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=500&h=500&fit=crop', 'rating' => 4.9],
@@ -59,7 +59,7 @@
 
 @extends('layouts.app')
 
-@section('title', $categoryName . ' - Sanctuari')
+@section('title', $categoryName . ' - JayaAbadi')
 
 @section('content')
 <div class="bg-white">

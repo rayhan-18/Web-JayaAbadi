@@ -64,7 +64,7 @@
     <div class="tb-divider"></div>
     
     <div class="tb-breadcrumb">
-        <span>FurniHome</span>
+        <span>JayaAbadi</span>
         <i class="ti ti-chevron-right"></i>
         <span class="current">@yield('title', 'Admin Panel')</span>
     </div>

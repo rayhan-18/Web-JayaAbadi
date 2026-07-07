@@ -1,6 +1,6 @@
 @extends('layouts.guest')
 
-@section('title', 'Verify Email — Sanctuari')
+@section('title', 'Verify Email — JayaAbadi')
 
 @section('content')
 <div class="auth-card">

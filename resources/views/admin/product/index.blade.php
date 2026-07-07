@@ -145,7 +145,7 @@
 <div class="page-header">
     <div class="page-title">
         <h1>Produk</h1>
-        <div class="breadcrumb">FurniHome / Produk</div>
+        <div class="breadcrumb">JayaAbadi / Produk</div>
     </div>
     <div style="display: flex; gap: 10px; align-items: center;">
         <a href="{{ route('admin.product.export.pdf', request()->query()) }}" target="_blank" class="btn-primary btn-danger">

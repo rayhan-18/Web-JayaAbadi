@@ -1,7 +1,7 @@
 {{-- resources/views/cart/index.blade.php --}}
 @extends('layouts.app')
 
-@section('title', 'Keranjang Belanja - Sanctuari')
+@section('title', 'Keranjang Belanja - JayaAbadi')
 
 @section('content')
 <div class="min-h-screen" style="background-color: #f5f7f3;">

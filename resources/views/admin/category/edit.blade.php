@@ -78,7 +78,7 @@
 <div class="page-header">
     <div class="page-title">
         <h1>Edit Kategori</h1>
-        <div class="breadcrumb">FurniHome / Kategori / Edit</div>
+        <div class="breadcrumb">JayaAbadi / Kategori / Edit</div>
     </div>
 </div>
 

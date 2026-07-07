@@ -74,7 +74,7 @@
 <div class="page-header">
     <div class="page-title">
         <h1>Tambah Kategori</h1>
-        <div class="breadcrumb">FurniHome / Kategori / Tambah Baru</div>
+        <div class="breadcrumb">JayaAbadi / Kategori / Tambah Baru</div>
     </div>
 </div>
 

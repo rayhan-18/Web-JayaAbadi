@@ -67,10 +67,10 @@
 <div class="header">
     <div class="header-left">
         <h1>Laporan Data Pesanan</h1>
-        <p>FurniHome — Sistem Manajemen Toko</p>
+        <p>JayaAbadi — Sistem Manajemen Toko</p>
     </div>
     <div class="header-right">
-        <strong>FurniHome</strong>
+        <strong>JayaAbadi</strong>
         Digenerate: {{ now()->format('d/m/Y H:i') }}
     </div>
 </div>
@@ -150,7 +150,7 @@
         Total Pesanan: <strong>{{ $orders->count() }}</strong> &nbsp;|&nbsp;
         Total Nilai: <strong>Rp {{ number_format($orders->sum('total_amount'), 0, ',', '.') }}</strong>
     </span>
-    <span>FurniHome © {{ now()->year }}</span>
+    <span>JayaAbadi © {{ now()->year }}</span>
 </div>
 
 </body>

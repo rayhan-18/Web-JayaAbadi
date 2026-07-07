@@ -20,7 +20,14 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [\App\Http\Controllers\ProductController::class, 'index'])->name('products.index');
 Route::get('/category/{slug}', function ($slug) { return view('products.category'); })->name('products.category');
 Route::get('/product/{slug}', function () { return view('products.show'); })->name('products.show');
-Route::get('/search', function () { return view('products.index'); })->name('products.search');
+Route::get('/search', function (\Illuminate\Http\Request $request) { 
+    $query = $request->input('q');
+    $products = \App\Models\Product::whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($query) . '%'])
+                       ->where('stock', '>', 0)
+                       ->paginate(12);
+    
+    return view('products.index', compact('products')); 
+})->name('products.search');
 Route::get('/wishlist', function () { return view('home'); })->name('wishlist.index');
 
 // =========================================================================

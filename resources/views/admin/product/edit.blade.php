@@ -122,7 +122,7 @@
 <div class="page-header">
     <div class="page-title">
         <h1>Edit Produk</h1>
-        <div class="breadcrumb">FurniHome / Produk / Edit</div>
+        <div class="breadcrumb">JayaAbadi / Produk / Edit</div>
     </div>
 </div>
 

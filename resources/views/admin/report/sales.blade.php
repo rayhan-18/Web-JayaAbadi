@@ -163,7 +163,7 @@
 <div class="page-header">
     <div class="page-title">
         <h1>Laporan Penjualan</h1>
-        <div class="breadcrumb">FurniHome / Laporan / Penjualan</div>
+        <div class="breadcrumb">JayaAbadi / Laporan / Penjualan</div>
     </div>
     <form method="GET" action="{{ route('admin.report.sales') }}" id="filter-form">
         <div style="display: flex; gap: 12px;">

@@ -45,10 +45,10 @@
 <div class="header">
     <div class="header-left">
         <h1>Laporan Data Pelanggan</h1>
-        <p>FurniHome — Sistem Manajemen Toko</p>
+        <p>JayaAbadi — Sistem Manajemen Toko</p>
     </div>
     <div class="header-right">
-        <strong>FurniHome</strong>
+        <strong>JayaAbadi</strong>
         Digenerate: {{ now()->format('d/m/Y H:i') }}
     </div>
 </div>
@@ -100,7 +100,7 @@
 
 <div class="footer">
     <span>Total Pelanggan: <strong>{{ $customers->count() }}</strong></span>
-    <span>FurniHome © {{ now()->year }}</span>
+    <span>JayaAbadi © {{ now()->year }}</span>
 </div>
 
 </body>

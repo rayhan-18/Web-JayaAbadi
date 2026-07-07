@@ -232,7 +232,7 @@
 <div class="page-header">
     <div class="page-title">
         <h1>Laporan Stok Gudang</h1>
-        <div class="breadcrumb">FurniHome / Laporan / Stok</div>
+        <div class="breadcrumb">JayaAbadi / Laporan / Stok</div>
     </div>
 </div>
 

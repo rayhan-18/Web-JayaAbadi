@@ -9,7 +9,7 @@
         {{-- Header Section --}}
         <div class="mb-10 text-center sm:text-left">
             <h1 class="text-3xl font-serif font-bold text-gray-900">Pesanan Saya</h1>
-            <p class="text-gray-500 mt-2">Daftar riwayat pesanan Anda di Sanctuari.</p>
+            <p class="text-gray-500 mt-2">Daftar riwayat pesanan Anda di JayaAbadi.</p>
         </div>
 
         @if($orders->isNotEmpty())

@@ -296,7 +296,7 @@
 <div class="page-header">
     <div class="page-title">
         <h1>Pesanan</h1>
-        <div class="breadcrumb">FurniHome / Pesanan</div>
+        <div class="breadcrumb">JayaAbadi / Pesanan</div>
     </div>
 </div>
 

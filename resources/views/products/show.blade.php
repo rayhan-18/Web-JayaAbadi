@@ -242,7 +242,7 @@
 
 @extends('layouts.app')
 
-@section('title', $product['name'] . ' - Sanctuari')
+@section('title', $product['name'] . ' - JayaAbadi')
 
 @section('content')
 <div class="bg-white">

@@ -265,7 +265,7 @@
 <div class="page-header">
     <div class="page-title">
         <h1>Transaksi Pembayaran</h1>
-        <div class="breadcrumb">FurniHome / Pembayaran</div>
+        <div class="breadcrumb">JayaAbadi / Pembayaran</div>
     </div>
     <div style="display: flex; gap: 10px; align-items: center; width: auto;">
         <div class="export-dropdown">

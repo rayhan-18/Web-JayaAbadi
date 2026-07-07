@@ -269,7 +269,7 @@
 <div class="page-header">
     <div class="page-title">
         <h1>Semua Pelanggan</h1>
-        <div class="breadcrumb">FurniHome / Pelanggan</div>
+        <div class="breadcrumb">JayaAbadi / Pelanggan</div>
     </div>
     <div class="export-dropdown">
         <button type="button" class="btn-export">

@@ -1,6 +1,6 @@
 @extends('layouts.guest')
 
-@section('title', 'Verifikasi OTP — Sanctuari')
+@section('title', 'Verifikasi OTP — JayaAbadi')
 
 @section('content')
 <div class="auth-card" style="padding-top: 1rem;">

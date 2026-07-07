@@ -119,7 +119,7 @@
 <div class="page-header">
     <div class="page-title">
         <h1>Tambah Produk</h1>
-        <div class="breadcrumb">FurniHome / Produk / Tambah Baru</div>
+        <div class="breadcrumb">JayaAbadi / Produk / Tambah Baru</div>
     </div>
 </div>
 
